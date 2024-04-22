@@ -7,10 +7,19 @@ import java.awt.event.ActionListener;
 
 public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
+    /**
+     * The main title for the program.
+     */
     private static final String TITLE = "Trivia Maze";
 
+    /**
+     * The Toolkit used.
+     */
     private static final Toolkit KIT = Toolkit.getDefaultToolkit();
 
+    /**
+     * The size of the current screen.
+     */
     private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
 
     /**
@@ -28,13 +37,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
      */
     private static final String RESET_COMMAND = "Reset";
 
-
     /**
      * The logic for the simulation.
      */
-    //private final PropertyChangeEnabledTriviaMazeControls myTriviaMaze;
-
-    // Constructor
+    private final PropertyChangeEnabledTriviaMazeControls myTriviaMaze;
 
     /**
      * Constructs a new RoadRageGUI, using the files in the current working
@@ -51,7 +57,18 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     }
 
     private void initGUI() {
-        final TriviaMazePanel tmp = new TriviaMazePanel(4, 4);
+        final TriviaMazePanel mazePanel = new TriviaMazePanel(4);
+        final QuestionPanel qPanel = new QuestionPanel();
+        myTriviaMaze.addPropertyChangeListener(mazePanel);
+        myTriviaMaze.addPropertyChangeListener(qPanel);
+
+        // TO DO:
+        /*
+        Menu
+        Keyboard shortcuts
+        Control buttons
+        Debug check
+         */
     }
 
     /**

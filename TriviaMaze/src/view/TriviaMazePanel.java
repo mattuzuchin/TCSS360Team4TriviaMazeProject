@@ -73,11 +73,19 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                 }
                 if (room.getEast != null) {
                     theGraphics.setPaint(Color.WHITE);
-                    theGraphics.fillRect(leftX + ROOM_SIZE, topY, ROOM_SIZE, DOOR_SIZE);
+                    theGraphics.fillRect(leftX + ROOM_SIZE + DOOR_SIZE, topY, DOOR_SIZE, ROOM_SIZE);
+                }
+                if (room.getSouth != null) {
+                    theGraphics.setPaint(Color.WHITE);
+                    theGraphics.fillRect(leftX, topY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
+                }
+                if (room.getWest != null) {
+                    theGraphics.setPaint(Color.WHITE);
+                    theGraphics.fillRect(leftX, topY, DOOR_SIZE, ROOM_SIZE);
                 }
 
                 theGraphics.setPaint(Color.DARK_GRAY);
-                theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                theGraphics.fillRect(leftX + DOOR_SIZE, topY + DOOR_SIZE, ROOM_SIZE, ROOM_SIZE);
 
 
 //                if (y != myHeight - 1) {
@@ -95,9 +103,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         }
     }
 
-    private void drawDoors(final Graphics2D theGraphics) {
-
-    }
 
     private void drawDebugInfo(final Graphics2D theGraphics, final int theX, final int theY) {
         if (myDebugFlag) {
