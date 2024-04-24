@@ -1,5 +1,8 @@
 package view;
 
+import controller.PropertyChangeEnabledTriviaMazeControls;
+import controller.TriviaMaze;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -51,7 +54,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         // initialize instance fields
 
         initGUI();
-
+        myTriviaMaze = new TriviaMaze();
 
         setVisible(true);
     }
@@ -69,15 +72,41 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         Control buttons
         Debug check
          */
+
+        final JCheckBox debugBox = new JCheckBox("Debug");
+        debugBox.addChangeListener(mazePanel);
+        debugBox.addChangeListener(qPanel);
+
+        final Container northPanel = new JPanel(new FlowLayout());
+
+        final Container southPanel = new JPanel(new FlowLayout());
+
+        final Container masterPanel = new JPanel(new BorderLayout());
+        masterPanel.add(mazePanel, BorderLayout.WEST);
+        masterPanel.add(qPanel, BorderLayout.EAST);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        add(masterPanel);
+        pack();
+        setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
+                SCREEN_SIZE.height / 2 - getHeight() / 2);
+    }
+
+    private JButton makeButton(final String theText) {
+        final JButton button = new JButton(theText);
+        button.addActionListener(this);
+        return button;
     }
 
     /**
      * Invoked when an action occurs.
      *
-     * @param e the event to be processed
+     * @param theEvent the event to be processed
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent theEvent) {
+        final Object source = theEvent.getSource();
 
     }
 }

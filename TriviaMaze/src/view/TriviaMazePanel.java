@@ -56,7 +56,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         g2.setStroke(STROKE);
-
+        drawRooms(g2);
     }
 
     private void drawRooms(final Graphics2D theGraphics) {
@@ -67,41 +67,47 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
             for (int x = 0; x < mySize; x++) {
                 final int leftX = x * (ROOM_SIZE + DOOR_SIZE);
                 final Room room = myMaze.getRooms[y][x];
-                if (room.getNorth != null) {
-                    theGraphics.setPaint(Color.WHITE);
-                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, DOOR_SIZE);
-                }
-                if (room.getEast != null) {
-                    theGraphics.setPaint(Color.WHITE);
-                    theGraphics.fillRect(leftX + ROOM_SIZE + DOOR_SIZE, topY, DOOR_SIZE, ROOM_SIZE);
-                }
-                if (room.getSouth != null) {
-                    theGraphics.setPaint(Color.WHITE);
-                    theGraphics.fillRect(leftX, topY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
-                }
-                if (room.getWest != null) {
-                    theGraphics.setPaint(Color.WHITE);
-                    theGraphics.fillRect(leftX, topY, DOOR_SIZE, ROOM_SIZE);
-                }
 
                 theGraphics.setPaint(Color.DARK_GRAY);
                 theGraphics.fillRect(leftX + DOOR_SIZE, topY + DOOR_SIZE, ROOM_SIZE, ROOM_SIZE);
+                drawDoors(theGraphics, room, leftX, topY);
 
-
-//                if (y != myHeight - 1) {
-//                    //draw South door
-//                    theGraphics.setPaint(Color.BLACK);
-//                    theGraphics.fillRect(leftX, topY + ROOM_SIZE, ROOM_SIZE, DOOR_WIDTH);
-//                }
-//                if (x != myWidth - 1) {
-//                    //draw East door
-//                    theGraphics.setPaint(Color.BLACK);
-//                    theGraphics.fillRect(leftX + ROOM_SIZE, topY, DOOR_WIDTH, ROOM_SIZE);
-//                }
                 drawDebugInfo(theGraphics, x, y);
             }
         }
     }
+
+    private void drawDoors(final Graphics2D theGraphics, final Room theRoom, final int theX, final int theY) {
+        if (theRoom.getNorth != null) {
+            final int doorStatus = theRoom.getNorth.getStatus;
+            if (doorStatus = )
+            theGraphics.setPaint(Color.WHITE);
+            theGraphics.fillRect(theX, theY, ROOM_SIZE, DOOR_SIZE);
+        }
+        if (theRoom.getEast != null) {
+            theGraphics.setPaint(Color.WHITE);
+            theGraphics.fillRect(theX + ROOM_SIZE + DOOR_SIZE, theY, DOOR_SIZE, ROOM_SIZE);
+        }
+        if (theRoom.getSouth != null) {
+            theGraphics.setPaint(Color.WHITE);
+            theGraphics.fillRect(theX, theY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
+        }
+        if (theRoom.getWest != null) {
+            theGraphics.setPaint(Color.WHITE);
+            theGraphics.fillRect(theX, theY, DOOR_SIZE, ROOM_SIZE);
+        }
+    }
+
+    /*
+    Room class:
+    door[4] doors, 0 = N, 1 = E, 2 = S, 3 = W
+    point coordinates (correspond to index in Maze)
+
+    Door class:
+    int status, 0 = wall, 1 = closed, 2 = open, 3 = locked
+    Question question
+
+     */
 
 
     private void drawDebugInfo(final Graphics2D theGraphics, final int theX, final int theY) {
