@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
@@ -91,6 +92,33 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         pack();
         setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
                 SCREEN_SIZE.height / 2 - getHeight() / 2);
+    }
+
+    private JMenuBar createMenuBar() {
+        final JMenuBar menuBar = new JMenuBar();
+
+        final JMenu gameMenu = new JMenu("Game");
+        gameMenu.setMnemonic(KeyEvent.VK_G);
+        for (final Action action : myActionList) {
+            final JMenuItem menuButton = new JMenuItem(action);
+            gameMenu.add(menuButton);
+        }
+        menuBar.add(gameMenu);
+
+        final JMenu helpMenu = new JMenu("Help");
+        gameMenu.setMnemonic(KeyEvent.VK_H);
+        final JMenuItem rules = new JMenuItem("Rules");
+        rules.setMnemonic(KeyEvent.VK_R);
+        rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "No gods, no masters!"));
+        final JMenuItem about = new JMenuItem("About");
+        about.setMnemonic(KeyEvent.VK_A);
+        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01"));
+        helpMenu.add(about);
+        helpMenu.add(rules);
+        menuBar.add(helpMenu);
+
+        return menuBar;
+
     }
 
     private JButton makeButton(final String theText) {

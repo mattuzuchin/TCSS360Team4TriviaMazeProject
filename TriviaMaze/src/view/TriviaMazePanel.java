@@ -45,6 +45,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         setPreferredSize(new Dimension((theSize * ROOM_SIZE) + ((theSize + 1) * DOOR_SIZE),
                 (theSize * ROOM_SIZE) + ((theSize + 1) * DOOR_SIZE)));
         setBackground(Color.BLACK);
+        // draw door corner square
         setFont(FONT);
     }
 
@@ -62,50 +63,108 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private void drawRooms(final Graphics2D theGraphics) {
 
         for (int y = 0; y < mySize; y++) {
-            final int topY = y * (ROOM_SIZE * DOOR_SIZE);
+            final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 
             for (int x = 0; x < mySize; x++) {
-                final int leftX = x * (ROOM_SIZE + DOOR_SIZE);
+                final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
                 final Room room = myMaze.getRooms[y][x];
 
                 theGraphics.setPaint(Color.DARK_GRAY);
-                theGraphics.fillRect(leftX + DOOR_SIZE, topY + DOOR_SIZE, ROOM_SIZE, ROOM_SIZE);
+                theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                 drawDoors(theGraphics, room, leftX, topY);
 
-                drawDebugInfo(theGraphics, x, y);
+                drawDebugInfo(theGraphics, leftX, topY);
             }
         }
     }
 
     private void drawDoors(final Graphics2D theGraphics, final Room theRoom, final int theX, final int theY) {
-        if (theRoom.getNorth != null) {
-            final int doorStatus = theRoom.getNorth.getStatus;
-            if (doorStatus = )
-            theGraphics.setPaint(Color.WHITE);
-            theGraphics.fillRect(theX, theY, ROOM_SIZE, DOOR_SIZE);
+        final Map<Direction, Status> doors = theRoom.getDoors();
+
+        int width;
+        int height;
+
+        for (Direction d : doors) {
+            int newX = theX;
+            int newY = theY;
+
+            switch (d) {
+                case N:
+                    newY -= DOOR_SIZE;
+                    width = ROOM_SIZE;
+                    height = DOOR_SIZE;
+                    break;
+                case E:
+                    newX += ROOM_SIZE;
+                    width = DOOR_SIZE;
+                    height = ROOM_SIZE;
+                    break;
+                case S:
+                    newY += ROOM_SIZE;
+                    width = ROOM_SIZE;
+                    height = DOOR_SIZE;
+                    break;
+                case W:
+                    newX -= DOOR_SIZE;
+                    width = DOOR_SIZE;
+                    height = ROOM_SIZE;
+                    break;
+                default:
+            }
+
+            switch (doors.getValue(d)) {
+                case C:
+                    theGraphics.setPaint(Color.DARK_GRAY);
+                    theGraphics.fillRect(newX, newY, width, height);
+                    break;
+                case O:
+                    theGraphics.setPaint(Color.LIGHT_GRAY);
+                    theGraphics.fillRect(newX, newY, width, height);
+                    break;
+                case L:
+                    theGraphics.setPaint(Color.BLACK);
+                    theGraphics.fillRect(newX, newY, width, height);
+                    break;
+                default:
+            }
         }
-        if (theRoom.getEast != null) {
-            theGraphics.setPaint(Color.WHITE);
-            theGraphics.fillRect(theX + ROOM_SIZE + DOOR_SIZE, theY, DOOR_SIZE, ROOM_SIZE);
-        }
-        if (theRoom.getSouth != null) {
-            theGraphics.setPaint(Color.WHITE);
-            theGraphics.fillRect(theX, theY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
-        }
-        if (theRoom.getWest != null) {
-            theGraphics.setPaint(Color.WHITE);
-            theGraphics.fillRect(theX, theY, DOOR_SIZE, ROOM_SIZE);
-        }
+
+//        if (theRoom.getNorth != null) {
+//            if (doorStatus = )
+//            theGraphics.setPaint(Color.WHITE);
+//            theGraphics.fillRect(theX, theY, ROOM_SIZE, DOOR_SIZE);
+//        }
+//        if (theRoom.getEast != null) {
+//            theGraphics.setPaint(Color.WHITE);
+//            theGraphics.fillRect(theX + ROOM_SIZE + DOOR_SIZE, theY, DOOR_SIZE, ROOM_SIZE);
+//        }
+//        if (theRoom.getSouth != null) {
+//            theGraphics.setPaint(Color.WHITE);
+//            theGraphics.fillRect(theX, theY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
+//        }
+//        if (theRoom.getWest != null) {
+//            theGraphics.setPaint(Color.WHITE);
+//            theGraphics.fillRect(theX, theY, DOOR_SIZE, ROOM_SIZE);
+//        }
+
     }
 
     /*
+
+    DIRECTION enum (n, w, s, e)
+    STATUS enum (closed, locked, open, wall)
+
     Room class:
     door[4] doors, 0 = N, 1 = E, 2 = S, 3 = W
     point coordinates (correspond to index in Maze)
+    getDoors()
+        return Map<DIRECTION, STATUS)
 
     Door class:
-    int status, 0 = wall, 1 = closed, 2 = open, 3 = locked
+    char Status ('C' closed, 'O' open, 'L' locked, 'W' wall)
     Question question
+
+
 
      */
 
