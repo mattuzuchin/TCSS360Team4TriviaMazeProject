@@ -1,8 +1,6 @@
 package view;
 
-import model.Maze;
-import model.Player;
-import model.Room;
+import model.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -10,6 +8,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
@@ -27,8 +27,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private final int mySize;
 
-//    private final int myHeight;
-
     private Maze myMaze;
 
     private boolean myDebugFlag;
@@ -38,7 +36,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     public TriviaMazePanel(final int theSize) {
         super();
 
-        myMaze = new Maze();
+        myMaze = new Maze(theSize);
         myPlayer = new Player();
         mySize = theSize;
 
@@ -67,7 +65,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
             for (int x = 0; x < mySize; x++) {
                 final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-                final Room room = myMaze.getRooms[y][x];
+                final Room room = myMaze.getRoom(x, y);
 
                 theGraphics.setPaint(Color.DARK_GRAY);
                 theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
@@ -79,32 +77,32 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     }
 
     private void drawDoors(final Graphics2D theGraphics, final Room theRoom, final int theX, final int theY) {
-        final Map<Direction, Status> doors = theRoom.getDoors();
+        final Map<Direction, Door> doors = theRoom.getDoors();
 
-        int width;
-        int height;
+        int width = 0;
+        int height = 0;
 
-        for (Direction d : doors) {
+        for (Direction d : doors.keySet()) {
             int newX = theX;
             int newY = theY;
 
             switch (d) {
-                case N:
+                case Direction.NORTH:
                     newY -= DOOR_SIZE;
                     width = ROOM_SIZE;
                     height = DOOR_SIZE;
                     break;
-                case E:
+                case Direction.EAST:
                     newX += ROOM_SIZE;
                     width = DOOR_SIZE;
                     height = ROOM_SIZE;
                     break;
-                case S:
+                case Direction.SOUTH:
                     newY += ROOM_SIZE;
                     width = ROOM_SIZE;
                     height = DOOR_SIZE;
                     break;
-                case W:
+                case Direction.WEST:
                     newX -= DOOR_SIZE;
                     width = DOOR_SIZE;
                     height = ROOM_SIZE;
@@ -112,61 +110,23 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                 default:
             }
 
-            switch (doors.getValue(d)) {
-                case C:
+            switch (doors.get(d).getStatus) {
+                case CLOSED:
                     theGraphics.setPaint(Color.DARK_GRAY);
                     theGraphics.fillRect(newX, newY, width, height);
                     break;
-                case O:
+                case OPEN:
                     theGraphics.setPaint(Color.LIGHT_GRAY);
                     theGraphics.fillRect(newX, newY, width, height);
                     break;
-                case L:
+                case LOCKED:
                     theGraphics.setPaint(Color.BLACK);
                     theGraphics.fillRect(newX, newY, width, height);
                     break;
-                default:
+                default: // Wall, not painted
             }
         }
-
-//        if (theRoom.getNorth != null) {
-//            if (doorStatus = )
-//            theGraphics.setPaint(Color.WHITE);
-//            theGraphics.fillRect(theX, theY, ROOM_SIZE, DOOR_SIZE);
-//        }
-//        if (theRoom.getEast != null) {
-//            theGraphics.setPaint(Color.WHITE);
-//            theGraphics.fillRect(theX + ROOM_SIZE + DOOR_SIZE, theY, DOOR_SIZE, ROOM_SIZE);
-//        }
-//        if (theRoom.getSouth != null) {
-//            theGraphics.setPaint(Color.WHITE);
-//            theGraphics.fillRect(theX, theY + ROOM_SIZE + DOOR_SIZE, ROOM_SIZE, DOOR_SIZE);
-//        }
-//        if (theRoom.getWest != null) {
-//            theGraphics.setPaint(Color.WHITE);
-//            theGraphics.fillRect(theX, theY, DOOR_SIZE, ROOM_SIZE);
-//        }
-
     }
-
-    /*
-
-    DIRECTION enum (n, w, s, e)
-    STATUS enum (closed, locked, open, wall)
-
-    Room class:
-    door[4] doors, 0 = N, 1 = E, 2 = S, 3 = W
-    point coordinates (correspond to index in Maze)
-    getDoors()
-        return Map<DIRECTION, STATUS)
-
-    Door class:
-    char Status ('C' closed, 'O' open, 'L' locked, 'W' wall)
-    Question question
-
-
-
-     */
 
 
     private void drawDebugInfo(final Graphics2D theGraphics, final int theX, final int theY) {
@@ -174,9 +134,9 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
             final Paint oldPaint = theGraphics.getPaint();
             theGraphics.setPaint(Color.BLACK);
 
-            final int leftx = theX * ROOM_SIZE;
-            final int topy = theY * ROOM_SIZE;
-            theGraphics.drawString("(" + theX + ", " + theY + ")", leftx, topy + DEBUG_OFFSET);
+            final int leftX = theX * ROOM_SIZE;
+            final int topY = theY * ROOM_SIZE;
+            theGraphics.drawString("(" + theX + ", " + theY + ")", leftX, topY+ DEBUG_OFFSET);
             theGraphics.setPaint(oldPaint);
         }
     }
