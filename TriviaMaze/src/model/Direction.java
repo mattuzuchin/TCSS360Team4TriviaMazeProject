@@ -5,23 +5,32 @@ public enum Direction {
     /**
      * North (which is up on the screen).
      */
-    NORTH,
+    NORTH("Up"),
 
     /**
      * West (which is left on the screen).
      */
-    WEST,
+    WEST("Left"),
 
     /**
      * South (which is down on the screen).
      */
-    SOUTH,
+    SOUTH("Down"),
 
     /**
      * East (which is right on the screen).
      */
-    EAST;
+    EAST("Right");
 
+    private final String myDirection;
+
+    Direction(final String theDirection) {
+        myDirection = theDirection;
+    }
+
+    public String getDirection() {
+        return myDirection;
+    }
     /**
      * Returns the change in x-coordinate by moving one space in this direction
      * (for example, WEST would be -1, and NORTH would be 0).

@@ -2,8 +2,10 @@ package view;
 
 import controller.PropertyChangeEnabledTriviaMazeControls;
 import controller.TriviaMaze;
+import model.Direction;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,8 +56,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         super(TITLE);
         // initialize instance fields
 
-        initGUI();
+
         myTriviaMaze = new TriviaMaze();
+        initGUI();
+        createMenuBar();
 
         setVisible(true);
     }
@@ -94,6 +98,38 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
                 SCREEN_SIZE.height / 2 - getHeight() / 2);
     }
 
+    private JComponent createNorthPanel() {
+
+    }
+
+    private JComponent createSouthPanel() {
+        // Movement buttons
+        final JComponent south = new JPanel();
+        south.setLayout(new FlowLayout());
+        for (final Direction d : Direction.values()) {
+            BasicArrowButton ab = null;
+            switch (d) {
+                case NORTH:
+                    ab = new BasicArrowButton(BasicArrowButton.NORTH);
+                    break;
+                case SOUTH:
+                    ab = new BasicArrowButton(BasicArrowButton.SOUTH);
+                    break;
+                case EAST:
+                    ab = new BasicArrowButton(BasicArrowButton.EAST);
+                    break;
+                case WEST:
+                    ab = new BasicArrowButton(BasicArrowButton.WEST);
+                    break;
+                default:
+            }
+            ab.addActionListener(theEvent -> firePropertyChange("MOVE", null, d));
+            south.add(ab);
+        }
+        south.setBorder(border);
+        return south;
+    }
+
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
 
@@ -107,12 +143,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
         final JMenu helpMenu = new JMenu("Help");
         gameMenu.setMnemonic(KeyEvent.VK_H);
+
         final JMenuItem rules = new JMenuItem("Rules");
         rules.setMnemonic(KeyEvent.VK_R);
-        rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "No gods, no masters!"));
+        rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "No gods, no masters!",
+                                                                           "Rules", JOptionPane.PLAIN_MESSAGE));
         final JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
-        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01"));
+        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01",
+                                                                            "About", JOptionPane.PLAIN_MESSAGE));
         helpMenu.add(about);
         helpMenu.add(rules);
         menuBar.add(helpMenu);
@@ -136,5 +175,22 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     public void actionPerformed(final ActionEvent theEvent) {
         final Object source = theEvent.getSource();
 
+    }
+
+    private static final class MoveAction extends AbstractAction {
+        private final Direction myDirection;
+        MoveAction(final Direction theDirection, Direction myDirection) {
+            super();
+            this.myDirection = myDirection;
+        }
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param theEvent the event to be processed
+         */
+        @Override
+        public void actionPerformed(final ActionEvent theEvent) {
+
+        }
     }
 }
