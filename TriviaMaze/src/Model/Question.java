@@ -12,14 +12,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Question {
-    private static ArrayList<String> printedQuestions;
-    public static void main(String[] args) throws FileNotFoundException {
-
-        assignQuestion(); //just for testing
-
+    private ArrayList<String> myPrintedQuestions;
+    public Question() {
+        myPrintedQuestions = new ArrayList<>();
     }
-
-    public static void assignQuestion() throws FileNotFoundException {
+    public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
 
         //establish connection (creates db file if it does not exist :-)
@@ -30,10 +27,6 @@ public class Question {
             e.printStackTrace();
             System.exit(0);
         }
-
-        System.out.println( "Opened database successfully" );
-
-
         //now create a table
         String query =
                 "CREATE TABLE IF NOT EXISTS questions ( " +
@@ -71,7 +64,6 @@ public class Question {
         }
 
         query = "SELECT DISTINCT * FROM questions";
-        printedQuestions = new ArrayList<>(); // Store unique questions
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement();) {
@@ -81,18 +73,22 @@ public class Question {
             // Walk through each row of results and print unique questions
             while (rs.next()) {
                 String question = rs.getString(1);
-                    String optionA = rs.getString(2);
-                    String optionB = rs.getString(3);
-                    String optionC = rs.getString(4);
-                    String optionD = rs.getString(5);
-                    String answer = rs.getString(6);
-                    String addArray = question + ", " + optionA + ", " + optionB + ", " + optionC + ", " + optionD + ", " +
+                String optionA = rs.getString(2);
+                String optionB = rs.getString(3);
+                String optionC = rs.getString(4);
+                String optionD = rs.getString(5);
+                String answer = rs.getString(6);
+                String addArray = question + ", " + optionA + ", " + optionB + ", " + optionC + ", " + optionD + ", " +
                         answer;
-                    printedQuestions.add(addArray); // Add question to the set
+                myPrintedQuestions.add(addArray); // Add question to the set
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(0);
         }
+    }
+
+    public ArrayList<String> getArray() {
+        return myPrintedQuestions;
     }
 }
