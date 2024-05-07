@@ -11,15 +11,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// Singleton!
 public class Question {
+
+    private static Question uniqueInstance;
     private ArrayList<String> myPrintedQuestions;
-    public Question() {
-        myPrintedQuestions = new ArrayList<>();
+
+    private Question() {}
+
+    public static Question getInstance() {
+        if(uniqueInstance == null) {
+            uniqueInstance = new Question();
+        }
+        return uniqueInstance;
     }
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
-
-        //establish connection (creates db file if it does not exist :-)
+        myPrintedQuestions = new ArrayList<String>();
         try {
             ds = new SQLiteDataSource();
             ds.setUrl("jdbc:sqlite:questions.sqlite");
@@ -27,7 +35,6 @@ public class Question {
             e.printStackTrace();
             System.exit(0);
         }
-        //now create a table
         String query =
                 "CREATE TABLE IF NOT EXISTS questions ( " +
                         "QUESTION TEXT NOT NULL, " +
@@ -39,15 +46,11 @@ public class Question {
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement(); ) {
-            int rv = stmt.executeUpdate( query );
-
-            System.out.println( "executeUpdate() returned " + rv );
+             int rv = stmt.executeUpdate( query );
         } catch ( SQLException e ) {
             e.printStackTrace();
             System.exit( 0 );
         }
-        System.out.println( "Created questions table successfully" );
-        // Plan to have a WIDE RANGE of questions :)
         Scanner in = new Scanner(new File("Questions.txt"));
         String queries = "";
         while(in.hasNext()) {
