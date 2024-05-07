@@ -6,36 +6,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Room {
+    private Door myDoor;
+    private int myRow;
+    private int myColumn;
 
-    private final Point myCoordinates;
-
-    private final Map<Direction, Door> myDoors;
-
-    private final int mySize;
-
-    public Room(final Point theCoordinates, final int theSize) {
-        myCoordinates = theCoordinates;
-        myDoors = new HashMap<>();
-        mySize = theSize;
-        setDoors();
+    public Room(final int theRow, final int theColumn) {
+        myRow = theRow;
+        myColumn = theColumn;
     }
-
-    private void setDoors() {
-        if (myCoordinates.getY() != 0) {
-            myDoors.put(Direction.NORTH, new Door());
+    public void setRow(final int theRow) {
+        if(theRow < 0) {
+            throw new IllegalArgumentException("row cannot be negative: " + theRow);
         }
-        if (myCoordinates.getX() != 0) {
-            myDoors.put(Direction.WEST, new Door());
-        }
-        if (myCoordinates.getY() != mySize) {
-            myDoors.put(Direction.SOUTH, new Door());
-        }
-        if (myCoordinates.getX() != mySize) {
-            myDoors.put(Direction.EAST, new Door());
-        }
+        myRow = theRow;
     }
-
-    public Map<Direction, Door> getDoors() {
-        return myDoors;
+    public void setColumn(final int theColumn) {
+        if(theColumn < 0) {
+            throw new IllegalArgumentException("column cannot be negative: " + theColumn);
+        }
+        myRow = theColumn;
+    }
+    public int getRow() {
+        return myRow;
+    }
+    public int getColumn() {
+        return myColumn;
+    }
+    public Door getDoor() {
+        return myDoor;
     }
 }

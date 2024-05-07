@@ -10,15 +10,16 @@ public interface PropertyChangeEnabledTriviaMazeControls extends TriviaMazeContr
     String PROPERTY_START = "start";
 
     String PROPERTY_GRID = "the maze grid";
+    String PROPERTY_PLAYER = "player";
 
 
-    void addPropertyChangeListener(PropertyChangeListener theListener);
+    void addPropertyChangeListener(final PropertyChangeListener theListener);
 
-    void addPropertyChangeListener(String thePropertyName, PropertyChangeListener theListener);
+    void addPropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener);
 
-    void removePropertyChangeListener(PropertyChangeListener theListener);
+    void removePropertyChangeListener(final PropertyChangeListener theListener);
 
-    void removePropertyChangeListener(String thePropertyName,
-                                      PropertyChangeListener theListener);
+    void removePropertyChangeListener(final String thePropertyName,
+                                      final PropertyChangeListener theListener);
 }
 

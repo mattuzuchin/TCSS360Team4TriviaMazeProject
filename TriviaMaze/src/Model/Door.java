@@ -11,19 +11,22 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Door {
-    boolean myOpenStatus;
-    boolean myLockedStatus;
-    Question myQuestion;
+    private String myStatus;
+    private boolean myOpenStatus;
+    private boolean myLockedStatus;
+    private Question myQuestion;
 
     Door() {
+        myOpenStatus = false;
+        myLockedStatus = false;
+        myQuestion = Question.getInstance();
 
     }
-
-    public void setOpenStatus(boolean theOpenStatus) {
-        this.myOpenStatus  = theOpenStatus;
+    public void setOpenStatus(final boolean theOpenStatus) {
+        myOpenStatus  = theOpenStatus;
     }
-    public void setLockedStatus(boolean theLockedStatus) {
-        this.myLockedStatus  = theLockedStatus;
+    public void setLockedStatus(final boolean theLockedStatus) {
+        myLockedStatus  = theLockedStatus;
     }
     public boolean isLocked() {
         return myLockedStatus;
@@ -31,8 +34,14 @@ public class Door {
     public boolean isOpen() {
         return myOpenStatus;
     }
+    public Question getQuestion() {
+        return myQuestion;
+    }
+    public void assignQuestion() {
+        myQuestion.generateQuestion();
+    }
 
-    public boolean getStatus() {
-        return myOpenStatus;
+    public String setStatus() {
+        return myStatus;
     }
 }

@@ -21,6 +21,7 @@ public enum Direction {
         myLetter = theLetter;
     }
 
+
     public static Direction valueOf(final char theLetter) {
         Direction result = null;
 

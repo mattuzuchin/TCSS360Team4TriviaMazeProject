@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 // Singleton!
@@ -72,8 +73,6 @@ public class Question {
              Statement stmt = conn.createStatement();) {
 
             ResultSet rs = stmt.executeQuery(query);
-
-            // Walk through each row of results and print unique questions
             while (rs.next()) {
                 String question = rs.getString(1);
                 String optionA = rs.getString(2);
@@ -90,7 +89,11 @@ public class Question {
             System.exit(0);
         }
     }
-
+    public String generateQuestion() {
+        Random randomQ = new Random();
+        int choice = randomQ.nextInt(myPrintedQuestions.size() - 1);
+        return myPrintedQuestions.get(choice);
+    }
     public ArrayList<String> getArray() {
         return myPrintedQuestions;
     }
