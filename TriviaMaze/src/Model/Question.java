@@ -19,7 +19,7 @@ public class Question {
 
     private Question() {}
 
-    public static Question getInstance() {
+    public static synchronized Question getInstance() {
         if(uniqueInstance == null) {
             uniqueInstance = new Question();
         }
