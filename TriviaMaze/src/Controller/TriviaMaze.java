@@ -25,7 +25,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
 
     public TriviaMaze(final List<Question> theQuestionsList) {
         myQuestionsList = new ArrayList<String>();
-       // myPcs = new PropertyChangeSupport(this);
+        myPcs = new PropertyChangeSupport(this);
         myPlayer = new Player();
     }
 
