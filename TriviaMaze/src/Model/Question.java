@@ -4,11 +4,9 @@ import org.sqlite.SQLiteDataSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -16,7 +14,8 @@ import java.util.Scanner;
 public class Question {
 
     private static Question uniqueInstance;
-    private ArrayList<String> myPrintedQuestions;
+    private ArrayList<Map<String, ArrayList<String>>> myPrintedQuestions;
+    private Map<String, ArrayList<String>> myQuestions;
 
 
     private Question() {
@@ -30,7 +29,7 @@ public class Question {
     }
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
-        myPrintedQuestions = new ArrayList<String>();
+        myPrintedQuestions = new ArrayList<Map<String,ArrayList<String>>>();
         try {
             ds = new SQLiteDataSource();
             ds.setUrl("jdbc:sqlite:questions.sqlite");
@@ -82,22 +81,29 @@ public class Question {
                 String optionC = rs.getString(4);
                 String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                String addList = question + ", " + optionA + ", " + optionB + ", " + optionC
-                        + ", " + optionD + ", " + answer;
-                myPrintedQuestions.add(addList); // Add question to the set
+                ArrayList<String> putIt = new ArrayList<>();
+                putIt.add(optionA);
+                putIt.add(optionB);
+                putIt.add(optionC);
+                putIt.add(optionD);
+
+                myQuestions.put(question, putIt);
+
+                myPrintedQuestions.add(myQuestions);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(0);
         }
     }
-    public String generateQuestion() {
+    public Map<String, ArrayList<String>> generateQuestion() {
         Random randomQ = new Random();
         int choice = randomQ.nextInt(myPrintedQuestions.size());
         return myPrintedQuestions.get(choice);
     }
 
-    public ArrayList<String> getArray() {
+    public ArrayList<Map<String,ArrayList<String>>> getArray() {
         return myPrintedQuestions;
     }
 }
