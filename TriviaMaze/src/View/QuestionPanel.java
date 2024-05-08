@@ -1,5 +1,6 @@
 package View;
 
+import Model.Door;
 import Model.Question;
 
 import javax.swing.*;
@@ -19,11 +20,12 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     private ButtonGroup myAnswerButtons;
 
-    private Question myQuestion;
+    private Door myDoor;
 
     public QuestionPanel() {
         super();
         myQuestionBody = new JLabel();
+        myQuestionBody.setVisible(true);
         myAnswerButtons = new ButtonGroup();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setComponents();

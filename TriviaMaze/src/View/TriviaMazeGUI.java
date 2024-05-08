@@ -56,7 +56,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     public TriviaMazeGUI() {
         super(TITLE);
         initGUI();
-        //myTriviaMaze = new TriviaMaze();
+        myTriviaMaze = new TriviaMaze();
         setVisible(true);
     }
 
@@ -85,6 +85,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         pack();
         setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
                 SCREEN_SIZE.height / 2 - getHeight() / 2);
+        masterPanel.setVisible(true);
+        mazePanel.setVisible(true);
+        southPanel.setVisible(true);
+        northPanel.setVisible(true);
     }
 
     private JMenuBar createMenuBar() {
@@ -110,7 +114,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         helpMenu.add(about);
         helpMenu.add(rules);
         menuBar.add(helpMenu);
-
+        menuBar.setVisible(true);
+        helpMenu.setVisible(true);
         return menuBar;
 
     }
@@ -118,6 +123,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     private JButton makeButton(final String theText) {
         final JButton button = new JButton(theText);
         button.addActionListener(this);
+        button.setVisible(true);
         return button;
     }
 

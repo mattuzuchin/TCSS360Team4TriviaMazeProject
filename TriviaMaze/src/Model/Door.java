@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Door {
+    private Door myDoor;
     private String myStatus;
     private boolean myOpenStatus;
     private boolean myLockedStatus;
@@ -20,7 +21,7 @@ public class Door {
         myOpenStatus = false;
         myLockedStatus = false;
         myQuestion = Question.getInstance();
-
+        myDoor = this;
     }
     public void setOpenStatus(final boolean theOpenStatus) {
         myOpenStatus  = theOpenStatus;
@@ -36,6 +37,9 @@ public class Door {
     }
     public Question getQuestion() {
         return myQuestion;
+    }
+    public Door getDoorInstance() {
+        return myDoor;
     }
     public void assignQuestion() {
         myQuestion.generateQuestion();
