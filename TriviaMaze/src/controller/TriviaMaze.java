@@ -2,18 +2,30 @@ package controller;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     private int myRow;
     private int myColumns;
-    private final PropertyChangeSupport myPcs;
-    private List<Question> myQuestionsList;
+    private PropertyChangeSupport myPcs = new PropertyChangeSupport(this);
+    private List<String> myQuestionsList;
+    private Player myPlayer;
+    private Door myDoor;
+    private Maze myMaze;
 
 
     public TriviaMaze(final List<Question> theQuestionsList) {
-        myQuestionsList = new ArrayList<Question>(theQuestionsList);
-        myPcs = new PropertyChangeSupport(this);
+        myQuestionsList = new ArrayList<String>();
+        // myPcs = new PropertyChangeSupport(this);
+        myPlayer = new Player();
+    }
+
+    public TriviaMaze() {
+        myRow =  0;
+        myColumns = 0;
+
     }
 
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
@@ -30,6 +42,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     }
 
 
+
     public void removePropertyChangeListener(final String thePropertyName,
                                              final PropertyChangeListener theListener) {
 
@@ -37,10 +50,16 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     }
 
     public void setX(final int theX) {
+        if(theX < 0) {
+            throw new IllegalArgumentException("Values cannot be negative. You put: " + theX);
+        }
         myRow = theX;
     }
 
     public void setY(final int theY) {
+        if(theY < 0) {
+            throw new IllegalArgumentException("Values cannot be negative. You put: " + theY);
+        }
         myColumns = theY;
     }
 
@@ -49,21 +68,9 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     }
 
     public void reset() {
-        //should change, however, as of now this is the state
         myRow = 0;
         myColumns = 0;
     }
-
-    @Override
-    public int getHeight() {
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        return 0;
-    }
-
     public void advanceNorth() {
         myRow--; // row goes up
     }
@@ -77,20 +84,18 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
         myColumns--; //go left
     }
     public void lockDoor() {
-
+        myDoor.setLockedStatus(true);
     }
     public void end() {
         //game ends
-        if(myColumns && myRow == /* something */) {
+        if(myColumns == 1) {
             end();
         }
     }
 
-    @Override
-    public void start() {
-
+    private boolean isValidIndex(final int theX, final int theY) {
+        return theY < 0 && theX < 0;
     }
-
     public int getRow() {
         return myRow;
     }
@@ -98,5 +103,34 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
 
     public int getCol() {
         return myColumns;
+    }
+
+    @Override
+    public void start() {
+        reset();
+    }
+
+    public void resetPlayer() {
+        myPlayer.setColumn(0);
+        myPlayer.setRow(0);
+    }
+    @Override
+    public int getHeight() {
+
+        return 0;
+    }
+
+    @Override
+    public int getWidth() {
+
+        return 0;
+    }
+
+    private void fireGridChange() {
+        myPcs.firePropertyChange(PROPERTY_GRID, null, myMaze.getMyRooms().clone());
+    }
+
+    private void firePlayerChange() {
+        myPcs.firePropertyChange(PROPERTY_PLAYER, null, new Player());
     }
 }

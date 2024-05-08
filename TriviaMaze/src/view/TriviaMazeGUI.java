@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
@@ -29,24 +31,27 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
 
     /**
-     * The Start command.
+     * The New Game command.
      */
-    private static final String START_COMMAND = "Start";
+    private static final String NEW_GAME_COMMAND = "New Game";
+    private static final String SAVE_COMMAND = "Save Game";
+    private static final String LOAD_COMMAND = "Load Game";
+    private static final String QUIT_COMMAND = "Quit";
+    private static final String RULES_COMMAND = "Rules";
+    private static final String ABOUT_COMMAND = "About";
+    private static final String SAVE_POPUP_MESSAGE = "Would you like to save before ending the game?";
+    private static final String POPUP_TITLE = "Unsaved Game!";
 
-    /**
-     * The Stop command.
-     */
-    private static final String STOP_COMMAND = "Stop";
+    private static final ArrayList<BasicArrowButton> MOVE_BUTTONS = new ArrayList<>();
 
-    /**
-     * The Reset command.
-     */
-    private static final String RESET_COMMAND = "Reset";
 
     /**
      * The logic for the simulation.
      */
     private final PropertyChangeEnabledTriviaMazeControls myTriviaMaze;
+
+    private final Container myMainPanel;
+    private final Container myTitlePanel;
 
     /**
      * Constructs a new RoadRageGUI, using the files in the current working
@@ -56,54 +61,50 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         super(TITLE);
         // initialize instance fields
 
-
         myTriviaMaze = new TriviaMaze();
-        initGUI();
+        myMainPanel = new JPanel(new BorderLayout());
+        myTitlePanel = new JPanel(new BorderLayout());
+        createTitleScreen();
+        createMainPanel();
         createMenuBar();
-
+        setContentPane(myTitlePanel);
+//        setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
+//                SCREEN_SIZE.height / 2 - getHeight() / 2);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
         setVisible(true);
     }
 
-    private void initGUI() {
-        final TriviaMazePanel mazePanel = new TriviaMazePanel(4);
+    private void createTitleScreen() {
+        myTitlePanel.add(makeButton(NEW_GAME_COMMAND), BorderLayout.WEST);
+        myTitlePanel.add(makeButton(LOAD_COMMAND), BorderLayout.EAST);
+        pack();
+    }
+
+    private void createMainPanel() {
+        final TriviaMazePanel mazePanel = new TriviaMazePanel();
         final QuestionPanel qPanel = new QuestionPanel();
         myTriviaMaze.addPropertyChangeListener(mazePanel);
         myTriviaMaze.addPropertyChangeListener(qPanel);
-
-        // TO DO:
-        /*
-        Menu
-        Keyboard shortcuts
-        Control buttons
-        Debug check
-         */
 
         final JCheckBox debugBox = new JCheckBox("Debug");
         debugBox.addChangeListener(mazePanel);
         debugBox.addChangeListener(qPanel);
 
-        final Container northPanel = new JPanel(new FlowLayout());
+        final Container movePanel = createMovePanel();
 
-        final Container southPanel = new JPanel(new FlowLayout());
+        myMainPanel.add(mazePanel, BorderLayout.WEST);
+        myMainPanel.add(qPanel, BorderLayout.EAST);
+        myMainPanel.add(movePanel, BorderLayout.SOUTH);
 
-        final Container masterPanel = new JPanel(new BorderLayout());
-        masterPanel.add(mazePanel, BorderLayout.WEST);
-        masterPanel.add(qPanel, BorderLayout.EAST);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        add(masterPanel);
         pack();
-        setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
-                SCREEN_SIZE.height / 2 - getHeight() / 2);
     }
 
-    private JComponent createNorthPanel() {
+    // Arrow buttons for movement
+    private JComponent createMovePanel() {
 
-    }
-
-    private JComponent createSouthPanel() {
-        // Movement buttons
+        // TODO: fetch player position and disable direction buttons as needed
         final JComponent south = new JPanel();
         south.setLayout(new FlowLayout());
         for (final Direction d : Direction.values()) {
@@ -111,22 +112,27 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
             switch (d) {
                 case NORTH:
                     ab = new BasicArrowButton(BasicArrowButton.NORTH);
+                    ab.setMnemonic(KeyEvent.VK_UP);
                     break;
                 case SOUTH:
                     ab = new BasicArrowButton(BasicArrowButton.SOUTH);
+                    ab.setMnemonic(KeyEvent.VK_DOWN);
                     break;
                 case EAST:
                     ab = new BasicArrowButton(BasicArrowButton.EAST);
+                    ab.setMnemonic(KeyEvent.VK_RIGHT);
                     break;
                 case WEST:
                     ab = new BasicArrowButton(BasicArrowButton.WEST);
+                    ab.setMnemonic(KeyEvent.VK_LEFT);
                     break;
                 default:
             }
+            ab.setToolTipText("Move " + d.getDirection());
             ab.addActionListener(theEvent -> firePropertyChange("MOVE", null, d));
+            MOVE_BUTTONS.add(ab);
             south.add(ab);
         }
-        south.setBorder(border);
         return south;
     }
 
@@ -135,35 +141,45 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
         final JMenu gameMenu = new JMenu("Game");
         gameMenu.setMnemonic(KeyEvent.VK_G);
-        for (final Action action : myActionList) {
-            final JMenuItem menuButton = new JMenuItem(action);
-            gameMenu.add(menuButton);
-        }
+        gameMenu.add(makeButton(NEW_GAME_COMMAND));
+        gameMenu.add(makeButton(SAVE_COMMAND));
+        gameMenu.add(makeButton(LOAD_COMMAND));
+        gameMenu.add(makeButton(QUIT_COMMAND));
         menuBar.add(gameMenu);
 
         final JMenu helpMenu = new JMenu("Help");
-        gameMenu.setMnemonic(KeyEvent.VK_H);
-
-        final JMenuItem rules = new JMenuItem("Rules");
-        rules.setMnemonic(KeyEvent.VK_R);
-        rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "No gods, no masters!",
-                                                                           "Rules", JOptionPane.PLAIN_MESSAGE));
-        final JMenuItem about = new JMenuItem("About");
-        about.setMnemonic(KeyEvent.VK_A);
-        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01",
-                                                                            "About", JOptionPane.PLAIN_MESSAGE));
-        helpMenu.add(about);
-        helpMenu.add(rules);
+        helpMenu.setMnemonic(KeyEvent.VK_H);
+        helpMenu.add(makeButton(RULES_COMMAND));
+        helpMenu.add(makeButton(ABOUT_COMMAND));
         menuBar.add(helpMenu);
 
         return menuBar;
 
     }
 
-    private JButton makeButton(final String theText) {
-        final JButton button = new JButton(theText);
-        button.addActionListener(this);
-        return button;
+    private AbstractButton makeButton(final String theText) {
+        final AbstractButton item = new AbstractButton() {
+        };
+        final char mnemonic = theText.charAt(0);
+        item.setMnemonic(mnemonic);
+        item.addActionListener(this);
+        return item;
+    }
+
+    private boolean displaySavePopup() {
+        final int input = JOptionPane.showConfirmDialog(null,
+                SAVE_POPUP_MESSAGE, POPUP_TITLE,
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+
+        if (input == JOptionPane.CANCEL_OPTION) {
+            return false;
+        }
+        else {
+            if (input == JOptionPane.YES_OPTION) {
+                // save command
+            }
+            return true;
+        }
     }
 
     /**
@@ -173,24 +189,43 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent theEvent) {
-        final Object source = theEvent.getSource();
-
+        final String command = theEvent.getActionCommand().intern();
+        switch (command) {
+            case NEW_GAME_COMMAND:
+                if (getContentPane().equals(myMainPanel)) {
+                    if (displaySavePopup()) {
+                        myTriviaMaze.reset();
+                    }
+                }
+                else {
+                    setContentPane(myMainPanel);
+                    myTriviaMaze.start();
+                }
+                break;
+            case SAVE_COMMAND:
+                // save command
+                break;
+            case LOAD_COMMAND:
+                if (displaySavePopup()) {
+                    setContentPane(myMainPanel);
+                    // load command
+                }
+                break;
+            case QUIT_COMMAND:
+                if (displaySavePopup()) {
+                    dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                }
+                break;
+            case RULES_COMMAND:
+                JOptionPane.showMessageDialog(null, "Rules go here!",
+                        "Rules", JOptionPane.PLAIN_MESSAGE);
+                break;
+            case ABOUT_COMMAND:
+                JOptionPane.showMessageDialog(null, "Trivia Maze V0.01",
+                        "About", JOptionPane.PLAIN_MESSAGE);
+                break;
+            default:
+        }
     }
 
-    private static final class MoveAction extends AbstractAction {
-        private final Direction myDirection;
-        MoveAction(final Direction theDirection, Direction myDirection) {
-            super();
-            this.myDirection = myDirection;
-        }
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param theEvent the event to be processed
-         */
-        @Override
-        public void actionPerformed(final ActionEvent theEvent) {
-
-        }
-    }
 }

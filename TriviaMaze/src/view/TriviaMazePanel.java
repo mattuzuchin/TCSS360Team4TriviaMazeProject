@@ -33,15 +33,14 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private Player myPlayer;
 
-    public TriviaMazePanel(final int theSize) {
+    public TriviaMazePanel() {
         super();
+        mySize = 4;
+        myMaze = new Maze(mySize);
+//        myPlayer = new Player();
 
-        myMaze = new Maze(theSize);
-        myPlayer = new Player();
-        mySize = theSize;
-
-        setPreferredSize(new Dimension((theSize * ROOM_SIZE) + ((theSize + 1) * DOOR_SIZE),
-                (theSize * ROOM_SIZE) + ((theSize + 1) * DOOR_SIZE)));
+        setPreferredSize(new Dimension((mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE),
+                (mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE)));
         setBackground(Color.BLACK);
         // draw door corner square
         setFont(FONT);
@@ -150,11 +149,11 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
         switch (theEvent.getPropertyName()) {
-            case PROP_MAZE:
+            case PROPERTY_MAZE:
                 myMaze = (Maze) theEvent.getNewValue();
                 repaint();
                 break;
-            case PROP_PLAYER:
+            case PROPERTY_PLAYER:
                 myPlayer = (Player) theEvent.getNewValue();
                 repaint();
                 break;
