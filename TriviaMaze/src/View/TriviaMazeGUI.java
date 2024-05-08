@@ -3,6 +3,7 @@ package View;
 
 import Controller.PropertyChangeEnabledTriviaMazeControls;
 import Controller.TriviaMaze;
+import Model.Question;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +50,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
      */
     private PropertyChangeEnabledTriviaMazeControls myTriviaMaze = new TriviaMaze();
 
+
+
+
     /**
      * Constructs a new RoadRageGUI, using the files in the current working
      * directory.
@@ -65,8 +69,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         final QuestionPanel qPanel = new QuestionPanel();
         myTriviaMaze.addPropertyChangeListener(mazePanel);
         myTriviaMaze.addPropertyChangeListener(qPanel);
-
-
         final JCheckBox debugBox = new JCheckBox("Debug");
         debugBox.addChangeListener(mazePanel);
         debugBox.addChangeListener(qPanel);
@@ -79,16 +81,13 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         masterPanel.add(mazePanel, BorderLayout.WEST);
         masterPanel.add(qPanel, BorderLayout.EAST);
 
+        setJMenuBar(createMenuBar());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         add(masterPanel);
         pack();
         setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2,
                 SCREEN_SIZE.height / 2 - getHeight() / 2);
-        masterPanel.setVisible(true);
-        mazePanel.setVisible(true);
-        southPanel.setVisible(true);
-        northPanel.setVisible(true);
     }
 
     private JMenuBar createMenuBar() {
@@ -96,49 +95,64 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
 
         final JMenu gameMenu = new JMenu("Game");
         gameMenu.setMnemonic(KeyEvent.VK_G);
-        Iterable<? extends Action> myActionList = null;
-        for (final Action action : myActionList) {
-            final JMenuItem menuButton = new JMenuItem(action);
-            gameMenu.add(menuButton);
-        }
+
+        final JMenuItem startItem = new JMenuItem(START_COMMAND);
+        startItem.addActionListener(this);
+        gameMenu.add(startItem);
+
+        final JMenuItem stopItem = new JMenuItem(STOP_COMMAND);
+        stopItem.addActionListener(this);
+        gameMenu.add(stopItem);
+
+        final JMenuItem moveItem = new JMenuItem(MOVE_COMMAND);
+        moveItem.addActionListener(this);
+        gameMenu.add(moveItem);
+
+        final JMenuItem resetItem = new JMenuItem(RESET_COMMAND);
+        resetItem.addActionListener(this);
+        gameMenu.add(resetItem);
+
         menuBar.add(gameMenu);
 
         final JMenu helpMenu = new JMenu("Help");
-        gameMenu.setMnemonic(KeyEvent.VK_H);
+        helpMenu.setMnemonic(KeyEvent.VK_H);
+
         final JMenuItem rules = new JMenuItem("Rules");
         rules.setMnemonic(KeyEvent.VK_R);
         rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "No gods, no masters!"));
+        helpMenu.add(rules);
+
         final JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
         about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01"));
         helpMenu.add(about);
-        helpMenu.add(rules);
+
         menuBar.add(helpMenu);
-        menuBar.setVisible(true);
-        helpMenu.setVisible(true);
+
         return menuBar;
 
     }
 
-    private JButton makeButton(final String theText) {
-        final JButton button = new JButton(theText);
-        button.addActionListener(this);
-        button.setVisible(true);
-        return button;
-    }
 
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param theEvent the event to be processed
-     */
+
     @Override
     public void actionPerformed(final ActionEvent theEvent) {
-        final Object source = theEvent.getSource();
-        final String command = theEvent.getActionCommand().intern();
-        if(command.equals(START_COMMAND)) {
-            myTriviaMaze.start();
+        final String command = theEvent.getActionCommand();
+        switch (command) {
+            case START_COMMAND:
+                myTriviaMaze.start();
+                break;
+            case STOP_COMMAND:
+                myTriviaMaze.end();
+                break;
+            case MOVE_COMMAND:
+                //myTriviaMaze.??;
+                break;
+            case RESET_COMMAND:
+                myTriviaMaze.reset();
+                break;
+            default:
+                break;
         }
-
     }
 }

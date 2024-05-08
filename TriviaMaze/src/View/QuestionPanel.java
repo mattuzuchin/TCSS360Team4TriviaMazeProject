@@ -1,6 +1,5 @@
 package View;
 
-import Model.Door;
 import Model.Question;
 
 import javax.swing.*;
@@ -8,6 +7,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
@@ -16,25 +16,65 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private static final String ANSWER_C = "C) ";
     private static final String ANSWER_D = "D) ";
 
+
     private JLabel myQuestionBody;
 
     private ButtonGroup myAnswerButtons;
+    private JButton mySubmit;
 
-    private Door myDoor;
+    private JRadioButton myButtonA;
+    private JRadioButton myButtonB;
+    private JRadioButton myButtonC;
+    private JRadioButton myButtonD;
+
+    private int myCheckAnswer;
 
     public QuestionPanel() {
         super();
         myQuestionBody = new JLabel();
         myQuestionBody.setVisible(true);
         myAnswerButtons = new ButtonGroup();
+        mySubmit = new JButton("Submit");
+        mySubmit.setVisible(true);
+        mySubmit.setEnabled(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setComponents();
+        addListener();
     }
 
     private void setComponents() {
+        // Create the question label
+        int q  = Question.getInstance().generateQuestion();
+        JLabel questionLabel = new JLabel("Question: " + Question.getInstance().getQ(q));
+        add(questionLabel);
+        add(myQuestionBody);
+        myButtonA = new JRadioButton(Question.getInstance().getA(q));
+        myAnswerButtons.add(myButtonA);
 
+        myButtonB = new JRadioButton(Question.getInstance().getB(q));
+        myAnswerButtons.add(myButtonB);
+
+        myButtonC = new JRadioButton(Question.getInstance().getC(q));
+        myAnswerButtons.add(myButtonC);
+
+        myButtonD = new JRadioButton(Question.getInstance().getD(q));
+        myAnswerButtons.add(myButtonD);
+
+        add(myButtonA);
+        add(myButtonB);
+        add(myButtonC);
+        add(myButtonD);
+
+        add(mySubmit);
     }
 
+
+    public ButtonGroup getGroup() {
+        return myAnswerButtons;
+    }
+    public JButton getMySubmit() {
+        return mySubmit;
+    }
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
 
@@ -42,6 +82,58 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
-
     }
+    public String getSelectedAnswer() {
+        for (AbstractButton button : Collections.list(myAnswerButtons.getElements())) {
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return "";
+    }
+
+    public void addListener() {
+        mySubmit.addActionListener(theEvent -> {
+            myCheckAnswer = 1;
+            mySubmit.setEnabled(false);
+            myButtonA.setEnabled(false);
+            myButtonB.setEnabled(false);
+            myButtonC.setEnabled(false);
+            myButtonD.setEnabled(false);
+            int choice = Question.getInstance().getChoice();
+            String selectedAnswer = getSelectedAnswer();
+            if (selectedAnswer.equals(Question.getInstance().getAns(choice))) {
+                JOptionPane.showMessageDialog(this, "Correct!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Incorrect!");
+            }
+
+        });
+        myButtonA.addActionListener(theEvent -> {
+            if(myCheckAnswer == 0) {
+                mySubmit.setEnabled(true);
+
+            }
+        });
+        myButtonB.addActionListener(theEvent -> {
+            if(myCheckAnswer == 0) {
+                mySubmit.setEnabled(true);
+
+            }
+        });
+        myButtonC.addActionListener(theEvent -> {
+            if (myCheckAnswer == 0) {
+
+            mySubmit.setEnabled(true);
+
+            }
+        });
+        myButtonD.addActionListener(theEvent -> {
+            if (myCheckAnswer == 0) {
+                mySubmit.setEnabled(true);
+
+            }
+        });
+      }
+
 }

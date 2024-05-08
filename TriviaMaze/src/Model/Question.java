@@ -14,22 +14,39 @@ import java.util.Scanner;
 public class Question {
 
     private static Question uniqueInstance;
-    private ArrayList<Map<String, ArrayList<String>>> myPrintedQuestions;
+    private ArrayList<String> myPrintedQuestions;
+    private ArrayList<String> myArrayA;
+    private ArrayList<String> myArrayB;
+    private ArrayList<String> myArrayC;
+    private ArrayList<String> myArrayD;
+    private ArrayList<String> myArrayAnswer;
+
     private Map<String, ArrayList<String>> myQuestions;
 
+    private int myChoice;
 
-    private Question() {
+    private Question() throws FileNotFoundException {
+        assignQuestion();
     }
 
     public static synchronized Question getInstance() {
         if(uniqueInstance == null) {
-            uniqueInstance = new Question();
+            try {
+                uniqueInstance = new Question();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
         return uniqueInstance;
     }
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
-        myPrintedQuestions = new ArrayList<Map<String,ArrayList<String>>>();
+        myPrintedQuestions = new ArrayList<String>();
+        myArrayA = new ArrayList<String>();
+        myArrayB = new ArrayList<String>();
+        myArrayC = new ArrayList<String>();
+        myArrayD = new ArrayList<String>();
+        myArrayAnswer = new ArrayList<String>();
         try {
             ds = new SQLiteDataSource();
             ds.setUrl("jdbc:sqlite:questions.sqlite");
@@ -81,29 +98,43 @@ public class Question {
                 String optionC = rs.getString(4);
                 String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                ArrayList<String> putIt = new ArrayList<>();
-                putIt.add(optionA);
-                putIt.add(optionB);
-                putIt.add(optionC);
-                putIt.add(optionD);
-
-                myQuestions.put(question, putIt);
-
-                myPrintedQuestions.add(myQuestions);
-
+                myPrintedQuestions.add(question);
+                myArrayA.add(optionA);
+                myArrayB.add(optionB);
+                myArrayC.add(optionC);
+                myArrayD.add(optionD);
+                myArrayAnswer.add(answer);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(0);
         }
     }
-    public Map<String, ArrayList<String>> generateQuestion() {
+    public String getQ(final int theQ) {
+        return myPrintedQuestions.get(theQ);
+    }
+    public String getA(final int theA) {
+        return myArrayA.get(theA);
+    }
+    public String getB(final int theB) {
+        return myArrayB.get(theB);
+    }
+    public String getC(final int theC) {
+        return myArrayC.get(theC);
+    }
+    public String getD(final int theD) {
+        return myArrayD.get(theD);
+    }
+    public String getAns(final int theAns) {
+        return myArrayAnswer.get(theAns);
+    }
+    public int generateQuestion() {
         Random randomQ = new Random();
-        int choice = randomQ.nextInt(myPrintedQuestions.size());
-        return myPrintedQuestions.get(choice);
+        myChoice = randomQ.nextInt(myPrintedQuestions.size());
+        return myChoice;
     }
 
-    public ArrayList<Map<String,ArrayList<String>>> getArray() {
-        return myPrintedQuestions;
+    public int getChoice() {
+        return myChoice;
     }
 }

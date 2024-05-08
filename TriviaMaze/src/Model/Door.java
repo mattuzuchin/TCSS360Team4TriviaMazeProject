@@ -15,12 +15,11 @@ public class Door {
     private Map<String, ArrayList<String>> myChosenQ;
     private boolean myOpenStatus;
     private boolean myLockedStatus;
-    private Question myQuestion;
 
-    Door() {
+
+    public Door() {
         myOpenStatus = false;
         myLockedStatus = false;
-        myQuestion = Question.getInstance();
         myDoor = this;
     }
     public void setOpenStatus(final boolean theOpenStatus) {
@@ -35,14 +34,12 @@ public class Door {
     public boolean isOpen() {
         return myOpenStatus;
     }
-    public Question getQuestion() {
-        return myQuestion;
-    }
+
     public Door getDoorInstance() {
         return myDoor;
     }
     public void assignQuestion() {
-        myChosenQ = myQuestion.generateQuestion();
+        Question.getInstance().generateQuestion();
     }
 
     public String setStatus() {
