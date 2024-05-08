@@ -13,6 +13,8 @@ import java.util.Set;
 public class Door {
     private Door myDoor;
     private String myStatus;
+
+    private String myChosenQ;
     private boolean myOpenStatus;
     private boolean myLockedStatus;
     private Question myQuestion;
@@ -42,7 +44,7 @@ public class Door {
         return myDoor;
     }
     public void assignQuestion() {
-        myQuestion.generateQuestion();
+        myChosenQ = myQuestion.generateQuestion();
     }
 
     public String setStatus() {

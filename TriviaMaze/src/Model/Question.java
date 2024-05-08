@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-// Singleton!
+
 public class Question {
 
     private static Question uniqueInstance;
     private ArrayList<String> myPrintedQuestions;
 
-    private Question() {}
+
+    private Question() {
+    }
 
     public static synchronized Question getInstance() {
         if(uniqueInstance == null) {
@@ -80,9 +82,9 @@ public class Question {
                 String optionC = rs.getString(4);
                 String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                String addArray = question + ", " + optionA + ", " + optionB + ", " + optionC + ", " + optionD + ", " +
-                        answer;
-                myPrintedQuestions.add(addArray); // Add question to the set
+                String addList = question + ", " + optionA + ", " + optionB + ", " + optionC
+                        + ", " + optionD + ", " + answer;
+                myPrintedQuestions.add(addList); // Add question to the set
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,9 +93,10 @@ public class Question {
     }
     public String generateQuestion() {
         Random randomQ = new Random();
-        int choice = randomQ.nextInt(myPrintedQuestions.size() - 1);
+        int choice = randomQ.nextInt(myPrintedQuestions.size());
         return myPrintedQuestions.get(choice);
     }
+
     public ArrayList<String> getArray() {
         return myPrintedQuestions;
     }
