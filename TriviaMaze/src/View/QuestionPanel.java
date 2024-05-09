@@ -101,11 +101,12 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             myButtonC.setEnabled(false);
             myButtonD.setEnabled(false);
             int choice = Question.getInstance().getChoice();
+            String theAnswer = Question.getInstance().getAns(choice);
             String selectedAnswer = getSelectedAnswer();
-            if (selectedAnswer.equals(Question.getInstance().getAns(choice))) {
+            if (selectedAnswer.equals(theAnswer)) {
                 JOptionPane.showMessageDialog(this, "Correct!");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect!");
+                JOptionPane.showMessageDialog(this, "Incorrect, the answer was: " + theAnswer);
             }
 
         });
