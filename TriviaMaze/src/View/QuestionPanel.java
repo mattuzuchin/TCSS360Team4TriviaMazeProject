@@ -1,5 +1,6 @@
 package View;
 
+import Model.Maze;
 import Model.Question;
 
 import javax.swing.*;
@@ -8,6 +9,8 @@ import javax.swing.event.ChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
+
+import static Controller.PropertyChangeEnabledTriviaMazeControls.*;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
@@ -26,6 +29,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private JRadioButton myButtonB;
     private JRadioButton myButtonC;
     private JRadioButton myButtonD;
+    private Maze myMaze;
 
     private int myCheckAnswer;
 
@@ -77,7 +81,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     }
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-
+        switch (theEvent.getPropertyName()) {
+            case PROPERTY_PLAYER:
+        }
     }
 
     @Override
