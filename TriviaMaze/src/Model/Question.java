@@ -29,6 +29,7 @@ public class Question {
         assignQuestion();
     }
 
+    // singleton
     public static synchronized Question getInstance() {
         if(uniqueInstance == null) {
             try {
@@ -111,21 +112,39 @@ public class Question {
         }
     }
     public String getQ(final int theQ) {
+        if(theQ < 0 || theQ > myPrintedQuestions.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theQ);
+        }
         return myPrintedQuestions.get(theQ);
     }
     public String getA(final int theA) {
+        if(theA < 0 || theA > myArrayA.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theA);
+        }
         return myArrayA.get(theA);
     }
     public String getB(final int theB) {
+        if(theB < 0 || theB > myArrayB.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theB);
+        }
         return myArrayB.get(theB);
     }
     public String getC(final int theC) {
+        if(theC < 0 || theC > myArrayC.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theC);
+        }
         return myArrayC.get(theC);
     }
     public String getD(final int theD) {
+        if(theD < 0 || theD > myArrayD.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theD);
+        }
         return myArrayD.get(theD);
     }
     public String getAns(final int theAns) {
+        if(theAns < 0 || theAns > myArrayAnswer.size()) {
+            throw new IllegalArgumentException("Size is not valid: " + theAns);
+        }
         return myArrayAnswer.get(theAns);
     }
     public int generateQuestion() {
