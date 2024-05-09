@@ -2,6 +2,7 @@ package View;
 
 import Model.Maze;
 import Model.Question;
+import Model.QuestionFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,7 +20,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private static final String ANSWER_C = "C) ";
     private static final String ANSWER_D = "D) ";
 
-
+    private Question myQuestion;
     private JLabel myQuestionBody;
 
     private ButtonGroup myAnswerButtons;
@@ -29,7 +30,6 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private JRadioButton myButtonB;
     private JRadioButton myButtonC;
     private JRadioButton myButtonD;
-    private Maze myMaze;
 
     private int myCheckAnswer;
 
@@ -48,27 +48,26 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     private void setComponents() {
         // Create the question label
-        int q  = Question.getInstance().generateQuestion();
-        JLabel questionLabel = new JLabel("Question: " + Question.getInstance().getQ(q));
+        myQuestion  = QuestionFactory.getInstance().getQuestion();
+        JLabel questionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
         add(questionLabel);
         add(myQuestionBody);
-        myButtonA = new JRadioButton(Question.getInstance().getA(q));
+        myButtonA = new JRadioButton(myQuestion.getOptionA());
         myAnswerButtons.add(myButtonA);
 
-        myButtonB = new JRadioButton(Question.getInstance().getB(q));
+        myButtonB = new JRadioButton(myQuestion.getOptionB());
         myAnswerButtons.add(myButtonB);
 
-        myButtonC = new JRadioButton(Question.getInstance().getC(q));
+        myButtonC = new JRadioButton(myQuestion.getOptionC());
         myAnswerButtons.add(myButtonC);
 
-        myButtonD = new JRadioButton(Question.getInstance().getD(q));
+        myButtonD = new JRadioButton(myQuestion.getOptionD());
         myAnswerButtons.add(myButtonD);
 
         add(myButtonA);
         add(myButtonB);
         add(myButtonC);
         add(myButtonD);
-
         add(mySubmit);
     }
 
@@ -106,8 +105,8 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             myButtonB.setEnabled(false);
             myButtonC.setEnabled(false);
             myButtonD.setEnabled(false);
-            int choice = Question.getInstance().getChoice();
-            String theAnswer = Question.getInstance().getAns(choice);
+            int choice = QuestionFactory.getInstance().getChoice();
+            String theAnswer = myQuestion.getCorrectAnswer();
             String selectedAnswer = getSelectedAnswer();
             if (selectedAnswer.equals(theAnswer)) {
                 JOptionPane.showMessageDialog(this, "Correct!");
@@ -142,5 +141,4 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             }
         });
       }
-
 }

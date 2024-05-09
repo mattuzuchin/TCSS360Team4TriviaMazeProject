@@ -1,11 +1,5 @@
 package Model;
 
-import org.sqlite.SQLiteDataSource;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 public class Door {
@@ -39,7 +33,6 @@ public class Door {
         return myDoor;
     }
     public void assignQuestion() {
-        Question.getInstance().generateQuestion();
     }
 
     public String setStatus() {

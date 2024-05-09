@@ -3,7 +3,6 @@ package View;
 
 import Controller.PropertyChangeEnabledTriviaMazeControls;
 import Controller.TriviaMaze;
-import Model.Question;
 
 import javax.swing.*;
 import java.awt.*;
