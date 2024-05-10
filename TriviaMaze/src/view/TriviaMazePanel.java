@@ -8,10 +8,13 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 import java.util.Map;
 
+import static controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_MAZE;
+
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
+
+    private static final long serialVersionUID = 1L;
 
     private static final Font FONT = new Font("SanSerif", Font.BOLD, 9);
 
@@ -31,18 +34,15 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private boolean myDebugFlag;
 
-    private Player myPlayer;
 
     public TriviaMazePanel() {
         super();
         mySize = 4;
         myMaze = new Maze(mySize);
-//        myPlayer = new Player();
 
         setPreferredSize(new Dimension((mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE),
                 (mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE)));
         setBackground(Color.BLACK);
-        // draw door corner square
         setFont(FONT);
     }
 

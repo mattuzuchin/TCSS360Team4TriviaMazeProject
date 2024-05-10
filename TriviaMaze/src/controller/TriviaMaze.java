@@ -1,5 +1,9 @@
 package controller;
 
+import model.Door;
+import model.Maze;
+import model.Player;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     private Maze myMaze;
 
 
-    public TriviaMaze(final List<Question> theQuestionsList) {
+    public TriviaMaze() {
         myQuestionsList = new ArrayList<String>();
         // myPcs = new PropertyChangeSupport(this);
         myPlayer = new Player();

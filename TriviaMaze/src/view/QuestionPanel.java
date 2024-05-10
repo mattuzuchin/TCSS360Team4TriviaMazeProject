@@ -6,15 +6,18 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.List;
+
+import static controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_ANSWER;
+import static controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_QUESTION;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
     private static final String[] ANSWER_LABELS = {"A) ", "B) ", "C) ", "D) "};
+    private static final String CORRECT_MESSAGE = "Correct!";
+    private static final String WRONG_MESSAGE = "Incorrect!";
 
     private final JLabel myQuestionBody;
     private final ArrayList<JButton> myAnswerButtons;
@@ -33,27 +36,36 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     private void createButtons() {
         for (int i = 0; i < ANSWER_LABELS.length; i++) {
-            final JButton button = new JButton(new AnswerAction(i));
+            final JButton button = new JButton();
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
             button.setMaximumSize(new Dimension(250, 100));
+            final int chosenIndex = i;
+            button.addActionListener(theEvent -> checkAnswer(chosenIndex));
             myAnswerButtons.add(button);
             add(button);
         }
     }
 
     private void displayQuestion() {
-        myQuestionBody.setText(myQuestion.getQuestionBody());
-        final List<String> answers = myQuestion.getAnswers();
+        myQuestionBody.setText(myQuestionBody.getText());
+        final ArrayList<String> answers = myQuestion.getOptions();
 
         for (int i = 0; i < answers.size(); i++) {
-            myAnswerButtons.get(i).setText(ANSWER_LABELS[i] + answers.get(i));
+            final JButton button = myAnswerButtons.get(i);
+            button.setText(ANSWER_LABELS[i] + answers.get(i));
+            button.setMnemonic(ANSWER_LABELS[i].charAt(0));
         }
-        repaint();
+//        repaint();
         setVisible(true);
     }
 
+    private void checkAnswer(final int theOptionIndex) {
+        final boolean isCorrect = myQuestion.getOptions().get(theOptionIndex).equals(myQuestion.getCorrectAnswer());
+        setAnswerStatus(isCorrect);
+        firePropertyChange(PROPERTY_ANSWER, null, isCorrect);
+    }
+
     private void setAnswerStatus(final boolean theCorrectness) {
-        // Where to display notification?
         if (theCorrectness) {
             for (JButton button : myAnswerButtons) {
                 if (button.isSelected()) {
@@ -64,6 +76,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     button.setForeground(Color.DARK_GRAY);
                 }
             }
+            JOptionPane.showMessageDialog(null, CORRECT_MESSAGE, null, JOptionPane.INFORMATION_MESSAGE);
         }
         else {
             for (JButton button : myAnswerButtons) {
@@ -76,6 +89,8 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     button.setForeground(Color.DARK_GRAY);
                 }
             }
+            JOptionPane.showMessageDialog(null, WRONG_MESSAGE, null, JOptionPane.INFORMATION_MESSAGE);
+
         }
     }
 
@@ -88,12 +103,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
      */
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        if (theEvent.getPropertyName().equals("question")) {
+        if (theEvent.getPropertyName().equals(PROPERTY_QUESTION)) {
             myQuestion = (Question) theEvent.getNewValue();
             displayQuestion();
-        }
-        if (theEvent.getPropertyName().equals("answer")) {
-
         }
     }
 
@@ -105,29 +117,5 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
         // Enable debug mode features here
-    }
-
-    private static final class AnswerAction extends AbstractAction{
-
-        private final int myAnswerInt;
-        private final char myAnswerChar;
-        AnswerAction(final int theAnswerIndex) {
-            super();
-            myAnswerInt = theAnswerIndex;
-            myAnswerChar = ANSWER_LABELS[myAnswerInt].charAt(0);
-            putValue(Action.SHORT_DESCRIPTION, "Answer " + myAnswerChar);
-            putValue(Action.MNEMONIC_KEY, myAnswerChar);
-            putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(myAnswerChar));
-        }
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param theEvent the event to be processed
-         */
-        @Override
-        public void actionPerformed(ActionEvent theEvent) {
-            firePropertyChange("answer chosen", null, myAnswerInt);
-        }
     }
 }

@@ -31,9 +31,9 @@ public enum Direction {
     public String getDirection() {
         return myDirection;
     }
+
     /**
      * Returns the change in x-coordinate by moving one space in this direction
-     * (for example, WEST would be -1, and NORTH would be 0).
      *
      * @return the change in x-coordinate.
      */
@@ -57,7 +57,6 @@ public enum Direction {
 
     /**
      * Returns the change in y-coordinate by moving one space in this direction
-     * (for example, WEST would be 0, and NORTH would be -1).
      *
      * @return the change in y-coordinate.
      */
