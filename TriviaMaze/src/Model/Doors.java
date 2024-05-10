@@ -25,4 +25,16 @@ public class Doors {
     public Door getMyWestDoor() {
         return myWestDoor;
     }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("North Door status: " + myNorthDoor.isLocked());
+        sb.append(" ");
+        sb.append("South Door status: " + mySouthDoor.isLocked());
+        sb.append(" ");
+        sb.append("East Door status: " + myEastDoor.isLocked());
+        sb.append(" ");
+        sb.append("West Door status: " + myWestDoor.isLocked());
+        return sb.toString();
+    }
 }

@@ -37,7 +37,7 @@ public class Player {
     public String getName() {
         return myName;
     }
-    public void changeLocation(final Direction theDirection) {
+    public void moveDirection(final Direction theDirection) {
         switch (theDirection) {
             case NORTH:
                 setRow(getRow()-1);
@@ -55,7 +55,15 @@ public class Player {
     public String getImageFileName() {
         return "elf.png";
     }
+    @Override
     public String toString() {
-        return myName;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Player Name: " + getName());
+        sb.append(" ");
+        sb.append("Player row:" + getRow());
+        sb.append(" ");
+        sb.append("Player column: " + getColumn());
+
+        return sb.toString();
     }
 }

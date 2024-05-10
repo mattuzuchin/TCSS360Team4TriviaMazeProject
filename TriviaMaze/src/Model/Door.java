@@ -7,7 +7,6 @@ public class Door {
 
     private Question myAssignedQuestion;
 
-
     private Direction myDirection;
 
 
@@ -28,6 +27,6 @@ public class Door {
     }
 
     public String toString() {
-        return "Current status: " + myLockedStatus + ", " + "Direction: " + myDirection;
+        return "Locked status: " + myLockedStatus + ", " + "Direction: " + myDirection;
     }
 }

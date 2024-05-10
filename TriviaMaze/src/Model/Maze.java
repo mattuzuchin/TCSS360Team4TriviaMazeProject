@@ -13,6 +13,9 @@ public class Maze {
     private Player myPlayer;
 
     public Maze(final int theSize) {
+        if (theSize<0) {
+            throw new IllegalArgumentException("Size cannot be negative: " + theSize);
+        }
         myPlayer = new Player("test");
         mySize = theSize;
         myRooms = new Room[mySize][mySize];
@@ -22,14 +25,20 @@ public class Maze {
 
 
     public void createMaze() {
-        for (int i = 0; i < mySize; i++) {
-            for (int j = 0; j < mySize; j++) {
-                myRooms[i][j] = new Room(i, j);
+        for (int row = 0; row < mySize; row++) {
+            for (int column = 0; column < mySize; column++) {
+                myRooms[row][column] = new Room(row, column);
             }
         }
     }
 
     public void setPlayerStart(final int theRow, final int theColumn) {
+        if (theRow<0) {
+            throw new IllegalArgumentException("Row cannot be negative: " + theRow);
+        }
+        if (theColumn<0) {
+            throw new IllegalArgumentException("Column cannot be negative; " + theColumn);
+        }
         myPlayer.setRow(theRow);
         myPlayer.setColumn(theColumn);
     }
@@ -84,5 +93,23 @@ public class Maze {
     }
     public Room[][] getMyRooms() {
         return myRooms;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Maze size: " + getSize());
+        sb.append(" ");
+//        for (int i=0; i<mySize; i++) {
+//            for (int j=0; j<mySize; j++) {
+//                sb.append(myRooms[i][j].toString());
+//            }
+//
+//        }
+        sb.append("Exit row: " + getExitRow());
+        sb.append(" ");
+        sb.append("Exit column " + getExitColumn());
+        sb.append(" ");
+        sb.append(myPlayer.toString());
+        return sb.toString();
     }
 }
