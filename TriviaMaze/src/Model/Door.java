@@ -3,39 +3,31 @@ package Model;
 import java.util.*;
 
 public class Door {
-    private Door myDoor;
-    private String myStatus;
-
-    private Map<String, ArrayList<String>> myChosenQ;
-    private boolean myOpenStatus;
     private boolean myLockedStatus;
 
+    private Question myAssignedQuestion;
 
-    public Door() {
-        myOpenStatus = false;
-        myLockedStatus = false;
-        myDoor = this;
+
+    private Direction myDirection;
+
+
+    public Door(Direction theDirection) {
+        myLockedStatus = false; //false means unlocked, true is locked!
+        myAssignedQuestion = QuestionFactory.getInstance().getQuestion();
+        myDirection = theDirection;
     }
-    public void setOpenStatus(final boolean theOpenStatus) {
-        myOpenStatus  = theOpenStatus;
-    }
+
     public void setLockedStatus(final boolean theLockedStatus) {
         myLockedStatus  = theLockedStatus;
     }
     public boolean isLocked() {
         return myLockedStatus;
     }
-    public boolean isOpen() {
-        return myOpenStatus;
+    public Question getMyAssignedQuestion() {
+        return myAssignedQuestion;
     }
 
-    public Door getDoorInstance() {
-        return myDoor;
-    }
-    public void assignQuestion() {
-    }
-
-    public String setStatus() {
-        return myStatus;
+    public String toString() {
+        return "Current status: " + myLockedStatus + ", " + "Direction: " + myDirection;
     }
 }

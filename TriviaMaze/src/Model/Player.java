@@ -5,21 +5,10 @@ public class Player {
     private int myColumn;
     private String myName;
 
-    Player(final int theRow, final int theColumn) {
-        myRow = theRow;
-        myColumn = theColumn;
-        myName = "Player1";
-    }
-    Player(final int theRow, final int theColumn, final String theName) {
-        myRow = theRow;
-        myColumn = theColumn;
-        myName = theName;
-
-    }
-    public Player() {
+    public Player(String theName) {
         myRow=0;
         myColumn=0;
-        myName="Player1";
+        myName = theName;
     }
     public void setRow(final int theRow) {
         if(theRow < 0) {
@@ -61,5 +50,12 @@ public class Player {
         }
 
 
+    }
+
+    public String getImageFileName() {
+        return "elf.png";
+    }
+    public String toString() {
+        return myName;
     }
 }

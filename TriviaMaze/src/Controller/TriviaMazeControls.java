@@ -1,14 +1,14 @@
 package Controller;
 
+import View.QuestionPanel;
+
 public interface TriviaMazeControls {
 
-    void advanceNorth();
-    void advanceEast();
-    void advanceSouth();
-    void advanceWest();
-    void lockDoor();
-    void end();
-
+    void advanceNorth(final QuestionPanel thePanel);
+    void advanceEast(final QuestionPanel thePanel);
+    void advanceSouth(final QuestionPanel thePanel);
+    void advanceWest(final QuestionPanel thePanel);
+    void lockDoor(final int theDir);
     void start();
 
     void reset();

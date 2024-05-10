@@ -1,5 +1,6 @@
 package View;
 
+import Controller.TriviaMaze;
 import Model.Maze;
 import Model.Question;
 import Model.QuestionFactory;
@@ -31,10 +32,15 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private JRadioButton myButtonC;
     private JRadioButton myButtonD;
 
+    private JLabel myQuestionLabel;
+    private int myDir;
+    private TriviaMaze myMaze;
+
     private int myCheckAnswer;
 
-    public QuestionPanel() {
+    public QuestionPanel(final TriviaMaze theMaze) {
         super();
+        myMaze = theMaze;
         myQuestionBody = new JLabel();
         myQuestionBody.setVisible(true);
         myAnswerButtons = new ButtonGroup();
@@ -45,13 +51,23 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         setComponents();
         addListener();
     }
+    public void setQuestion(Question theQuestion) {
+        if(theQuestion == null) {
+            throw new IllegalArgumentException("null");
+        }
+        myQuestion = theQuestion;
 
-    private void setComponents() {
-        // Create the question label
+    }
+
+    public void setDir(final int theDir) {
+        if(theDir < 0 || theDir > 3) {
+            throw new IllegalArgumentException("not valid");
+        }
+        myDir = theDir;
+    }
+    public void updateQuestion() {
         myQuestion  = QuestionFactory.getInstance().getQuestion();
-        JLabel questionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
-        add(questionLabel);
-        add(myQuestionBody);
+        myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
         myButtonA = new JRadioButton(myQuestion.getOptionA());
         myAnswerButtons.add(myButtonA);
 
@@ -63,12 +79,40 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
         myButtonD = new JRadioButton(myQuestion.getOptionD());
         myAnswerButtons.add(myButtonD);
+        myQuestionBody.setVisible(true);
+        myButtonA.setVisible(true);
+        myButtonB.setVisible(true);
+        myButtonC.setVisible(true);
+        myButtonD.setVisible(true);
+    }
+
+    public void setComponents() {
+        myQuestion  = QuestionFactory.getInstance().getQuestion();
+        myQuestionLabel = new JLabel();
+        add(myQuestionLabel);
+        add(myQuestionBody);
+        myButtonA = new JRadioButton();
+        myAnswerButtons.add(myButtonA);
+
+        myButtonB = new JRadioButton();
+        myAnswerButtons.add(myButtonB);
+
+        myButtonC = new JRadioButton();
+        myAnswerButtons.add(myButtonC);
+
+        myButtonD = new JRadioButton();
+        myAnswerButtons.add(myButtonD);
 
         add(myButtonA);
         add(myButtonB);
         add(myButtonC);
         add(myButtonD);
         add(mySubmit);
+        myQuestionBody.setVisible(false);
+        myButtonA.setVisible(false);
+        myButtonB.setVisible(false);
+        myButtonC.setVisible(false);
+        myButtonD.setVisible(false);
     }
 
 
@@ -112,6 +156,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                 JOptionPane.showMessageDialog(this, "Correct!");
             } else {
                 JOptionPane.showMessageDialog(this, "Incorrect, the answer was: " + theAnswer);
+                myMaze.lockDoor(myDir);
             }
 
         });

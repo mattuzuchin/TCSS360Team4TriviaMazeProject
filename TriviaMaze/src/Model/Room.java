@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Room {
-    private Door myDoor;
+    private Doors myDoor;
     private int myRow;
     private int myColumn;
 
     public Room(final int theRow, final int theColumn) {
+        myDoor = new Doors();
         myRow = theRow;
         myColumn = theColumn;
     }
@@ -32,7 +33,7 @@ public class Room {
     public int getColumn() {
         return myColumn;
     }
-    public Door getDoor() {
+    public Doors getDoor() {
         return myDoor;
     }
 }

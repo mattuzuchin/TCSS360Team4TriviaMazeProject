@@ -1,9 +1,7 @@
 package Controller;
 
-import Model.Door;
-import Model.Maze;
-import Model.Player;
-import Model.QuestionFactory;
+import Model.*;
+import View.QuestionPanel;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -15,22 +13,17 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     private int myRow;
     private int myColumns;
     private PropertyChangeSupport myPcs = new PropertyChangeSupport(this);
-    private List<String> myQuestionsList;
+
     private Player myPlayer;
-    private Door myDoor;
     private Maze myMaze;
-
-
-    public TriviaMaze(final List<QuestionFactory> theQuestionsList) {
-        myQuestionsList = new ArrayList<String>();
-        myPcs = new PropertyChangeSupport(this);
-        myPlayer = new Player();
-    }
 
     public TriviaMaze() {
         myRow =  0;
         myColumns = 0;
+    }
 
+    public Player getMyPlayer() {
+        return myPlayer;
     }
 
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
@@ -73,29 +66,84 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     }
 
     public void reset() {
-        myRow = 0;
-        myColumns = 0;
+        myMaze.setPlayerStart(0,0);
+
     }
-    public void advanceNorth() {
-        myRow--; // row goes up
-    }
-    public void advanceEast() {
-        myColumns++; //go to the right
-    }
-    public void advanceSouth(){
-        myRow++; // go down
-    }
-    public void advanceWest() {
-        myColumns--; //go left
-    }
-    public void lockDoor() {
-        myDoor.setLockedStatus(true);
-    }
-    public void end() {
-        //game ends
-        if(myColumns == 1) {
-            end();
+    public void advanceNorth(QuestionPanel thePanel) {
+        if(myRow < myMaze.getSize() && myRow != 0) {
+            Room room = myMaze.getRoom(myRow, myColumns);
+            Door door = room.getDoor().getMyNorthDoor();
+            Question question = door.getMyAssignedQuestion();
+            thePanel.setQuestion(question);
+            myRow--;
         }
+
+    }
+    public void advanceEast(QuestionPanel thePanel) {
+        if(myColumns< myMaze.getSize() && myColumns != myMaze.getSize() - 1) {
+            Room room = myMaze.getRoom(myRow, myColumns);
+            Door door = room.getDoor().getMyEastDoor();
+            Question question = door.getMyAssignedQuestion();
+            thePanel.setQuestion(question);
+            myColumns++; //go to the right
+        }
+    }
+    public void advanceSouth(QuestionPanel thePanel){
+        if(myRow < myMaze.getSize() && myRow != myMaze.getSize() - 1) {
+            Room room = myMaze.getRoom(myRow, myColumns);
+            Door door = room.getDoor().getMySouthDoor();
+            Question question = door.getMyAssignedQuestion();
+            thePanel.setQuestion(question);
+            myRow++; // go down
+        }
+    }
+    public void advanceWest(QuestionPanel thePanel) {
+        if(myColumns < myMaze.getSize() && myColumns != 0) {
+            Room room = myMaze.getRoom(myRow, myColumns);
+            Door door = room.getDoor().getMyWestDoor();
+            Question question = door.getMyAssignedQuestion();
+            thePanel.setQuestion(question);
+            myColumns--; //go left
+        }
+    }
+
+    public boolean checkLock(Direction theDirection) {
+        Room room;
+        if(theDirection == Direction.NORTH) {
+            room = myMaze.getRoom(myRow, myColumns);
+            return room.getDoor().getMyNorthDoor().isLocked();
+        } else if (theDirection == Direction.SOUTH) {
+            room = myMaze.getRoom(myRow, myColumns);
+            return room.getDoor().getMySouthDoor().isLocked();
+        } else if (theDirection == Direction.EAST) {
+            room = myMaze.getRoom(myRow, myColumns);
+            return room.getDoor().getMyEastDoor().isLocked();
+        } else {
+            room = myMaze.getRoom(myRow, myColumns);
+            return room.getDoor().getMyWestDoor().isLocked();
+        }
+    }
+    public void lockDoor(final int theDir) {
+        Room room = myMaze.getRoom(myRow, myColumns);
+        if(theDir == 0) {
+            room.getDoor().getMyNorthDoor().setLockedStatus(true);
+        } else if (theDir == 1) {
+            room.getDoor().getMyEastDoor().setLockedStatus(true);
+        } else if (theDir == 2) {
+            room.getDoor().getMySouthDoor().setLockedStatus(true);
+        } else {
+            room.getDoor().getMySouthDoor().setLockedStatus(true);
+        }
+    }
+    public Room[][] getMaze() {
+        return myMaze.getMyRooms();
+    }
+    public void makeMaze(final int theSize) {
+        myMaze = new Maze(theSize);
+        myMaze.createMaze();
+    }
+    public void setName(String theName) {
+        myPlayer = new Player(theName);
     }
 
     private boolean isValidIndex(final int theX, final int theY) {
@@ -112,7 +160,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
 
     @Override
     public void start() {
-        reset();
+
     }
 
     public void resetPlayer() {
@@ -136,6 +184,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls {
     }
 
     private void firePlayerChange() {
-        myPcs.firePropertyChange(PROPERTY_PLAYER, null, new Player());
+        myPcs.firePropertyChange(PROPERTY_PLAYER, null, new Player("test"));
     }
 }

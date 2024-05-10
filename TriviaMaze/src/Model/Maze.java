@@ -13,25 +13,13 @@ public class Maze {
     private Player myPlayer;
 
     public Maze(final int theSize) {
-        myPlayer = new Player();
-        mySize = 4;
+        myPlayer = new Player("test");
+        mySize = theSize;
         myRooms = new Room[mySize][mySize];
-        myExitRow = 0;
-        myExitColumn = mySize - 1;
-        myPlayer.setRow(mySize - 1);
+        myPlayer.setRow(0);
         myPlayer.setColumn(0);
     }
 
-    public Maze(final int theSize, final int theExitRow, final int theExitColumn, final int thePlayerRow, final int thePlayerColumn) {
-        myPlayer = new Player(thePlayerRow, thePlayerColumn, "Player1");
-        mySize = theSize;
-        myRooms = new Room[theSize][theSize];
-        myRooms = new Room[theSize][theSize];
-        myExitRow = theExitRow;
-        myExitColumn = theExitColumn;
-        myPlayer.setRow(thePlayerRow);
-        myPlayer.setColumn(thePlayerColumn);
-    }
 
     public void createMaze() {
         for (int i = 0; i < mySize; i++) {
