@@ -1,28 +1,26 @@
 package View;
 
 
-import Controller.PropertyChangeEnabledTriviaMazeControls;
 import Controller.TriviaMaze;
 import Model.Direction;
-import Model.QuestionFactory;
+import Model.Maze;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.*;
 
-public final class TriviaMazeGUI extends JFrame implements ActionListener {
+public final class TriviaMazeGUI extends JFrame implements ActionListener, Serializable {
     private static long serialVersionUID = 0;
     /**
      * The main title for the program.
      */
     private static final String TITLE = "Trivia Maze";
 
-    private static final String NORTH_COMMAND = "North";
-    private static final String EAST_COMMAND = "East";
-    private static final String SOUTH_COMMAND = "South";
-    private static final String WEST_COMMAND = "West";
+    private int myMoves;
+
 
     /**
      * The Toolkit used.
@@ -44,16 +42,17 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
      */
     private static final String STOP_COMMAND = "Stop";
 
-    private static final String MOVE_COMMAND = "Move";
+    private static final String LOAD_COMMAND = "Load";
+    private static final String SAVE_COMMAND = "Save";
 
     /**
      * The Reset command.
      */
     private static final String RESET_COMMAND = "Reset";
-    private JButton myNorth;
-    private JButton mySouth;
-    private JButton myWest;
-    private JButton myEast;
+    private JButton myUp;
+    private JButton myDown;
+    private JButton myLeft;
+    private JButton myRight;
 
     /**
      * The logic for the simulation.
@@ -63,66 +62,76 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     private int mySize;
 
     private QuestionPanel myPanel;
+    private Graphics2D myGraph;
+    private TriviaMazePanel myMazePanel;
+    private String myDif;
 
 
-    public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize) {
+    public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif) {
         super(TITLE);
+        myDif =theDif;
         mySize = thePanelSize;
         myTriviaMaze = theMaze;
-        initGUI();
+        initGUI(theDif);
         setVisible(true);
+
         addListener();
+
 
     }
 
-    private void initGUI() {
-        final TriviaMazePanel mazePanel = new TriviaMazePanel(mySize, myTriviaMaze);
-        myPanel = new QuestionPanel(myTriviaMaze);
-        myTriviaMaze.addPropertyChangeListener(mazePanel);
+    private void initGUI(final String theDif) {
+         myMazePanel = new TriviaMazePanel(mySize, myTriviaMaze, theDif);
+        myPanel = new QuestionPanel(myTriviaMaze, theDif);
+        myPanel.setVisible(false);
+        myTriviaMaze.mySetPanel(myMazePanel);
+        myTriviaMaze.addPropertyChangeListener(myMazePanel);
         myTriviaMaze.addPropertyChangeListener(myPanel);
-        myPanel.setVisible(true);
+        myMazePanel.setFocusable(true);
         final JPanel southPanel = new JPanel(new FlowLayout());
         mySouthAndQuestionPanel = new JPanel();
         mySouthAndQuestionPanel.setLayout(new BoxLayout(mySouthAndQuestionPanel, BoxLayout.Y_AXIS));
 
-        myNorth = new JButton("North");
-        myNorth.setActionCommand(NORTH_COMMAND);
-        myNorth.addActionListener(this);
-        myEast = new JButton("East");
+        myUp = new JButton("UP");
+        myUp.addActionListener(this);
+        myRight = new JButton("RIGHT");
 
-        myEast.setActionCommand(EAST_COMMAND);
-        myEast.addActionListener(this);
 
-        mySouth = new JButton("South");
-        mySouth.setActionCommand(SOUTH_COMMAND);
-        mySouth.addActionListener(this);
+        myRight.addActionListener(this);
 
-        myWest = new JButton("West");
-        myWest.setActionCommand(WEST_COMMAND);
-        myWest.addActionListener(this);
+        myDown = new JButton("DOWN");
 
-        myWest.setFocusable(false);
-        myEast.setFocusable(false);
-        myNorth.setFocusable(false);
-        mySouth.setFocusable(false);
+        myDown.addActionListener(this);
 
-        southPanel.add(myNorth);
-        southPanel.add(myEast);
-        southPanel.add(mySouth);
-        southPanel.add(myWest);
+        myLeft = new JButton("LEFT");
+
+        myLeft.addActionListener(this);
+
+        myLeft.setFocusable(false);
+        myRight.setFocusable(false);
+        myUp.setFocusable(false);
+        myDown.setFocusable(false);
+
+        southPanel.add(myUp);
+        southPanel.add(myRight);
+        southPanel.add(myDown);
+        southPanel.add(myLeft);
         mySouthAndQuestionPanel.add(southPanel);
         mySouthAndQuestionPanel.add(myPanel);
         final Container masterPanel = new JPanel();
         masterPanel.setLayout(new BoxLayout(masterPanel, BoxLayout.X_AXIS));
-        masterPanel.add(mazePanel);
+        masterPanel.add(myMazePanel);
         masterPanel.add(mySouthAndQuestionPanel);
-
+        mySouthAndQuestionPanel.setVisible(true);
         setJMenuBar(createMenuBar());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
         add(masterPanel);
         pack();
+
         setLocation(SCREEN_SIZE.width / 2 - getWidth() / 2, SCREEN_SIZE.height / 2 - getHeight() / 2);
+        myUp.setEnabled(false); //START (0,0)
+        myLeft.setEnabled(false);
     }
 
 
@@ -140,15 +149,19 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
         stopItem.addActionListener(this);
         gameMenu.add(stopItem);
 
-        final JMenuItem moveItem = new JMenuItem(MOVE_COMMAND);
-        moveItem.addActionListener(this);
-        gameMenu.add(moveItem);
-
         final JMenuItem resetItem = new JMenuItem(RESET_COMMAND);
         resetItem.addActionListener(this);
         gameMenu.add(resetItem);
 
         menuBar.add(gameMenu);
+
+        final JMenuItem loadItem = new JMenuItem(LOAD_COMMAND);
+        loadItem.addActionListener(this);
+        gameMenu.add(loadItem);
+
+        final JMenuItem saveItem = new JMenuItem(SAVE_COMMAND);
+        saveItem.addActionListener(this);
+        gameMenu.add(saveItem);
 
         final JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
@@ -175,7 +188,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
     }
 
 
-
     @Override
     public void actionPerformed(final ActionEvent theEvent) {
         final String command = theEvent.getActionCommand();
@@ -183,50 +195,151 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener {
             case START_COMMAND:
                 myTriviaMaze.start();
                 break;
-
-            case MOVE_COMMAND:
-                //myTriviaMaze.??;
-                break;
             case RESET_COMMAND:
                 myTriviaMaze.reset();
+                break;
+            case LOAD_COMMAND:
+                Maze loaded = loadGame();
+                dispose();
+                myTriviaMaze.setMaze(loaded);
+                new TriviaMazeGUI(myTriviaMaze, loaded.getSize(), myDif);
+                break;
+
+            case SAVE_COMMAND:
+                saveGame(myTriviaMaze.getMyMaze());
                 break;
             default:
                 break;
         }
+        updateButtonState();
+    }
+    private void updateButtonState() {
+        int row = myTriviaMaze.getRow();
+        int col = myTriviaMaze.getCol();
+        myUp.setEnabled(row > 0);
+        myDown.setEnabled(row < mySize - 1);
+        myLeft.setEnabled(col > 0);
+        myRight.setEnabled(col < mySize - 1);
+    }
+
+
+    public static void saveGame(final Maze theMaze) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream("save.ser");
+            ObjectOutputStream out = new ObjectOutputStream(outputStream);
+            out.writeObject(theMaze);
+            out.close();
+            outputStream.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+
+
+    public static Maze loadGame() throws NullPointerException{
+        Maze maze;
+        File file = new File("save.ser");
+        try {
+            FileInputStream grabFile = new FileInputStream(file);
+            ObjectInputStream mazeIn = new ObjectInputStream(grabFile);
+            maze = (Maze) mazeIn.readObject();
+            mazeIn.close();
+            grabFile.close();
+
+        }catch (IOException | ClassNotFoundException i) {
+            return loadGame();
+        }
+        return maze;
+    }
+    public void end() {
+        int option = JOptionPane.showConfirmDialog(this, "Congratulations! You won! \n " +
+                        "Stats: " + myTriviaMaze.getCorrect() + " correct. \n" +
+                        myTriviaMaze.getIncorrect() + " incorrect. \n" +
+                        myMoves + " moves taken. \n Do you want to play again?",
+                "Game Over", JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.YES_OPTION) {
+            dispose();
+            new TitleScreen();
+        } else {
+            System.exit(0);
+        }
     }
 
     public void addListener() {
-        myNorth.addActionListener(theEvent -> {
-            myPanel.updateQuestion();
+        myUp.addActionListener(theEvent -> {
+
             if(!myTriviaMaze.checkLock(Direction.NORTH)) {
                 myTriviaMaze.advanceNorth(myPanel);
+                myMoves++;
+                myMazePanel.setColor(myTriviaMaze.getRow(), myTriviaMaze.getCol());
+
+                if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
+                        myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
+                    end();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
             }
 
 
         });
-        mySouth.addActionListener(theEvent -> {
-            myPanel.updateQuestion();
-            myTriviaMaze.advanceSouth(myPanel);
+        myDown.addActionListener(theEvent -> {
             if(!myTriviaMaze.checkLock(Direction.SOUTH)) {
-                myTriviaMaze.advanceNorth(myPanel);
+
+                myTriviaMaze.advanceSouth(myPanel);
+                myMoves++;
+                myMazePanel.setColor(myTriviaMaze.getRow(), myTriviaMaze.getCol());
+
+                if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow() &&
+                        myTriviaMaze.getCol() == myTriviaMaze.getExitCol()) {
+                    end();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
             }
 
         });
-        myWest.addActionListener(theEvent -> {
-            myPanel.updateQuestion();
-            myTriviaMaze.advanceWest(myPanel);
+        myLeft.addActionListener(theEvent -> {
+
+
             if(!myTriviaMaze.checkLock(Direction.WEST)) {
-                myTriviaMaze.advanceNorth(myPanel);
+
+                myTriviaMaze.advanceWest(myPanel);
+                myMoves++;
+                myMazePanel.setColor(myTriviaMaze.getRow(), myTriviaMaze.getCol());
+
+                if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow() &&
+                        myTriviaMaze.getCol() == myTriviaMaze.getExitCol()) {
+                    end();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
             }
 
         });
-        myEast.addActionListener(theEvent -> {
-            myPanel.updateQuestion();
-            myTriviaMaze.advanceEast(myPanel);
+        myRight.addActionListener(theEvent -> {
+
+
             if(!myTriviaMaze.checkLock(Direction.EAST)) {
-                myTriviaMaze.advanceNorth(myPanel);
+
+                myTriviaMaze.advanceEast(myPanel);
+                myMoves++;
+                myMazePanel.setColor(myTriviaMaze.getRow(), myTriviaMaze.getCol());
+
+                if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
+                myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
+                    end();
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
             }
         });
 
     }
+
 }

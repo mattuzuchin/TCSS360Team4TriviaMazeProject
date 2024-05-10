@@ -4,12 +4,16 @@ import org.sqlite.SQLiteDataSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.*;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class QuestionFactory {
+public class QuestionFactory implements Serializable {
     private static QuestionFactory uniqueInstance;
     private ArrayList<Question> myQuestionsList;
     private int myChoice;

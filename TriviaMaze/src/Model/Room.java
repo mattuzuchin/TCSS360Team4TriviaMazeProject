@@ -1,11 +1,9 @@
 package Model;
 
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
-public class Room {
+public class Room implements Serializable {
     private Doors myDoor;
     private int myRow;
     private int myColumn;

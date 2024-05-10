@@ -1,25 +1,22 @@
 package View;
 
 import Controller.TriviaMaze;
-import Model.Maze;
 import Model.Question;
 import Model.QuestionFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
-import static Controller.PropertyChangeEnabledTriviaMazeControls.*;
+import static Controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
-    private static final String ANSWER_A = "A) ";
-    private static final String ANSWER_B = "B) ";
-    private static final String ANSWER_C = "C) ";
-    private static final String ANSWER_D = "D) ";
+
 
     private Question myQuestion;
     private JLabel myQuestionBody;
@@ -38,7 +35,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     private int myCheckAnswer;
 
-    public QuestionPanel(final TriviaMaze theMaze) {
+    public QuestionPanel(final TriviaMaze theMaze, String theDif) {
         super();
         myMaze = theMaze;
         myQuestionBody = new JLabel();
@@ -48,6 +45,15 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         mySubmit.setVisible(true);
         mySubmit.setEnabled(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        if(theDif.equals("Easy")) {
+            setPreferredSize(new Dimension(200,200));
+        } else if(theDif.equals("Medium")) {
+            setPreferredSize(new Dimension(300,300));
+        } else if(theDif.equals("Hard")) {
+            setPreferredSize(new Dimension(500,500));
+        } else {
+            setPreferredSize(new Dimension(500,500));
+        }
         setComponents();
         addListener();
     }
@@ -65,7 +71,50 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         }
         myDir = theDir;
     }
-    public void updateQuestion() {
+//    public void updateQuestion() {
+//        myQuestion  = QuestionFactory.getInstance().getQuestion();
+//        if(myQuestion.getQuestionText().length() > 30) {
+//            myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText().substring(0,30));
+//            JLabel my = new JLabel("\n" + myQuestion.getQuestionText().substring(31));
+//            myButtonA = new JRadioButton(myQuestion.getOptionA());
+//            myAnswerButtons.add(myButtonA);
+//
+//            myButtonB = new JRadioButton(myQuestion.getOptionB());
+//            myAnswerButtons.add(myButtonB);
+//
+//            myButtonC = new JRadioButton(myQuestion.getOptionC());
+//            myAnswerButtons.add(myButtonC);
+//
+//            myButtonD = new JRadioButton(myQuestion.getOptionD());
+//            myAnswerButtons.add(myButtonD);
+//            myQuestionBody.setVisible(true);
+//            myButtonA.setVisible(true);
+//            myButtonB.setVisible(true);
+//            myButtonC.setVisible(true);
+//            myButtonD.setVisible(true);
+//        } else {
+//            myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
+//            myButtonA = new JRadioButton(myQuestion.getOptionA());
+//            myAnswerButtons.add(myButtonA);
+//
+//            myButtonB = new JRadioButton(myQuestion.getOptionB());
+//            myAnswerButtons.add(myButtonB);
+//
+//            myButtonC = new JRadioButton(myQuestion.getOptionC());
+//            myAnswerButtons.add(myButtonC);
+//
+//            myButtonD = new JRadioButton(myQuestion.getOptionD());
+//            myAnswerButtons.add(myButtonD);
+//            myQuestionBody.setVisible(true);
+//            myButtonA.setVisible(true);
+//            myButtonB.setVisible(true);
+//            myButtonC.setVisible(true);
+//            myButtonD.setVisible(true);
+//        }
+//
+//    }
+
+    public void setComponents() {
         myQuestion  = QuestionFactory.getInstance().getQuestion();
         myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
         myButtonA = new JRadioButton(myQuestion.getOptionA());
@@ -84,35 +133,13 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myButtonB.setVisible(true);
         myButtonC.setVisible(true);
         myButtonD.setVisible(true);
-    }
-
-    public void setComponents() {
-        myQuestion  = QuestionFactory.getInstance().getQuestion();
-        myQuestionLabel = new JLabel();
         add(myQuestionLabel);
-        add(myQuestionBody);
-        myButtonA = new JRadioButton();
-        myAnswerButtons.add(myButtonA);
-
-        myButtonB = new JRadioButton();
-        myAnswerButtons.add(myButtonB);
-
-        myButtonC = new JRadioButton();
-        myAnswerButtons.add(myButtonC);
-
-        myButtonD = new JRadioButton();
-        myAnswerButtons.add(myButtonD);
-
         add(myButtonA);
         add(myButtonB);
         add(myButtonC);
         add(myButtonD);
         add(mySubmit);
-        myQuestionBody.setVisible(false);
-        myButtonA.setVisible(false);
-        myButtonB.setVisible(false);
-        myButtonC.setVisible(false);
-        myButtonD.setVisible(false);
+
     }
 
 
@@ -155,7 +182,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             if (selectedAnswer.equals(theAnswer)) {
                 JOptionPane.showMessageDialog(this, "Correct!");
             } else {
-                JOptionPane.showMessageDialog(this, "Incorrect, the answer was: " + theAnswer);
+                JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
                 myMaze.lockDoor(myDir);
             }
 

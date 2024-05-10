@@ -1,6 +1,8 @@
 package Model;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
     private int myRow;
     private int myColumn;
     private String myName;

@@ -1,6 +1,8 @@
 package Model;
 
-public class Doors {
+import java.io.Serializable;
+
+public class Doors implements Serializable {
     private Door myNorthDoor;
     private Door myEastDoor;
     private Door mySouthDoor;

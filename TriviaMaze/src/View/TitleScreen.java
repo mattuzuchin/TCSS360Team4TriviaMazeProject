@@ -1,6 +1,8 @@
 package View;
+
 import Controller.TriviaMaze;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import javax.imageio.ImageIO;
 
 public class TitleScreen extends JFrame implements ActionListener {
 
@@ -18,6 +19,7 @@ public class TitleScreen extends JFrame implements ActionListener {
     private TriviaMaze myTM = new TriviaMaze();
     private ButtonGroup myButtonGroup;
     private JRadioButton myEasy, myMedium, myHard, myExtreme;
+    private JButton mySet;
 
     public TitleScreen() {
 
@@ -27,6 +29,7 @@ public class TitleScreen extends JFrame implements ActionListener {
         setTitle("Trivia Maze Title Screen");
         setSize(800, 600); // Set your preferred size
         setLocationRelativeTo(null); // Center the window on the screen
+        addListener();
     }
 
     private void initGUI() {
@@ -54,22 +57,25 @@ public class TitleScreen extends JFrame implements ActionListener {
         myMedium = new JRadioButton("Medium");
         myHard = new JRadioButton("Hard");
         myExtreme = new JRadioButton("Extreme");
-
+        mySet = new JButton("Set");
+        mySet.setEnabled(false);
         myButtonGroup.add(myEasy);
         myButtonGroup.add(myMedium);
         myButtonGroup.add(myHard);
         myButtonGroup.add(myExtreme);
-
+        myButtonGroup.add(mySet);
         difficulty.add(myEasy);
         difficulty.add(myMedium);
         difficulty.add(myHard);
         difficulty.add(myExtreme);
+        difficulty.add(mySet);
         masterPanel.add(difficulty, BorderLayout.WEST);
 
         myStartButton = new JButton("Start");
         myStartButton.addActionListener(this);
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(myStartButton);
+        myStartButton.setEnabled(false);
         masterPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(masterPanel);
 
@@ -91,18 +97,39 @@ public class TitleScreen extends JFrame implements ActionListener {
             myTM.setName(myTextName.getText());
             String getDifficulty = getSelectedAnswer();
             if(getDifficulty.equals("Easy")) {
-                new TriviaMazeGUI(myTM, 4);
+                new TriviaMazeGUI(myTM, 4, "Easy");
             } else if (getDifficulty.equals("Medium")) {
-                new TriviaMazeGUI(myTM, 6);
+                new TriviaMazeGUI(myTM, 6, "Medium");
             } else if (getDifficulty.equals("Hard")) {
-                new TriviaMazeGUI(myTM, 8);
+                new TriviaMazeGUI(myTM, 8, "Hard");
             } else {
-                new TriviaMazeGUI(myTM, 10);
+                new TriviaMazeGUI(myTM, 10, "Extreme");
             }
 
         }
     }
-
+    public void addListener() {
+        myEasy.addActionListener(theEvent -> {
+            mySet.setEnabled(true);
+        });
+        myMedium.addActionListener(theEvent -> {
+            mySet.setEnabled(true);
+        });
+        myHard.addActionListener(theEvent -> {
+            mySet.setEnabled(true);
+        });
+        myExtreme.addActionListener(theEvent -> {
+            mySet.setEnabled(true);
+        });
+        mySet.addActionListener(theEvent -> {
+            myEasy.setEnabled(false);
+            myMedium.setEnabled(false);
+            myHard.setEnabled(false);
+            myExtreme.setEnabled(false);
+            myStartButton.setEnabled(true);
+            mySet.setEnabled(false);
+        });
+    }
     public String getSelectedAnswer() {
         for (AbstractButton button : Collections.list(myButtonGroup.getElements())) {
             if (button.isSelected()) {
