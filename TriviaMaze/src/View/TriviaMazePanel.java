@@ -123,9 +123,10 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
         } else {
             repaint();
+            Room[][] checkRoom = myMaze.getMaze();
+
             for (int y = 0; y < mySize; y++) {
                 final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-
                 for (int x = 0; x < mySize; x++) {
                     final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
                     if (y == myRow && x == myCol) {
@@ -138,22 +139,33 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
 
-                    } else {
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 0 ){
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 1 ){
+                        theGraphics.setPaint(Color.GREEN);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 2 ){
+                        theGraphics.setPaint(Color.PINK);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 3 ){
+                        theGraphics.setPaint(Color.WHITE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 4 ){
+                        theGraphics.setPaint(Color.CYAN);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
                     }
+
                 }
         }
 
         }
-//        final String image = myMaze.getMyPlayer().getImageFileName();
-//        ImageIcon imgIcon = new ImageIcon(image);
-//        if(imgIcon.getImageLoadStatus() != MediaTracker.COMPLETE) {
-//            imgIcon = new ImageIcon(getClass().getResource(image));
-//        }
-//        final Image img = imgIcon.getImage();
-//        theGraphics.drawImage(img,myMaze.getMyPlayer().getRow(), myMaze.getMyPlayer().getColumn(), this);
+
     }
 
 

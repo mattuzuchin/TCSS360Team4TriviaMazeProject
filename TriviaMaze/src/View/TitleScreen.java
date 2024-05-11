@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 
 public class TitleScreen extends JFrame implements ActionListener {
@@ -20,25 +21,28 @@ public class TitleScreen extends JFrame implements ActionListener {
     private ButtonGroup myButtonGroup;
     private JRadioButton myEasy, myMedium, myHard, myExtreme;
     private JButton mySet;
+    private JButton myNameSet;
 
     public TitleScreen() {
 
         initGUI();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Trivia Maze Title Screen");
-        setSize(800, 600); // Set your preferred size
-        setLocationRelativeTo(null); // Center the window on the screen
+        setTitle("Movie Trivia Maze");
+        setSize(800, 600);
+        setLocationRelativeTo(null);
         addListener();
     }
 
     private void initGUI() {
+
         JPanel masterPanel = new JPanel();
         masterPanel.setLayout(new BorderLayout());
-
+        masterPanel.setBackground(Color.WHITE);
         // Load and display your image
-        BufferedImage image = loadImage("OIP (1).jpg");
+        BufferedImage image = loadImage("movie.png");
         JLabel imageLabel = new JLabel(new ImageIcon(image));
+        imageLabel.setPreferredSize(new Dimension(800,600));
         masterPanel.add(imageLabel, BorderLayout.CENTER);
 
         // Create and add a text input field
@@ -46,10 +50,15 @@ public class TitleScreen extends JFrame implements ActionListener {
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("Enter your name:"));
         inputPanel.add(myTextName);
+        myNameSet = new JButton("Set");
+        myNameSet.setEnabled(false);
+        inputPanel.add(myNameSet);
+        inputPanel.setBackground(Color.WHITE);
         masterPanel.add(inputPanel, BorderLayout.NORTH);
 
 
         JPanel difficulty = new JPanel();
+        difficulty.setBackground(Color.WHITE);
         difficulty.setLayout(new BoxLayout(difficulty, BoxLayout.Y_AXIS));
         difficulty.add(new JLabel("Select Difficulty: "));
         myButtonGroup = new ButtonGroup();
@@ -59,6 +68,10 @@ public class TitleScreen extends JFrame implements ActionListener {
         myExtreme = new JRadioButton("Extreme");
         mySet = new JButton("Set");
         mySet.setEnabled(false);
+        myEasy.setBackground(Color.WHITE);
+        myMedium.setBackground(Color.WHITE);
+        myHard.setBackground(Color.WHITE);
+        myExtreme.setBackground(Color.WHITE);
         myButtonGroup.add(myEasy);
         myButtonGroup.add(myMedium);
         myButtonGroup.add(myHard);
@@ -70,15 +83,19 @@ public class TitleScreen extends JFrame implements ActionListener {
         difficulty.add(myExtreme);
         difficulty.add(mySet);
         masterPanel.add(difficulty, BorderLayout.WEST);
-
+        myEasy.setEnabled(false);
+        myMedium.setEnabled(false);
+        myHard.setEnabled(false);
+        myExtreme.setEnabled(false);
+        mySet.setEnabled(false);
         myStartButton = new JButton("Start");
         myStartButton.addActionListener(this);
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(myStartButton);
         myStartButton.setEnabled(false);
         masterPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(masterPanel);
-
     }
 
     private BufferedImage loadImage(String imagePath) {
@@ -126,8 +143,28 @@ public class TitleScreen extends JFrame implements ActionListener {
             myMedium.setEnabled(false);
             myHard.setEnabled(false);
             myExtreme.setEnabled(false);
-            myStartButton.setEnabled(true);
             mySet.setEnabled(false);
+            myStartButton.setEnabled(true);
+
+        });
+        myNameSet.addActionListener(theEvent -> {
+            myTextName.setEditable(false);
+            myNameSet.setEnabled(false);
+            myEasy.setEnabled(true);
+            myMedium.setEnabled(true);
+            myHard.setEnabled(true);
+            myExtreme.setEnabled(true);
+
+        });
+
+        myTextName.addActionListener(theEvent -> {
+            if (myTextName.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No empty names!");
+            } else {
+                // Enable the component if the text field is not empty
+                myNameSet.setEnabled(true);
+            }
+
         });
     }
     public String getSelectedAnswer() {

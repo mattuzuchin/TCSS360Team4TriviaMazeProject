@@ -27,4 +27,21 @@ public class Doors implements Serializable {
     public Door getMyWestDoor() {
         return myWestDoor;
     }
+
+    public int checkNumber() {
+        int check = 0;
+        if(myWestDoor.isLocked()) {
+            check++;
+        }
+        if (myNorthDoor.isLocked()) {
+            check++;
+        }
+        if(mySouthDoor.isLocked()) {
+            check++;
+        }
+        if (myEastDoor.isLocked()) {
+            check++;
+        }
+        return check;
+    }
 }

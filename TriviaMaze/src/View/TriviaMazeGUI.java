@@ -17,7 +17,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     /**
      * The main title for the program.
      */
-    private static final String TITLE = "Trivia Maze";
+    private static final String TITLE = "Movie Trivia Maze";
 
     private int myMoves;
 
@@ -163,13 +163,17 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         saveItem.addActionListener(this);
         gameMenu.add(saveItem);
 
+
         final JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
-        final String gameRules = "Game Rules as follows: \n" +
-                "You will start at a square (a room), and you must go through the maze to reach the exit, which \n" +
-                "is listed on the maze itself. Each room has 4 doors, with each being a direction you wish to choose from, " +
-                "\n whenever you move to a door, a question will pop up for you to answer. If you get it correct, great! You \n" +
+        final String gameRules = "Welcome to the Movie Trivia Maze " + myTriviaMaze.getMyPlayer().getName() +  "! \nGame Rules as follows:\n" +
+                "You will start at a square (a room), and you must go through the maze to reach the exit, which\n" +
+                "is listed on the maze itself. Each room has 4 doors, with each being a direction you wish to choose from, \n" +
+                "whenever you move to a door, a question will pop up for you to answer. READ THIS: A room that is green \n" +
+                "indicates that ONE DOOR is locked, if a room is pink, it indicates that TWO DOORS are locked, if a room \n" +
+                "is white, it indicates that THREE DOORS are locked, if a room is WHITE, then ALL doors are locked. Grey doors \n" +
+                "indicate no locked doors! If you get it correct, great! You\n" +
                 "can move on, if you get it wrong, that door is locked and you must find another way! Good luck and have fun!";
         final JMenuItem rules = new JMenuItem("Rules");
         rules.setMnemonic(KeyEvent.VK_R);
@@ -252,7 +256,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         return maze;
     }
     public void end() {
-        int option = JOptionPane.showConfirmDialog(this, "Congratulations! You won! \n " +
+        int option = JOptionPane.showConfirmDialog(this, "Congratulations " + myTriviaMaze.getMyPlayer().getName() + "! You won! \n " +
                         "Stats: " + myTriviaMaze.getCorrect() + " correct. \n" +
                         myTriviaMaze.getIncorrect() + " incorrect. \n" +
                         myMoves + " moves taken. \n Do you want to play again?",
