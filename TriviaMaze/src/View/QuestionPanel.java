@@ -32,12 +32,15 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private JLabel myQuestionLabel;
     private int myDir;
     private TriviaMaze myMaze;
-
+    private int myCorrect;
+    private int myIncorrect;
     private int myCheckAnswer;
 
-    public QuestionPanel(final TriviaMaze theMaze, String theDif) {
-        super();
+    private TriviaMazeGUI myView;
 
+    public QuestionPanel(final TriviaMaze theMaze, String theDif, TriviaMazeGUI theView) {
+        super();
+        myView = theView;
         myMaze = theMaze;
         myQuestionBody = new JLabel();
         myQuestionBody.setVisible(true);
@@ -75,31 +78,41 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     public void updateQuestion(final Question theQ) {
         myCheckAnswer = 0;
        setQuestion(theQ);
-
+       myQuestion  = theQ;
+       myQuestionLabel.setText("Question: " + myQuestion.getQuestionText());
+       myButtonA.setText(myQuestion.getOptionA());
+        myButtonB.setText(myQuestion.getOptionB());
+        myButtonC.setText(myQuestion.getOptionC());
+        myButtonD.setText(myQuestion.getOptionD());
+        myButtonA.setEnabled(true);
+        myButtonB.setEnabled(true);
+        myButtonC.setEnabled(true);
+        myButtonD.setEnabled(true);
     }
 
-    public Question getMyQuestion() {
-        return myQuestion;
-    }
     public void setComponents() {
-        myQuestion  = QuestionFactory.getInstance().getQuestion();
-        myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
-        myButtonA = new JRadioButton(myQuestion.getOptionA());
+
+        myQuestionLabel = new JLabel();
+        myButtonA = new JRadioButton();
         myAnswerButtons.add(myButtonA);
 
-        myButtonB = new JRadioButton(myQuestion.getOptionB());
+        myButtonB = new JRadioButton();
         myAnswerButtons.add(myButtonB);
 
-        myButtonC = new JRadioButton(myQuestion.getOptionC());
+        myButtonC = new JRadioButton();
         myAnswerButtons.add(myButtonC);
 
-        myButtonD = new JRadioButton(myQuestion.getOptionD());
+        myButtonD = new JRadioButton();
         myAnswerButtons.add(myButtonD);
         myQuestionBody.setVisible(true);
         myButtonA.setVisible(true);
         myButtonB.setVisible(true);
         myButtonC.setVisible(true);
         myButtonD.setVisible(true);
+        myButtonA.setEnabled(false);
+        myButtonB.setEnabled(false);
+        myButtonC.setEnabled(false);
+        myButtonD.setEnabled(false);
         add(myQuestionLabel);
         add(myButtonA);
         add(myButtonB);
@@ -110,12 +123,6 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     }
 
 
-    public ButtonGroup getGroup() {
-        return myAnswerButtons;
-    }
-    public JButton getMySubmit() {
-        return mySubmit;
-    }
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
         switch (theEvent.getPropertyName()) {
@@ -143,15 +150,77 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             myButtonB.setEnabled(false);
             myButtonC.setEnabled(false);
             myButtonD.setEnabled(false);
-            int choice = QuestionFactory.getInstance().getChoice();
             String theAnswer = myQuestion.getCorrectAnswer();
             String selectedAnswer = getSelectedAnswer();
             if (selectedAnswer.equals(theAnswer)) {
                 JOptionPane.showMessageDialog(this, "Correct!");
+                myCorrect++;
+                if(myView.getMyUp()) {
+                    myMaze.advanceNorth(myView.getQPanel());
+                    myView.changePosition();
+                    myView.setUpBut();
+                    myView.checkEnd();
+                    myView.updateButtonState();
+                    myView.setUp(false);
+                }
+                if(myView.getMyDown()) {
+                    myMaze.advanceSouth(myView.getQPanel());
+                    myView.changePosition();
+                    myView.setUpBut();
+                    myView.checkEnd();
+                    myView.updateButtonState();
+                    myView.setDown(false);
+
+                }
+                if(myView.getMyLeft()) {
+                    myMaze.advanceWest(myView.getQPanel());
+                    myView.changePosition();
+                    myView.setUpBut();
+                    myView.checkEnd();
+                    myView.updateButtonState();
+                    myView.setLeft(false);
+                }
+                if(myView.getMyRight()) {
+                    myMaze.advanceEast(myView.getQPanel());
+                    myView.changePosition();
+                    myView.setUpBut();
+                    myView.checkEnd();
+                    myView.updateButtonState();
+                    myView.setRight(false);
+                }
+
             } else {
+                myIncorrect++;
                 JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
                 myMaze.lockDoor(myDir);
+                myView.setUpBut();
+                myView.updateButtonState();
+                myView.playerLost();
+                if(myView.getMyUp()) {
+                    myView.setDisableUp();
+                    myView.setUp(false);
+                    myView.changePosition();
+                }
+                if(myView.getMyDown()) {
+                    myView.setDisableDown();
+                    myView.setDown(false);
+                    myView.changePosition();
+
+                }
+                if(myView.getMyRight()) {
+                    myView.setDisableRight();
+                    myView.setRight(false);
+                    myView.changePosition();
+
+                }
+                if(myView.getMyLeft()) {
+                    myView.setDisableLeft();
+                    myView.setLeft(false);
+                    myView.changePosition();
+
+                }
             }
+
 
         });
         myButtonA.addActionListener(theEvent -> {

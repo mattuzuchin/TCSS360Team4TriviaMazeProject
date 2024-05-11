@@ -127,6 +127,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         myMaze.setPlayerStart(0,0);
         myColumns = 0;
         myRow = 0;
+
         myTMP.setCheck(false);
         myTMP.drawRooms((Graphics2D) myTMP.getGraphics());
     }
@@ -206,6 +207,10 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     }
     public Room[][] getMaze() {
         return myMaze.getMyRooms();
+    }
+
+    public Room getCurrentRoom() {
+        return myMaze.getRoom(myRow,myColumns);
     }
     public void makeMaze(final int theSize) {
         myMaze = new Maze(theSize);

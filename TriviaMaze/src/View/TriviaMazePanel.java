@@ -31,7 +31,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private final int mySize;
 
     private TriviaMaze myMaze;
-
+    private boolean check = false;
     private boolean myDebugFlag;
     private Graphics myGraph;
 
@@ -57,13 +57,12 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private int myRow;
     private int myCol;
     public void setColor(final int theRow, final int theCol) {
-        check = true;
+       check = true;
         myRow = theRow;
         myCol = theCol;
         paintComponent(myGraph);
 
     }
-    private boolean check = false;
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
