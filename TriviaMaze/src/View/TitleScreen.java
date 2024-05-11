@@ -51,7 +51,7 @@ public class TitleScreen extends JFrame implements ActionListener {
         inputPanel.add(new JLabel("Enter your name:"));
         inputPanel.add(myTextName);
         myNameSet = new JButton("Set");
-        myNameSet.setEnabled(false);
+        myNameSet.setEnabled(true);
         inputPanel.add(myNameSet);
         inputPanel.setBackground(Color.WHITE);
         masterPanel.add(inputPanel, BorderLayout.NORTH);
@@ -148,24 +148,24 @@ public class TitleScreen extends JFrame implements ActionListener {
 
         });
         myNameSet.addActionListener(theEvent -> {
-            myTextName.setEditable(false);
-            myNameSet.setEnabled(false);
-            myEasy.setEnabled(true);
-            myMedium.setEnabled(true);
-            myHard.setEnabled(true);
-            myExtreme.setEnabled(true);
-
-        });
-
-        myTextName.addActionListener(theEvent -> {
             if (myTextName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No empty names!");
+                myNameSet.setEnabled(true);
+
             } else {
                 // Enable the component if the text field is not empty
-                myNameSet.setEnabled(true);
+                myTextName.setEditable(false);
+                myNameSet.setEnabled(false);
+                myEasy.setEnabled(true);
+                myMedium.setEnabled(true);
+                myHard.setEnabled(true);
+                myExtreme.setEnabled(true);
             }
 
+
         });
+
+
     }
     public String getSelectedAnswer() {
         for (AbstractButton button : Collections.list(myButtonGroup.getElements())) {

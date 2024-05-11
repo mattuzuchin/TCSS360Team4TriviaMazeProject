@@ -138,7 +138,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             thePanel.setQuestion(question);
             myRow--;
         }
-
     }
     public void advanceEast(QuestionPanel thePanel) {
         if(myColumns< myMaze.getSize() && myColumns != myMaze.getSize() - 1) {

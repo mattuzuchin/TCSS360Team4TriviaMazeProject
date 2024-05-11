@@ -37,6 +37,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
     public QuestionPanel(final TriviaMaze theMaze, String theDif) {
         super();
+
         myMaze = theMaze;
         myQuestionBody = new JLabel();
         myQuestionBody.setVisible(true);
@@ -71,49 +72,15 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         }
         myDir = theDir;
     }
-//    public void updateQuestion() {
-//        myQuestion  = QuestionFactory.getInstance().getQuestion();
-//        if(myQuestion.getQuestionText().length() > 30) {
-//            myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText().substring(0,30));
-//            JLabel my = new JLabel("\n" + myQuestion.getQuestionText().substring(31));
-//            myButtonA = new JRadioButton(myQuestion.getOptionA());
-//            myAnswerButtons.add(myButtonA);
-//
-//            myButtonB = new JRadioButton(myQuestion.getOptionB());
-//            myAnswerButtons.add(myButtonB);
-//
-//            myButtonC = new JRadioButton(myQuestion.getOptionC());
-//            myAnswerButtons.add(myButtonC);
-//
-//            myButtonD = new JRadioButton(myQuestion.getOptionD());
-//            myAnswerButtons.add(myButtonD);
-//            myQuestionBody.setVisible(true);
-//            myButtonA.setVisible(true);
-//            myButtonB.setVisible(true);
-//            myButtonC.setVisible(true);
-//            myButtonD.setVisible(true);
-//        } else {
-//            myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
-//            myButtonA = new JRadioButton(myQuestion.getOptionA());
-//            myAnswerButtons.add(myButtonA);
-//
-//            myButtonB = new JRadioButton(myQuestion.getOptionB());
-//            myAnswerButtons.add(myButtonB);
-//
-//            myButtonC = new JRadioButton(myQuestion.getOptionC());
-//            myAnswerButtons.add(myButtonC);
-//
-//            myButtonD = new JRadioButton(myQuestion.getOptionD());
-//            myAnswerButtons.add(myButtonD);
-//            myQuestionBody.setVisible(true);
-//            myButtonA.setVisible(true);
-//            myButtonB.setVisible(true);
-//            myButtonC.setVisible(true);
-//            myButtonD.setVisible(true);
-//        }
-//
-//    }
+    public void updateQuestion(final Question theQ) {
+        myCheckAnswer = 0;
+       setQuestion(theQ);
 
+    }
+
+    public Question getMyQuestion() {
+        return myQuestion;
+    }
     public void setComponents() {
         myQuestion  = QuestionFactory.getInstance().getQuestion();
         myQuestionLabel = new JLabel("Question: " + myQuestion.getQuestionText());
