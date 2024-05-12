@@ -1,11 +1,9 @@
 package Model;
 
 
-import com.sun.source.tree.IfTree;
+import java.io.Serializable;
 
-import java.awt.*;
-
-public class Maze {
+public class Maze implements Serializable {
     private int mySize;
     private Room[][] myRooms;
     private int myExitRow;
@@ -21,6 +19,8 @@ public class Maze {
         myRooms = new Room[mySize][mySize];
         myPlayer.setRow(0);
         myPlayer.setColumn(0);
+        myExitColumn = mySize -1;
+        myExitRow = mySize - 1;
     }
 
 

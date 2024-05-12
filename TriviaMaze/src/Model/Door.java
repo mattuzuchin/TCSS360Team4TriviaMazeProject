@@ -1,8 +1,8 @@
 package Model;
 
-import java.util.*;
+import java.io.Serializable;
 
-public class Door {
+public class Door implements Serializable {
     private boolean myLockedStatus;
 
     private Question myAssignedQuestion;

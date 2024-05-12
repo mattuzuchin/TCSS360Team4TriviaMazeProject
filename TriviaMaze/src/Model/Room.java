@@ -1,23 +1,15 @@
 package Model;
 
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
-public class Room {
-    private Doors myDoors;
+public class Room implements Serializable {
+    private Doors myDoor;
     private int myRow;
     private int myColumn;
 
     public Room(final int theRow, final int theColumn) {
-        if(theRow < 0) {
-            throw new IllegalArgumentException("row cannot be negative: " + theRow);
-        }
-        if(theColumn < 0) {
-            throw new IllegalArgumentException("column cannot be negative: " + theRow);
-        }
-        myDoors = new Doors();
+        myDoor = new Doors();
         myRow = theRow;
         myColumn = theColumn;
     }
@@ -39,17 +31,7 @@ public class Room {
     public int getColumn() {
         return myColumn;
     }
-    public Doors getDoors() {
-        return myDoors;
-    }
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Room row: " + myRow);
-        sb.append(" ");
-        sb.append("Room column" + myColumn);
-        sb.append(" ");
-        sb.append(myDoors.toString());
-        return sb.toString();
+    public Doors getDoor() {
+        return myDoor;
     }
 }
