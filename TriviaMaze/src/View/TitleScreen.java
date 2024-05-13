@@ -115,7 +115,7 @@ public class TitleScreen extends JFrame implements ActionListener {
                 for (Difficulty d : Difficulty.values()) {
                     assert getDifficulty != null;
                     if (getDifficulty.equals(d.getName())) {
-                        new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name()); // placeholder size
+                        new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name());
                     }
                 }
             }

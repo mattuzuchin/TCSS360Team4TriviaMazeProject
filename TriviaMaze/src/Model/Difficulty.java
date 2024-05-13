@@ -21,9 +21,9 @@ public enum Difficulty {
 
     public int getSize(final String theIn) {
         if(theIn.equals("Easy")) {
-            return 2;
-        } else if (theIn.equals("Medium")) {
             return 4;
+        } else if (theIn.equals("Medium")) {
+            return 5;
         } else if(theIn.equals("Hard")) {
             return 6;
         } else {

@@ -383,7 +383,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
             end(message);
         } else {
-            throw new IllegalArgumentException("No such case");
+            //
         }
     }
 
