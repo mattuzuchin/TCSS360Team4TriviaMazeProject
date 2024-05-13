@@ -1,7 +1,7 @@
-package view;
+package View;
 
-import controller.TriviaMaze;
-import model.Difficulty;
+import Controller.TriviaMaze;
+import Model.Difficulty;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
