@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class TitleScreen extends JFrame implements ActionListener {
 
-//    private static final String[] DIFFICULTY_LABELS = {"Easy", "Medium", "Hard", "Extreme"};
     private JButton myStartButton;
     private JTextField myTextName;
     private final TriviaMaze myTM = new TriviaMaze();
