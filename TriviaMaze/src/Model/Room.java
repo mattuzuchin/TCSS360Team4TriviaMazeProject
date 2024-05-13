@@ -25,12 +25,7 @@ public class Room implements Serializable {
         }
         myRow = theColumn;
     }
-    public int getRow() {
-        return myRow;
-    }
-    public int getColumn() {
-        return myColumn;
-    }
+
     public Doors getDoor() {
         return myDoor;
     }

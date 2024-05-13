@@ -18,10 +18,11 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     private Player myPlayer;
     private Maze myMaze;
     private TriviaMazePanel myTMP;
+    private QuestionFactory myQF;
 
 
-
-    public TriviaMaze() {
+    public TriviaMaze(QuestionFactory theFactory) {
+        myQF = theFactory;
         myRow =  0;
         myColumns = 0;
     }
@@ -200,6 +201,8 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             room.getDoor().getMyEastDoor().setLockedStatus(true);
         }
     }
+
+
     public Room[][] getMaze() {
         return myMaze.getMyRooms();
     }
@@ -208,7 +211,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         return myMaze.getRoom(myRow,myColumns);
     }
     public void makeMaze(final int theSize) {
-        myMaze = new Maze(theSize);
+        myMaze = new Maze(theSize, myQF);
         myMaze.createMaze();
     }
     public void setName(String theName) {

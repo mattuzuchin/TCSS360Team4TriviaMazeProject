@@ -95,7 +95,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         return myPanel;
     }
     private void initGUI(final String theDif) {
-         myMazePanel = new TriviaMazePanel(mySize, myTriviaMaze, theDif);
+        myMazePanel = new TriviaMazePanel(mySize, myTriviaMaze, theDif);
         myPanel = new QuestionPanel(myTriviaMaze, theDif, this);
         myPanel.setVisible(true);
         myTriviaMaze.mySetPanel(myMazePanel);
@@ -234,9 +234,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 break;
             case STOP_COMMAND:
                 myStop = true;
-                end(myPlayerEnd + "Stats: " + myPanel.getCorrect() + " correct. \n" +
-                        myPanel.getIncorrect() +  " incorrect. \n" +
-                        myMoves +  "vmoves taken. \n Do you want to play again?") ;
+                end(myPlayerEnd + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                        myPanel.getIncorrect() +  " incorrect.\n" +
+                        myMoves +  "vmoves taken.\n Do you want to play again?") ;
                 break;
             case MOVE_UP:
                 myHitUp = true;
@@ -348,18 +348,42 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void checkEnd() {
         if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
                 myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
-            end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct. \n" +
-                    myPanel.getIncorrect() +  " incorrect. \n" +
-                    myMoves +  " moves taken. \n Do you want to play again?");
+            end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                    myPanel.getIncorrect() +  " incorrect.\n" +
+                    myMoves +  " moves taken.\n Do you want to play again?");
         }
     }
 
     public void playerLost() {
+        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                myPanel.getIncorrect() +  " incorrect.\n" +
+                myMoves +  " moves taken.\n Do you want to play again?";
         if(myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked()) {
-           end(myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct. \n" +
-                                  myPanel.getIncorrect() +  " incorrect. \n" +
-                                   myMoves +  " moves taken. \n Do you want to play again?");
+           end(message);
+        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked())) {
+            end(message);
+        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+            end(message);
+        } else if ((myTriviaMaze.getRow() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+            end(message);
+        } else if ((myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked())) {
+            end(message);
+        } else if ((myTriviaMaze.getCol() == 0 && myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1) && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked()) {
+            end(message);
+        } else if ((myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked())) {
+            end(message);
+        } else if ((myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1 ) && (myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+            end(message);
+        } else {
+            throw new IllegalArgumentException("No such case");
         }
     }
 

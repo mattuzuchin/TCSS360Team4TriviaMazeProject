@@ -1,6 +1,7 @@
 package Model;
 
 
+import javax.swing.plaf.TableHeaderUI;
 import java.io.Serializable;
 
 public class Maze implements Serializable {
@@ -10,8 +11,11 @@ public class Maze implements Serializable {
     private int myExitColumn;
     private Player myPlayer;
 
-    public Maze(final int theSize) {
-        myPlayer = new Player("test");
+    public static QuestionFactory FACTORY;
+
+    public Maze(final int theSize, final QuestionFactory theFactory) {
+        FACTORY = theFactory;
+        myPlayer = new Player("");
         mySize = theSize;
         myRooms = new Room[mySize][mySize];
         myPlayer.setRow(0);

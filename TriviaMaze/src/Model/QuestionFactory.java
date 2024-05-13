@@ -50,7 +50,8 @@ public class QuestionFactory implements Serializable {
                         "OPTION_B TEXT NOT NULL, " +
                         "OPTION_C TEXT NOT NULL, " +
                         "OPTION_D TEXT NOT NULL, " +
-                        "ANSWER TEXT NOT NULL )";
+                        "ANSWER TEXT NOT NULL, " +
+                        "TYPE TEXT NOT NULL )";
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement(); ) {
@@ -70,7 +71,8 @@ public class QuestionFactory implements Serializable {
                 String optionC = rs.getString(4);
                 String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                Question question = new Question(questionText, optionA, optionB, optionC, optionD, answer);
+                String type = rs.getString(7);
+                Question question = new Question(questionText, optionA, optionB, optionC, optionD,answer, type);
                 myQuestionsList.add(question);
             }
         } catch ( SQLException e ) {
