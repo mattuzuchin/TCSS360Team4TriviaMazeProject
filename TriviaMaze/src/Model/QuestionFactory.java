@@ -81,7 +81,9 @@ public class QuestionFactory implements Serializable {
     public Question getQuestion() {
         Random randomQ = new Random();
         myChoice = randomQ.nextInt(myQuestionsList.size());
-        return myQuestionsList.get(myChoice);
+        Question noRepeat = myQuestionsList.get(myChoice);
+        myQuestionsList.remove(myChoice);
+        return noRepeat;
     }
 
 

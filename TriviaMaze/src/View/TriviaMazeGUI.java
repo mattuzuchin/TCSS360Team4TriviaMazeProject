@@ -75,6 +75,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private boolean myHitLeft;
     private boolean myHitRight;
 
+    private String myPlayerEnd;
+    private String myPlayerWon;
+    private String myPlayerLost;
+
 
 
     public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif) {
@@ -97,8 +101,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myTriviaMaze.mySetPanel(myMazePanel);
         myTriviaMaze.addPropertyChangeListener(myMazePanel);
         myTriviaMaze.addPropertyChangeListener(myPanel);
+        myPlayerEnd = myTriviaMaze.getMyPlayer().getName() + " ended the game" ;
+        myPlayerWon = myTriviaMaze.getMyPlayer().getName() + " won the game!";
 
-
+        myPlayerLost = myTriviaMaze.getMyPlayer().getName() + " LOST! \n ";
         myMazePanel.setFocusable(true);
         final JPanel southPanel = new JPanel(new FlowLayout());
         mySouthAndQuestionPanel = new JPanel();
@@ -228,7 +234,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 break;
             case STOP_COMMAND:
                 myStop = true;
-                end();
+                end(myPlayerEnd + "Stats: " + myPanel.getCorrect() + " correct. \n" +
+                        myPanel.getIncorrect() +  " incorrect. \n" +
+                        myMoves +  "vmoves taken. \n Do you want to play again?") ;
                 break;
             case MOVE_UP:
                 myHitUp = true;
@@ -340,24 +348,18 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void checkEnd() {
         if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
                 myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
-            end();
+            end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct. \n" +
+                    myPanel.getIncorrect() +  " incorrect. \n" +
+                    myMoves +  " moves taken. \n Do you want to play again?");
         }
     }
 
     public void playerLost() {
         if(myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked()) {
-            int option = JOptionPane.showConfirmDialog(this, myTriviaMaze.getMyPlayer().getName() + " LOST! \n " +
-                            "Stats: " + myTriviaMaze.getCorrect() + " correct. \n" +
-                            myTriviaMaze.getIncorrect() + " incorrect. \n" +
-                            myMoves + " moves taken. \n Do you want to play again?",
-                    "Game Over", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                dispose();
-                new TitleScreen();
-            } else {
-                System.exit(0);
-            }
+           end(myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct. \n" +
+                                  myPanel.getIncorrect() +  " incorrect. \n" +
+                                   myMoves +  " moves taken. \n Do you want to play again?");
         }
     }
 
@@ -406,12 +408,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
         return maze;
     }
-    public void end() {
-        if (!myStop) {
-            int option = JOptionPane.showConfirmDialog(this, "Congratulations " + myTriviaMaze.getMyPlayer().getName() + "! You won! \n " +
-                            "Stats: " + myTriviaMaze.getCorrect() + " correct. \n" +
-                            myTriviaMaze.getIncorrect() + " incorrect. \n" +
-                            myMoves + " moves taken. \n Do you want to play again?",
+    public void end(final String theMessage) {
+            int option = JOptionPane.showConfirmDialog(this,theMessage,
                     "Game Over", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 dispose();
@@ -419,19 +417,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             } else {
                 System.exit(0);
             }
-        } else {
-            int option = JOptionPane.showConfirmDialog(this, myTriviaMaze.getMyPlayer().getName() + " ended the game. \n " +
-                            "Stats: " + myTriviaMaze.getCorrect() + " correct. \n" +
-                            myTriviaMaze.getIncorrect() + " incorrect. \n" +
-                            myMoves + " moves taken. \n Do you want to play again?",
-                    "Game Over", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                dispose();
-                new TitleScreen();
-            } else {
-                System.exit(0);
-            }
-        }
 
     }
 
