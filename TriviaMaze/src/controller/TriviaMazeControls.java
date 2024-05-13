@@ -1,6 +1,6 @@
-package controller;
+package Controller;
 
-import view.QuestionPanel;
+import View.QuestionPanel;
 
 public interface TriviaMazeControls {
 

@@ -1,7 +1,7 @@
-package view;
+package View;
 
-import controller.TriviaMaze;
-import model.Room;
+import Controller.TriviaMaze;
+import Model.Room;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

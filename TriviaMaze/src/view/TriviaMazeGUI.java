@@ -1,8 +1,8 @@
-package view;
+package View;
 
 
-import controller.TriviaMaze;
-import model.*;
+import Controller.TriviaMaze;
+import Model.*;
 
 import javax.swing.*;
 import java.awt.*;

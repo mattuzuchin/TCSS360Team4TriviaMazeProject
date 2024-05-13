@@ -1,7 +1,8 @@
-package view;
+package View;
 
-import controller.TriviaMaze;
-import model.Question;
+import Controller.TriviaMaze;
+import Model.Question;
+import Model.QuestionFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -11,7 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
-import static controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
+import static Controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 

@@ -1,8 +1,8 @@
-package controller;
+package Controller;
 
-import model.*;
-import view.QuestionPanel;
-import view.TriviaMazePanel;
+import Model.*;
+import View.QuestionPanel;
+import View.TriviaMazePanel;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -23,11 +23,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     private int myIncorrect;
 
     public TriviaMaze() {
-        myRow =  0;
-        myColumns = 0;
-    }
-
-    public TriviaMaze(final Difficulty theDifficulty, final String thePlayer) {
         myRow =  0;
         myColumns = 0;
     }
