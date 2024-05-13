@@ -1,25 +1,33 @@
 package model;
 
-public class Door {
+import java.io.Serializable;
 
-    boolean myOpenStatus;
-    boolean myLockedStatus;
-    Question myQuestion;
+public class Door implements Serializable {
+    private boolean myLockedStatus;
 
-    Door() {
+    private Question myAssignedQuestion;
 
+
+    private Direction myDirection;
+
+
+    public Door(Direction theDirection) {
+        myLockedStatus = false; //false means unlocked, true is locked!
+        myAssignedQuestion = QuestionFactory.getInstance().getQuestion();
+        myDirection = theDirection;
     }
 
-    public void setOpenStatus(boolean theOpenStatus) {
-        this.myOpenStatus  = theOpenStatus;
-    }
-    public void setLockedStatus(boolean theLockedStatus) {
-        this.myLockedStatus  = theLockedStatus;
+    public void setLockedStatus(final boolean theLockedStatus) {
+        myLockedStatus  = theLockedStatus;
     }
     public boolean isLocked() {
         return myLockedStatus;
     }
-    public boolean isOpen() {
-        return myOpenStatus;
+    public Question getMyAssignedQuestion() {
+        return myAssignedQuestion;
+    }
+
+    public String toString() {
+        return "Current status: " + myLockedStatus + ", " + "Direction: " + myDirection;
     }
 }

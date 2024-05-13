@@ -3,11 +3,8 @@ package view;
 import java.awt.*;
 
 public class TriviaMazeMain {
-
-    private TriviaMazeMain() {
-        // Dummy constructor
+    private TriviaMazeMain() {}
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> new TitleScreen());
     }
-
-    public static void main(final String[] theArgs) {
-        EventQueue.invokeLater(() -> new TriviaMazeGUI());    }
 }

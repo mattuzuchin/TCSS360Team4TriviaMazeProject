@@ -1,6 +1,7 @@
 package view;
 
-import model.*;
+import controller.TriviaMaze;
+import model.Room;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -8,9 +9,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 
-import static controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_MAZE;
 
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
@@ -19,8 +18,8 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private static final Font FONT = new Font("SanSerif", Font.BOLD, 9);
 
     private static final BasicStroke STROKE = new BasicStroke(3, BasicStroke.CAP_BUTT,
-                                                                BasicStroke.JOIN_MITER, 2,
-                                                                new float[] {2, 2, 2, 2}, 0);
+            BasicStroke.JOIN_MITER, 2,
+            new float[] {2, 2, 2, 2}, 0);
 
     private static final int ROOM_SIZE = 50;
 
@@ -28,104 +27,147 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private static final int DEBUG_OFFSET = 10;
 
+
     private final int mySize;
 
-    private Maze myMaze;
-
+    private TriviaMaze myMaze;
+    private boolean check = false;
     private boolean myDebugFlag;
+    private Graphics myGraph;
 
 
-    public TriviaMazePanel() {
+    public TriviaMazePanel(final int theSize, final TriviaMaze theMaze, String theDif) {
         super();
-        mySize = 4;
-        myMaze = new Maze(mySize);
+        myMaze = theMaze;
+        myMaze.makeMaze(theSize);
+        mySize = theSize;
+        if(theDif.equals("Easy")) {
+            setPreferredSize(new Dimension(200,200));
+        } else if(theDif.equals("Medium")) {
+            setPreferredSize(new Dimension(300,300));
+        } else if(theDif.equals("Hard")) {
+            setPreferredSize(new Dimension(500,500));
+        } else {
+            setPreferredSize(new Dimension(700,700));
+        }
 
-        setPreferredSize(new Dimension((mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE),
-                (mySize * ROOM_SIZE) + ((mySize + 1) * DOOR_SIZE)));
-        setBackground(Color.BLACK);
+        setBackground(Color.ORANGE);
         setFont(FONT);
     }
+    private int myRow;
+    private int myCol;
+    public void setColor(final int theRow, final int theCol) {
+       check = true;
+        myRow = theRow;
+        myCol = theCol;
+        paintComponent(myGraph);
 
+    }
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
-        final Graphics2D g2 = (Graphics2D) theGraphics;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        if(!check) {
+            final Graphics2D g2 = (Graphics2D) theGraphics;
+            myGraph = theGraphics;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setStroke(STROKE);
-        drawRooms(g2);
+            g2.setStroke(STROKE);
+            drawRooms(g2);
+        } else {
+            final Graphics2D g2 = (Graphics2D) theGraphics;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setStroke(STROKE);
+            drawRooms(g2);
+        }
+
+
+    }
+    public void setCheck(final boolean theB) {
+        check = theB;
     }
 
-    private void drawRooms(final Graphics2D theGraphics) {
+    public void move() {
+        int row = myMaze.getRow() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+        int col = myMaze.getCol() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+    }
 
+    public void drawRooms(final Graphics2D theGraphics) {
+
+        Room[][] theR = myMaze.getMaze();
+        if(!check) {
         for (int y = 0; y < mySize; y++) {
             final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 
             for (int x = 0; x < mySize; x++) {
                 final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-                final Room room = myMaze.getRoom(x, y);
+                if (x == 0 && y == 0) {
+                    theGraphics.setPaint(Color.BLUE);
+                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                    drawDebugInfo(theGraphics, leftX, topY);
 
-                theGraphics.setPaint(Color.DARK_GRAY);
-                theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                drawDoors(theGraphics, room, leftX, topY);
+                } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
+                    theGraphics.setPaint(Color.RED);
+                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                    drawDebugInfo(theGraphics, leftX, topY);
 
-                drawDebugInfo(theGraphics, leftX, topY);
-            }
-        }
-    }
-
-    private void drawDoors(final Graphics2D theGraphics, final Room theRoom, final int theX, final int theY) {
-        final Map<Direction, Door> doors = theRoom.getDoors();
-
-        int width = 0;
-        int height = 0;
-
-        for (Direction d : doors.keySet()) {
-            int newX = theX;
-            int newY = theY;
-
-            switch (d) {
-                case Direction.NORTH:
-                    newY -= DOOR_SIZE;
-                    width = ROOM_SIZE;
-                    height = DOOR_SIZE;
-                    break;
-                case Direction.EAST:
-                    newX += ROOM_SIZE;
-                    width = DOOR_SIZE;
-                    height = ROOM_SIZE;
-                    break;
-                case Direction.SOUTH:
-                    newY += ROOM_SIZE;
-                    width = ROOM_SIZE;
-                    height = DOOR_SIZE;
-                    break;
-                case Direction.WEST:
-                    newX -= DOOR_SIZE;
-                    width = DOOR_SIZE;
-                    height = ROOM_SIZE;
-                    break;
-                default:
-            }
-
-            switch (doors.get(d).getStatus) {
-                case CLOSED:
+                } else {
                     theGraphics.setPaint(Color.DARK_GRAY);
-                    theGraphics.fillRect(newX, newY, width, height);
-                    break;
-                case OPEN:
-                    theGraphics.setPaint(Color.LIGHT_GRAY);
-                    theGraphics.fillRect(newX, newY, width, height);
-                    break;
-                case LOCKED:
-                    theGraphics.setPaint(Color.BLACK);
-                    theGraphics.fillRect(newX, newY, width, height);
-                    break;
-                default: // Wall, not painted
+                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                    drawDebugInfo(theGraphics, leftX, topY);
+                }
             }
         }
+
+        } else {
+            repaint();
+            Room[][] checkRoom = myMaze.getMaze();
+
+            for (int y = 0; y < mySize; y++) {
+                final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+                for (int x = 0; x < mySize; x++) {
+                    final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+                    if (y == myRow && x == myCol) {
+                        theGraphics.setPaint(Color.BLUE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
+                        theGraphics.setPaint(Color.RED);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 0 ){
+                        theGraphics.setPaint(Color.DARK_GRAY);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 1 ){
+                        theGraphics.setPaint(Color.GREEN);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 2 ){
+                        theGraphics.setPaint(Color.PINK);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 3 ){
+                        theGraphics.setPaint(Color.WHITE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    } else if(checkRoom[y][x].getDoor().checkNumber() == 4 ){
+                        theGraphics.setPaint(Color.CYAN);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    }
+
+                }
+        }
+
+        }
+
     }
+
+
 
 
     private void drawDebugInfo(final Graphics2D theGraphics, final int theX, final int theY) {
@@ -140,33 +182,13 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         }
     }
 
-    /**
-     * This method gets called when a bound property is changed.
-     *
-     * @param theEvent A PropertyChangeEvent object describing the event source
-     *            and the property that has changed.
-     */
+
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
-        switch (theEvent.getPropertyName()) {
-            case PROPERTY_MAZE:
-                myMaze = (Maze) theEvent.getNewValue();
-                repaint();
-                break;
-            case PROPERTY_PLAYER:
-                myPlayer = (Player) theEvent.getNewValue();
-                repaint();
-                break;
-            default:
-                break;
-        }
+
     }
 
-    /**
-     * Invoked when the target of the listener has changed its state.
-     *
-     * @param theEvent a ChangeEvent object
-     */
+
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
         myDebugFlag = ((JToggleButton) theEvent.getSource()).isSelected();

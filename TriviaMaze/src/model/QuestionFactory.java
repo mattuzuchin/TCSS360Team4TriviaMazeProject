@@ -4,20 +4,23 @@ import org.sqlite.SQLiteDataSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.*;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class QuestionFactory {
+public class QuestionFactory implements Serializable {
     private static QuestionFactory uniqueInstance;
-    private final ArrayList<Question> myQuestionsList;
-    private final Random myRandom;
+    private ArrayList<Question> myQuestionsList;
+    private int myChoice;
 
     private QuestionFactory() throws FileNotFoundException {
         myQuestionsList = new ArrayList<Question>();
         assignQuestion();
-        myRandom = new Random(myQuestionsList.size());
     }
 
     // singleton
@@ -51,7 +54,7 @@ public class QuestionFactory {
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement(); ) {
-            int rv = stmt.executeUpdate( query );
+             int rv = stmt.executeUpdate( query );
             Scanner in = new Scanner(new File("Questions.txt"));
             String queries = "";
             while(in.hasNext()) {
@@ -61,14 +64,13 @@ public class QuestionFactory {
             query = "SELECT DISTINCT * FROM questions";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                ArrayList<String> options = new ArrayList<>();
                 String questionText = rs.getString(1);
-                options.add(rs.getString(2));
-                options.add(rs.getString(3));
-                options.add(rs.getString(4));
-                options.add(rs.getString(5));
+                String optionA = rs.getString(2);
+                String optionB = rs.getString(3);
+                String optionC = rs.getString(4);
+                String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                Question question = new Question(questionText, options, answer);
+                Question question = new Question(questionText, optionA, optionB, optionC, optionD, answer);
                 myQuestionsList.add(question);
             }
         } catch ( SQLException e ) {
@@ -77,6 +79,13 @@ public class QuestionFactory {
         }
     }
     public Question getQuestion() {
-        return myQuestionsList.get(myRandom.nextInt(myQuestionsList.size()));
+        Random randomQ = new Random();
+        myChoice = randomQ.nextInt(myQuestionsList.size());
+        return myQuestionsList.get(myChoice);
+    }
+
+
+    public int getChoice() {
+        return myChoice;
     }
 }
