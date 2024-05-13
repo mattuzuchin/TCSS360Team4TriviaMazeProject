@@ -2,6 +2,7 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Difficulty;
+import Model.QuestionFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,12 +18,16 @@ public class TitleScreen extends JFrame implements ActionListener {
 
     private JButton myStartButton;
     private JTextField myTextName;
-    private final TriviaMaze myTM = new TriviaMaze();
+    private TriviaMaze myTM;
     private ArrayList<JToggleButton> myButtons;
     private ButtonGroup myButtonGroup;
+    private QuestionFactory myFactory;
 
     public TitleScreen() {
+
         myButtons = new ArrayList<>();
+        myFactory = QuestionFactory.getInstance();
+        myTM = new TriviaMaze(myFactory);
         initGUI();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

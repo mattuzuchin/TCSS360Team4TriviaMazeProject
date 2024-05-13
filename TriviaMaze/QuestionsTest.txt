@@ -1,0 +1,4 @@
+INSERT INTO questions (QUESTION, OPTION_A, OPTION_B, OPTION_C, OPTION_D, ANSWER, TYPE) VALUES
+('In what 1976 movie does Robert De Niro say the famous line, “You talkin’ to me?”', 'Meet the Fockers', 'The Godfather', 'Taxi Driver', 'Goodfellas', 'Taxi Driver','1')
+
+
