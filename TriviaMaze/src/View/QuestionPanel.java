@@ -163,6 +163,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     public void addListener() {
         mySubmit.addActionListener(theEvent -> {
             myCheckAnswer = 1;
+            myLong.setText("");
             mySubmit.setEnabled(false);
             myButtonA.setEnabled(false);
             myButtonB.setEnabled(false);
