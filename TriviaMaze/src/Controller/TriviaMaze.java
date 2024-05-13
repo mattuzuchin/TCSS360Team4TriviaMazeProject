@@ -19,8 +19,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     private Maze myMaze;
     private TriviaMazePanel myTMP;
 
-    private int myCorrect;
-    private int myIncorrect;
+
 
     public TriviaMaze() {
         myRow =  0;
@@ -28,16 +27,12 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     }
 
 
-    public int getCorrect() {
-        return myCorrect;
-    }
+
 
     public Maze getMyMaze() {
         return myMaze;
     }
-    public int getIncorrect() {
-        return myIncorrect;
-    }
+
     public void mySetPanel(final TriviaMazePanel theT) {
         myTMP = theT;
     }

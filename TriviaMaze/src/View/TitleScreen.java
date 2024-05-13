@@ -114,13 +114,13 @@ public class TitleScreen extends JFrame implements ActionListener {
             myTM.setName(myTextName.getText());
             String getDifficulty = getSelectedAnswer();
             if(getDifficulty.equals("Easy")) {
-                new TriviaMazeGUI(myTM, 4, "Easy");
+                new TriviaMazeGUI(myTM, 2, "Easy");
             } else if (getDifficulty.equals("Medium")) {
-                new TriviaMazeGUI(myTM, 6, "Medium");
+                new TriviaMazeGUI(myTM, 4, "Medium");
             } else if (getDifficulty.equals("Hard")) {
-                new TriviaMazeGUI(myTM, 8, "Hard");
+                new TriviaMazeGUI(myTM, 6, "Hard"); // points system?
             } else {
-                new TriviaMazeGUI(myTM, 10, "Extreme");
+                new TriviaMazeGUI(myTM, 6, "Extreme"); // points system?
             }
 
         }

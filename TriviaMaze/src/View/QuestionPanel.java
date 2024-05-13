@@ -35,6 +35,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private int myCorrect;
     private int myIncorrect;
     private int myCheckAnswer;
+    private JLabel myLong;
 
     private TriviaMazeGUI myView;
 
@@ -79,22 +80,38 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myCheckAnswer = 0;
        setQuestion(theQ);
        myQuestion  = theQ;
-       myQuestionLabel.setText("Question: " + myQuestion.getQuestionText());
-       myButtonA.setText(myQuestion.getOptionA());
-        myButtonB.setText(myQuestion.getOptionB());
-        myButtonC.setText(myQuestion.getOptionC());
-        myButtonD.setText(myQuestion.getOptionD());
-        myButtonA.setEnabled(true);
-        myButtonB.setEnabled(true);
-        myButtonC.setEnabled(true);
-        myButtonD.setEnabled(true);
+       String question = myQuestion.getQuestionText();
+       if(question.length() > 60) {
+           myQuestionLabel.setText("Question: " + question.substring(0,60));
+           myLong.setText(question.substring(60));
+           myButtonA.setText(myQuestion.getOptionA());
+           myButtonB.setText(myQuestion.getOptionB());
+           myButtonC.setText(myQuestion.getOptionC());
+           myButtonD.setText(myQuestion.getOptionD());
+           myButtonA.setEnabled(true);
+           myButtonB.setEnabled(true);
+           myButtonC.setEnabled(true);
+           myButtonD.setEnabled(true);
+       } else {
+           myQuestionLabel.setText("Question: " + question);
+           myButtonA.setText(myQuestion.getOptionA());
+           myButtonB.setText(myQuestion.getOptionB());
+           myButtonC.setText(myQuestion.getOptionC());
+           myButtonD.setText(myQuestion.getOptionD());
+           myButtonA.setEnabled(true);
+           myButtonB.setEnabled(true);
+           myButtonC.setEnabled(true);
+           myButtonD.setEnabled(true);
+       }
     }
 
     public void setComponents() {
 
         myQuestionLabel = new JLabel();
+        myLong = new JLabel();
         myButtonA = new JRadioButton();
         myAnswerButtons.add(myButtonA);
+
 
         myButtonB = new JRadioButton();
         myAnswerButtons.add(myButtonB);
@@ -114,6 +131,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myButtonC.setEnabled(false);
         myButtonD.setEnabled(false);
         add(myQuestionLabel);
+        add(myLong);
         add(myButtonA);
         add(myButtonB);
         add(myButtonC);
@@ -248,5 +266,13 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
             }
         });
+      }
+
+      public int getCorrect() {
+        return myCorrect;
+      }
+
+      public int getIncorrect() {
+        return myIncorrect;
       }
 }
