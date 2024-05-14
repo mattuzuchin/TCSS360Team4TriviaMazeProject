@@ -4,6 +4,7 @@ package View;
 import Controller.TriviaMaze;
 import Model.*;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -48,7 +49,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private static final String MOVE_RIGHT = "Right";
     private static final String MOVE_LEFT = "Left";
     private static final String ROOM_INFO = "Room";
-    
+
     private static final String RESET_COMMAND = "Reset";
     private JButton myUp;
     private JButton myDown;
@@ -75,11 +76,24 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private String myPlayerEnd;
     private String myPlayerWon;
     private String myPlayerLost;
+    private Clip myGameWon;
+    private Clip myGameLost;
 
 
 
     public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif) {
         super(TITLE);
+        try {
+            myGameWon = AudioSystem.getClip();
+            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File("gamewon.wav"));
+            myGameWon.open(correctStream);
+
+            myGameLost = AudioSystem.getClip();
+            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File("gameover.wav"));
+            myGameLost.open(incorrectStream);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
         myDif =theDif;
         mySize = thePanelSize;
         myTriviaMaze = theMaze;
@@ -362,6 +376,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void checkEnd() {
         if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
                 myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
+            playWonSound();
             end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct.\n" +
                     myPanel.getIncorrect() +  " incorrect.\n" +
                     myMoves +  " moves taken.\n Do you want to play again?");
@@ -372,6 +387,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
+        playLostSound();
         if(myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked()) {
            end(message);
@@ -405,10 +421,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         int exitRow = myTriviaMaze.getExitRow() - 1;
         int exitCol = myTriviaMaze.getExitCol() - 1;
         Room[][] room = myTriviaMaze.getMaze();
+
         String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         if(room[exitRow][exitCol].getDoor().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoor().getMyWestDoor().isLocked()) {
+            playLostSound();
             end(message);
         }
     }
@@ -459,6 +477,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         return maze;
     }
     public void end(final String theMessage) {
+
             int option = JOptionPane.showConfirmDialog(this,theMessage,
                     "Game Over", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
@@ -468,6 +487,21 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 System.exit(0);
             }
 
+    }
+
+    private void playWonSound() {
+        if (myGameWon.isRunning())
+            myGameWon.stop();
+        myGameWon.setFramePosition(0);
+        myGameWon.start();
+    }
+
+    // Method to play incorrect sound
+    private void playLostSound() {
+        if (myGameLost.isRunning())
+            myGameLost.stop();
+        myGameLost.setFramePosition(0);
+        myGameLost.start();
     }
 
 
