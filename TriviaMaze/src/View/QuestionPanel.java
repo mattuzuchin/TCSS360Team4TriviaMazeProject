@@ -4,19 +4,23 @@ import Controller.TriviaMaze;
 import Model.Question;
 import Model.QuestionFactory;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 
 import static Controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
 
 public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
-
+    private Clip myIncorrectSound;
+    private Clip myCorrectSound;
 
     private Question myQuestion;
     private JLabel myQuestionBody;
@@ -50,6 +54,17 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         mySubmit = new JButton("Submit");
         mySubmit.setVisible(true);
         mySubmit.setEnabled(false);
+        try {
+            myCorrectSound = AudioSystem.getClip();
+            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File("correctbuzz.wav"));
+            myCorrectSound.open(correctStream);
+
+            myIncorrectSound = AudioSystem.getClip();
+            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File("incorrectbuzz.wav"));
+            myIncorrectSound.open(incorrectStream);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         if(theDif.equals("Easy")) {
             setPreferredSize(new Dimension(200,200));
@@ -70,7 +85,20 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myQuestion = theQuestion;
 
     }
+    private void playCorrectSound() {
+        if (myCorrectSound.isRunning())
+            myCorrectSound.stop();
+        myCorrectSound.setFramePosition(0);
+        myCorrectSound.start();
+    }
 
+
+    private void playIncorrectSound() {
+        if (myIncorrectSound.isRunning())
+            myIncorrectSound.stop();
+        myIncorrectSound.setFramePosition(0);
+        myIncorrectSound.start();
+    }
     public void setDir(final int theDir) {
         if(theDir < 0 || theDir > 3) {
             throw new IllegalArgumentException("not valid");
@@ -234,6 +262,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                 String theAnswer = myQuestion.getCorrectAnswer();
                 String selectedAnswer = getSelectedAnswer();
                 if (selectedAnswer.equals(theAnswer)) {
+                    playCorrectSound();
                     JOptionPane.showMessageDialog(this, "Correct!");
                     myCorrect++;
                     if (myView.getMyUp()) {
@@ -273,6 +302,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
                 } else {
                     myIncorrect++;
+                    playIncorrectSound();
                     JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
                     myMaze.lockDoor(myDir);
                     myView.setUpBut();
@@ -311,6 +341,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                 String theAnswer = myQuestion.getCorrectAnswer();
                 String selectedAnswer = myField.getText();
                 if (selectedAnswer.toLowerCase().equals(theAnswer.toLowerCase())) {
+                    playCorrectSound();
                     JOptionPane.showMessageDialog(this, "Correct!");
                     myCorrect++;
                     if (myView.getMyUp()) {
@@ -352,6 +383,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
                 } else {
                     myIncorrect++;
+                    playIncorrectSound();
                     JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
                     myMaze.lockDoor(myDir);
                     myView.setUpBut();
@@ -388,6 +420,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             }
             myField.setVisible(false);
             myAnswer.setVisible(false);
+            mySubmit.setVisible(false);
 
 
         });
@@ -424,6 +457,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
             }
         });
       }
+
 
       public int getCorrect() {
         return myCorrect;
