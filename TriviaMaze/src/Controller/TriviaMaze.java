@@ -45,31 +45,13 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         myPcs.addPropertyChangeListener(theListener);
     }
 
-    public void addPropertyChangeListener(final String thePropertyName, final PropertyChangeListener theListener) {
-        myPcs.addPropertyChangeListener(thePropertyName, theListener);
-    }
-
-
-    public void removePropertyChangeListener(final PropertyChangeListener theListener) {
-        myPcs.removePropertyChangeListener(theListener);
-    }
-
-
-
-    public void removePropertyChangeListener(final String thePropertyName,
-                                      final PropertyChangeListener theListener) {
-
-        myPcs.removePropertyChangeListener(thePropertyName, theListener);
-    }
 
     public void setMaze(final Maze theMaze) {
         myMaze = theMaze;
     }
-    public void setX(final int theX) {
-        if(theX < 0) {
-            throw new IllegalArgumentException("Values cannot be negative. You put: " + theX);
-        }
-        myRow = theX;
+
+    public QuestionFactory getQF() {
+        return myQF;
     }
 
     public boolean checkNorthLocation() {
@@ -108,25 +90,11 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         }
         return check;
     }
-    public void setY(final int theY) {
-        if(theY < 0) {
-            throw new IllegalArgumentException("Values cannot be negative. You put: " + theY);
-        }
-        myColumns = theY;
-    }
 
     public String toString() {
         return myRow + " " + myColumns;
     }
 
-    public void reset() {
-        myMaze.setPlayerStart(0,0);
-        myColumns = 0;
-        myRow = 0;
-
-        myTMP.setCheck(false);
-        myTMP.drawRooms((Graphics2D) myTMP.getGraphics());
-    }
     public void advanceNorth(QuestionPanel thePanel) {
         if(myRow < myMaze.getSize() && myRow != 0) {
             Room room = myMaze.getRoom(myRow, myColumns);
@@ -218,9 +186,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         myPlayer = new Player(theName);
     }
 
-    private boolean isValidIndex(final int theX, final int theY) {
-        return theY < 0 && theX < 0;
-    }
     public int getRow() {
         return myRow;
     }
@@ -251,11 +216,4 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         return 0;
     }
 
-    private void fireGridChange() {
-        myPcs.firePropertyChange(PROPERTY_GRID, null, myMaze.getMyRooms().clone());
-    }
-
-    private void firePlayerChange() {
-        myPcs.firePropertyChange(PROPERTY_PLAYER, null, new Player("test"));
-    }
 }

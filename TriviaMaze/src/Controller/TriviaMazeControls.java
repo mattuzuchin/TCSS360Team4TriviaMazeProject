@@ -11,8 +11,6 @@ public interface TriviaMazeControls {
     void lockDoor(final int theDir);
     void start();
 
-    void reset();
-
     int getHeight();
 
 

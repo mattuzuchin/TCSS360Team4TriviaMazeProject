@@ -38,6 +38,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     private JLabel myLong;
     private JTextField myField;
     private TriviaMazeGUI myView;
+    private JPanel myAnswer;
 
     public QuestionPanel(final TriviaMaze theMaze, String theDif, TriviaMazeGUI theView) {
         super();
@@ -84,7 +85,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
        if(theQ.getType() == 1) { // multiple choice
           setMultipleChoiceVisible(true);
           setMultipleChoiceEnable(true);
+          mySubmit.setEnabled(false);
            if (question.length() > 60) {
+               myLong.setVisible(true);
                myQuestionLabel.setText("Question: " + question.substring(0, 60));
                myLong.setText(question.substring(60));
                myButtonA.setText(myQuestion.getOptionA());
@@ -103,11 +106,13 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
        } else if (theQ.getType() == 2) { //true false
            setMultipleChoiceVisible(true);
            setMultipleChoiceEnable(true);
+           mySubmit.setEnabled(false);
            myButtonC.setEnabled(false);
            myButtonD.setEnabled(false);
            myButtonC.setVisible(false);
            myButtonD.setVisible(false);
            if (question.length() > 60) {
+               myLong.setVisible(true);
                myQuestionLabel.setText("Question: " + question.substring(0, 60));
                myLong.setText(question.substring(60));
                myButtonA.setText(myQuestion.getOptionA());
@@ -122,12 +127,16 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
        } else if (theQ.getType() == 3) { // short answer
            setMultipleChoiceEnable(false);
            setMultipleChoiceVisible(false);
+           myQuestionBody.setVisible(true);
+           myQuestionLabel.setVisible(true);
            myField.setVisible(true);
            myField.setEditable(true);
            mySubmit.setVisible(true);
-           if (question.length() > 60) {
-               myQuestionLabel.setText("Question: " + question.substring(0, 60));
-               myLong.setText(question.substring(60));
+           myAnswer.setVisible(true);
+           if (question.length() > 45) {
+               myLong.setVisible(true);
+               myQuestionLabel.setText("Question: " + question.substring(0, 45));
+               myLong.setText(question.substring(45));
 
 
            } else {
@@ -159,10 +168,10 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         mySubmit.setEnabled(theB);
     }
     public void setComponents() {
-
+        myAnswer = new JPanel();
         myQuestionLabel = new JLabel();
         myLong = new JLabel();
-        myField = new JTextField("Answer: ");
+        myField = new JTextField(20);
         myButtonA = new JRadioButton();
         myAnswerButtons.add(myButtonA);
 
@@ -177,11 +186,13 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myAnswerButtons.add(myButtonD);
         myField.setEditable(false);
         myField.setVisible(false);
+        myAnswer.add(myField);
+        myAnswer.setVisible(false);
         setMultipleChoiceVisible(false);
         setMultipleChoiceEnable(false);
         add(myQuestionLabel);
         add(myLong);
-        add(myField);
+        add(myAnswer);
         add(myButtonA);
         add(myButtonB);
         add(myButtonC);
@@ -258,6 +269,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.updateButtonState();
                         myView.setRight(false);
                     }
+                    setMultipleChoiceVisible(false);
 
                 } else {
                     myIncorrect++;
@@ -266,6 +278,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     myView.setUpBut();
                     myView.updateButtonState();
                     myView.playerLost();
+                    myView.checkExitEnd();
                     if (myView.getMyUp()) {
                         myView.setDisableUp();
                         myView.setUp(false);
@@ -289,6 +302,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.changePosition();
 
                     }
+                    setMultipleChoiceVisible(false);
                 }
             } else {
                 myCheckAnswer = 1;
@@ -332,6 +346,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.updateButtonState();
                         myView.setRight(false);
                     }
+                    myField.setVisible(false);
+                    myQuestionBody.setVisible(false);
+                    myQuestionLabel.setVisible(false);
 
                 } else {
                     myIncorrect++;
@@ -340,6 +357,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     myView.setUpBut();
                     myView.updateButtonState();
                     myView.playerLost();
+                    myView.checkExitEnd();
                     if (myView.getMyUp()) {
                         myView.setDisableUp();
                         myView.setUp(false);
@@ -364,7 +382,12 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
                     }
                 }
+                myQuestionBody.setVisible(false);
+                myQuestionLabel.setVisible(false);
+
             }
+            myField.setVisible(false);
+            myAnswer.setVisible(false);
 
 
         });
