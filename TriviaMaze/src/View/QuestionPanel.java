@@ -387,6 +387,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
             }
             myField.setVisible(false);
+            myAnswer.setVisible(false);
 
 
         });

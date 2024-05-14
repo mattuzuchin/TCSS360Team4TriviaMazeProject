@@ -47,11 +47,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private static final String MOVE_DOWN = "Down";
     private static final String MOVE_RIGHT = "Right";
     private static final String MOVE_LEFT = "Left";
-    private boolean myWaitToAdvance = false;
-
-    /**
-     * The Reset command.
-     */
+    private static final String ROOM_INFO = "Room";
+    
     private static final String RESET_COMMAND = "Reset";
     private JButton myUp;
     private JButton myDown;
@@ -204,10 +201,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, gameRules));
         helpMenu.add(rules);
 
+        final JMenuItem aboutRoom = new JMenuItem(ROOM_INFO);
+        aboutRoom.setMnemonic(KeyEvent.VK_L);
+        aboutRoom.addActionListener(this);
+
         final JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
         about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V0.01"));
         helpMenu.add(about);
+        helpMenu.add(aboutRoom);
 
         menuBar.add(helpMenu);
         menuBar.add(playerMenu);
@@ -228,10 +230,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                         "Confirm", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     dispose();
+                    myTriviaMaze.getQF().setInstance();
                     new TitleScreen();
                 } else {
                     System.exit(0);
                 }
+                break;
+            case ROOM_INFO:
+                JOptionPane.showMessageDialog(this, "Current Room Info:\n" + "Row: " + myTriviaMaze.getRow() + "\nColumn: " + myTriviaMaze.getCol() +
+                        "\nLocked Doors: " + myTriviaMaze.getCurrentRoom().getDoor().checkNumber());
                 break;
             case LOAD_COMMAND:
                 Maze loaded = loadGame();

@@ -50,6 +50,9 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         myMaze = theMaze;
     }
 
+    public QuestionFactory getQF() {
+        return myQF;
+    }
 
     public boolean checkNorthLocation() {
         boolean check = true;

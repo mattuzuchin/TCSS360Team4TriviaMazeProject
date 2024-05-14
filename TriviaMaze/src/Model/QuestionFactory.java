@@ -14,15 +14,20 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class QuestionFactory implements Serializable {
-    private static QuestionFactory uniqueInstance;
+    private static QuestionFactory uniqueInstance = null;
     private ArrayList<Question> myQuestionsList;
     private int myChoice;
+    private Random myRandom;
 
     private QuestionFactory() throws FileNotFoundException {
+        myRandom = new Random();
         myQuestionsList = new ArrayList<Question>();
         assignQuestion();
     }
 
+    public void setInstance() {
+        uniqueInstance = null;
+    }
     // singleton
     public static synchronized QuestionFactory getInstance() {
         if(uniqueInstance == null) {
@@ -81,8 +86,7 @@ public class QuestionFactory implements Serializable {
         }
     }
     public Question getQuestion() {
-        Random randomQ = new Random();
-        myChoice = randomQ.nextInt(myQuestionsList.size());
+        myChoice = myRandom.nextInt(myQuestionsList.size());
         Question noRepeat = myQuestionsList.get(myChoice);
         myQuestionsList.remove(myChoice);
         return noRepeat;
