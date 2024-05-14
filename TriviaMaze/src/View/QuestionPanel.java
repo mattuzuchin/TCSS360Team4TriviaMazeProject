@@ -127,6 +127,8 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
        } else if (theQ.getType() == 3) { // short answer
            setMultipleChoiceEnable(false);
            setMultipleChoiceVisible(false);
+           myQuestionBody.setVisible(true);
+           myQuestionLabel.setVisible(true);
            myField.setVisible(true);
            myField.setEditable(true);
            mySubmit.setVisible(true);
@@ -267,6 +269,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.updateButtonState();
                         myView.setRight(false);
                     }
+                    setMultipleChoiceVisible(false);
 
                 } else {
                     myIncorrect++;
@@ -275,6 +278,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     myView.setUpBut();
                     myView.updateButtonState();
                     myView.playerLost();
+                    myView.checkExitEnd();
                     if (myView.getMyUp()) {
                         myView.setDisableUp();
                         myView.setUp(false);
@@ -298,6 +302,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.changePosition();
 
                     }
+                    setMultipleChoiceVisible(false);
                 }
             } else {
                 myCheckAnswer = 1;
@@ -341,6 +346,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.updateButtonState();
                         myView.setRight(false);
                     }
+                    myField.setVisible(false);
+                    myQuestionBody.setVisible(false);
+                    myQuestionLabel.setVisible(false);
 
                 } else {
                     myIncorrect++;
@@ -349,6 +357,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     myView.setUpBut();
                     myView.updateButtonState();
                     myView.playerLost();
+                    myView.checkExitEnd();
                     if (myView.getMyUp()) {
                         myView.setDisableUp();
                         myView.setUp(false);
@@ -373,6 +382,8 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
                     }
                 }
+                myQuestionBody.setVisible(false);
+                myQuestionLabel.setVisible(false);
 
             }
             myField.setVisible(false);

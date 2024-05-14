@@ -23,8 +23,8 @@ public class TitleScreen extends JFrame implements ActionListener {
     private ButtonGroup myButtonGroup;
     private QuestionFactory myFactory;
 
-    public TitleScreen() {
 
+    public TitleScreen() {
         myButtons = new ArrayList<>();
         myFactory = QuestionFactory.getInstance();
         myTM = new TriviaMaze(myFactory);
@@ -34,6 +34,8 @@ public class TitleScreen extends JFrame implements ActionListener {
         setTitle("Movie Trivia Maze");
         setSize(800, 600);
         setLocationRelativeTo(null);
+
+
     }
 
     private void initGUI() {

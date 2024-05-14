@@ -109,7 +109,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         final JPanel southPanel = new JPanel(new FlowLayout());
         mySouthAndQuestionPanel = new JPanel();
         mySouthAndQuestionPanel.setLayout(new BoxLayout(mySouthAndQuestionPanel, BoxLayout.Y_AXIS));
-
+        myMazePanel.setBounds(0,600,500,500);
         myUp = new JButton(MOVE_UP);
         myUp.addActionListener(this);
         myRight = new JButton(MOVE_RIGHT);
@@ -224,7 +224,14 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myTriviaMaze.start();
                 break;
             case RESET_COMMAND:
-                myTriviaMaze.reset();
+                int option = JOptionPane.showConfirmDialog(this,"Are you sure you want to restart the game? It will take you to the title page.",
+                        "Confirm", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    dispose();
+                    new TitleScreen();
+                } else {
+                    System.exit(0);
+                }
                 break;
             case LOAD_COMMAND:
                 Maze loaded = loadGame();
@@ -236,7 +243,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myStop = true;
                 end(myPlayerEnd + "Stats: " + myPanel.getCorrect() + " correct.\n" +
                         myPanel.getIncorrect() +  " incorrect.\n" +
-                        myMoves +  "vmoves taken.\n Do you want to play again?") ;
+                        myMoves +  " moves taken.\n Do you want to play again?") ;
                 break;
             case MOVE_UP:
                 myHitUp = true;
@@ -384,6 +391,18 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             end(message);
         } else {
             //
+        }
+    }
+
+    public void checkExitEnd() {
+        int exitRow = myTriviaMaze.getExitRow() - 1;
+        int exitCol = myTriviaMaze.getExitCol() - 1;
+        Room[][] room = myTriviaMaze.getMaze();
+        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                myPanel.getIncorrect() +  " incorrect.\n" +
+                myMoves +  " moves taken.\n Do you want to play again?";
+        if(room[exitRow][exitCol].getDoor().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoor().getMyWestDoor().isLocked()) {
+            end(message);
         }
     }
 

@@ -41,18 +41,9 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         myMaze = theMaze;
         myMaze.makeMaze(theSize);
         mySize = theSize;
-        if(theDif.equals("Easy")) {
-            setPreferredSize(new Dimension(200,200));
-        } else if(theDif.equals("Medium")) {
-            setPreferredSize(new Dimension(300,300));
-        } else if(theDif.equals("Hard")) {
-            setPreferredSize(new Dimension(500,500));
-        } else {
-            setPreferredSize(new Dimension(700,700));
-        }
-
         setBackground(Color.ORANGE);
         setFont(FONT);
+
     }
     private int myRow;
     private int myCol;
@@ -88,10 +79,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         check = theB;
     }
 
-    public void move() {
-        int row = myMaze.getRow() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-        int col = myMaze.getCol() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-    }
+
 
     public void drawRooms(final Graphics2D theGraphics) {
 
