@@ -197,7 +197,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
 
     @Override
     public void start() {
-
+        //Not used
     }
 
     public void resetPlayer() {

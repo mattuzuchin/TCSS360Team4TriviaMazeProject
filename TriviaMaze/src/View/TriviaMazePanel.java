@@ -41,6 +41,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         myMaze = theMaze;
         myMaze.makeMaze(theSize);
         mySize = theSize;
+        setPreferredSize(new Dimension(theSize*56, theSize*56));
         setBackground(Color.ORANGE);
         setFont(FONT);
 

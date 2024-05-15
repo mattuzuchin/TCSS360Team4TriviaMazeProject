@@ -494,6 +494,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     "Game Over", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 dispose();
+                myTriviaMaze.getQF().setInstance();
                 new TitleScreen();
             } else {
                 System.exit(0);
