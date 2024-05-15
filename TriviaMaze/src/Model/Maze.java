@@ -22,12 +22,18 @@ public class Maze implements Serializable {
         mySize = theSize;
         myRooms = new Room[mySize][mySize];
         myRandom = new Random();
-        myRowPotion = myRandom.nextInt(mySize - 1);
-        myColPotion = myRandom.nextInt(mySize - 1);
-        myPlayer.setRow(0);
-        myPlayer.setColumn(0);
         myExitColumn = mySize -1;
         myExitRow = mySize - 1;
+        myRowPotion = myRandom.nextInt(mySize - 1);
+        myColPotion = myRandom.nextInt(mySize - 1);
+        while(myRowPotion == 0 || myRowPotion == myExitRow) {
+            myRowPotion = myRandom.nextInt(mySize - 1);
+        }
+        while(myColPotion == 0 || myColPotion == myExitColumn) {
+            myColPotion = myRandom.nextInt(mySize - 1);
+        }
+        myPlayer.setRow(0);
+        myPlayer.setColumn(0);
     }
 
 
@@ -89,12 +95,12 @@ public class Maze implements Serializable {
         return myPlayer;
     }
 
-//    public int placePotionRow() {
-//        return myRowPotion;
-//    }
-//    public int placePotionCol() {
-//        return myColPotion;
-//    }
+    public int placePotionRow() {
+        return myRowPotion;
+    }
+    public int placePotionCol() {
+        return myColPotion;
+    }
 
     public Room getRoom(final int theX, final int theY) {
         return myRooms[theX][theY];

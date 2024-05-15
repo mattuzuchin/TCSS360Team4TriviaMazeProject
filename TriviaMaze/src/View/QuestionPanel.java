@@ -161,7 +161,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
            myField.setEditable(true);
            mySubmit.setVisible(true);
            myAnswer.setVisible(true);
-           if (question.length() > 45) {
+           if (question.length() > 60) {
                myLong.setVisible(true);
                myQuestionLabel.setText("Question: " + question.substring(0, 60));
                myLong.setText(question.substring(60));
@@ -169,8 +169,6 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
            } else {
                myQuestionLabel.setText("Question: " + question);
-
-
            }
 
        } else {

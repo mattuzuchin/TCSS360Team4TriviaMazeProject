@@ -104,7 +104,23 @@ public class TitleScreen extends JFrame implements ActionListener {
             if (myTextName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No empty names!");
                 myTextName.requestFocusInWindow();
-            } else {
+            } else if (myTextName.getText().trim().equals("test")) {
+                setVisible(false);
+                myTM.setName(myTextName.getText());
+                JOptionPane.showMessageDialog(this, "Congrats! You earned a free potion for using the name " + myTextName.getText());
+                String getDifficulty = null;
+                for (JToggleButton button : myButtons) {
+                    if (button.isSelected()) {
+                        getDifficulty = button.getText();
+                    }
+                }
+                for (Difficulty d : Difficulty.values()) {
+                    assert getDifficulty != null;
+                    if (getDifficulty.equals(d.getName())) {
+                        new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name(), 1);
+                    }
+                }
+            }else {
                 setVisible(false);
                 myTM.setName(myTextName.getText());
                 String getDifficulty = null;

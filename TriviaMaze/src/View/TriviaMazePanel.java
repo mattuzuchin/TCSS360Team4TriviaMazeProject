@@ -69,12 +69,12 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
             g2.setStroke(STROKE);
             drawRooms(g2);
-//        } else if (myCheat) {
-//            final Graphics2D g2 = (Graphics2D) theGraphics;
-//            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-//                    RenderingHints.VALUE_ANTIALIAS_ON);
-//            g2.setStroke(STROKE);
-//            drawRooms(g2);
+        } else if (myCheat) {
+            final Graphics2D g2 = (Graphics2D) theGraphics;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setStroke(STROKE);
+            drawRooms(g2);
         } else {
             final Graphics2D g2 = (Graphics2D) theGraphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -120,31 +120,31 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                 }
             }
 
-//        } else if (myCheat) {
-//            repaint();
-//            myMaze.getMyMaze().createMaze();
-//            for (int y = 0; y < mySize; y++) {
-//                final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-//
-//                for (int x = 0; x < mySize; x++) {
-//                    final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-//                    if (x == myMaze.getCol() && y == myMaze.getRow()) {
-//                        theGraphics.setPaint(Color.BLUE);
-//                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-//                        drawDebugInfo(theGraphics, leftX, topY);
-//
-//                    } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
-//                        theGraphics.setPaint(Color.RED);
-//                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-//                        drawDebugInfo(theGraphics, leftX, topY);
-//
-//                    } else {
-//                        theGraphics.setPaint(Color.DARK_GRAY);
-//                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-//                        drawDebugInfo(theGraphics, leftX, topY);
-//                    }
-//                }
-//            }
+        } else if (myCheat) {
+            repaint();
+            for (int y = 0; y < mySize; y++) {
+                final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+
+                for (int x = 0; x < mySize; x++) {
+                    final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+                    if (x == myMaze.getCol() && y == myMaze.getRow()) {
+                        theGraphics.setPaint(Color.BLUE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
+                        theGraphics.setPaint(Color.RED);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else {
+                        theGraphics.setPaint(Color.DARK_GRAY);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    }
+                }
+            }
+            myCheat = false;
         }  else {
             repaint();
             Room[][] checkRoom = myMaze.getMaze();

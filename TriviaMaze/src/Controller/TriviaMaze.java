@@ -44,12 +44,24 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     public void addPropertyChangeListener(final PropertyChangeListener theListener) {
         myPcs.addPropertyChangeListener(theListener);
     }
-//    public void setRow(int a) {
-//        myRow = a;
-//    }
-//    public void setCol(int a) {aa
-//        myColumns = a;
-//    }
+    public void setRow(int a) {
+        myRow = a;
+    }
+    public void setCol(int a) {
+        myColumns = a;
+    }
+
+    public void unlockAll() {
+        Room[][] rooms = myMaze.getMyRooms();
+        for(int row = 0; row < rooms.length;row++) {
+            for(int col = 0; col < rooms[row].length; col++) {
+                rooms[row][col].getDoor().getMyNorthDoor().setLockedStatus(false);
+                rooms[row][col].getDoor().getMySouthDoor().setLockedStatus(false);
+                rooms[row][col].getDoor().getMyWestDoor().setLockedStatus(false);
+                rooms[row][col].getDoor().getMyEastDoor().setLockedStatus(false);
+            }
+        }
+    }
 
     public void setMaze(final Maze theMaze) {
         myMaze = theMaze;
