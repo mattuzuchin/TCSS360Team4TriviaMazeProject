@@ -104,8 +104,7 @@ public class TitleScreen extends JFrame implements ActionListener {
             if (myTextName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No empty names!");
                 myTextName.requestFocusInWindow();
-            }
-            else {
+            } else {
                 setVisible(false);
                 myTM.setName(myTextName.getText());
                 String getDifficulty = null;
@@ -123,5 +122,6 @@ public class TitleScreen extends JFrame implements ActionListener {
             }
         }
     }
+
 
 }

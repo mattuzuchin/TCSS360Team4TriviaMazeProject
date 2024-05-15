@@ -28,7 +28,7 @@ public class QuestionFactory implements Serializable {
     public void setInstance() {
         uniqueInstance = null;
     }
-    // singleton
+
     public static synchronized QuestionFactory getInstance() {
         if(uniqueInstance == null) {
             try {
@@ -93,7 +93,4 @@ public class QuestionFactory implements Serializable {
     }
 
 
-    public int getChoice() {
-        return myChoice;
-    }
 }
