@@ -13,20 +13,9 @@ public class Room implements Serializable {
         myRow = theRow;
         myColumn = theColumn;
     }
-    public void setRow(final int theRow) {
-        if(theRow < 0) {
-            throw new IllegalArgumentException("row cannot be negative: " + theRow);
-        }
-        myRow = theRow;
-    }
-    public void setColumn(final int theColumn) {
-        if(theColumn < 0) {
-            throw new IllegalArgumentException("column cannot be negative: " + theColumn);
-        }
-        myRow = theColumn;
-    }
 
-    public Doors getDoor() {
+
+    public Doors getDoors() {
         return myDoor;
     }
 

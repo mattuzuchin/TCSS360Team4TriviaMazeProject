@@ -45,31 +45,8 @@ public class Maze implements Serializable {
         }
     }
 
-    public void setPlayerStart(final int theRow, final int theColumn) {
-        myPlayer.setRow(theRow);
-        myPlayer.setColumn(theColumn);
-    }
 
-    public void setExitRow(final int theExitRow) {
-        if(theExitRow < 0) {
-            throw new IllegalArgumentException("cannot be negative: " + theExitRow);
-        }
-        myExitRow = theExitRow;
-    }
 
-    public void setExitColumn(final int theExitColumn) {
-        if(theExitColumn < 0) {
-            throw new IllegalArgumentException("cannot be negative: " + theExitColumn);
-        }
-        myExitColumn = theExitColumn;
-    }
-
-    public void setSize(final int theSize) {
-        if(theSize < 0) {
-            throw new IllegalArgumentException("cannot be negative size: " + theSize);
-        }
-        mySize = theSize;
-    }
 
     public int getSize() {
         return mySize;
@@ -83,17 +60,6 @@ public class Maze implements Serializable {
         return myExitColumn;
     }
 
-    public int getPlayerRow() {
-        return myPlayer.getRow();
-    }
-
-    public int getPlayerColumn() {
-        return myPlayer.getColumn();
-    }
-
-    public Player getPlayer() {
-        return myPlayer;
-    }
 
     public int placePotionRow() {
         return myRowPotion;

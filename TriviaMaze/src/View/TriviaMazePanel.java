@@ -85,9 +85,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
 
     }
-    public void setMyCheck(final boolean theB) {
-        myCheck = theB;
-    }
+
 
     public void useCheat() {
         myCheat = true;
@@ -163,23 +161,23 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
 
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 0 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 0 ){
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 1 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 1 ){
                         theGraphics.setPaint(Color.GREEN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 2 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 2 ){
                         theGraphics.setPaint(Color.PINK);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 3 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 3 ){
                         theGraphics.setPaint(Color.WHITE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 4 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 4 ){
                         theGraphics.setPaint(Color.CYAN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);

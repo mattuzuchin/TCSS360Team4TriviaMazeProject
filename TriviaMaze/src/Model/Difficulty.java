@@ -27,7 +27,7 @@ public enum Difficulty {
         } else if(theIn.equals("Hard")) {
             return 6;
         } else {
-            return 6;
+            return 7;
         }
     }
 }

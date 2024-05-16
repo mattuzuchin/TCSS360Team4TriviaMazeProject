@@ -14,32 +14,16 @@ import java.io.*;
 
 public final class TriviaMazeGUI extends JFrame implements ActionListener, Serializable {
     private static long serialVersionUID = 0;
-    /**
-     * The main title for the program.
-     */
+
     private static final String TITLE = "Movie Trivia Maze";
 
     private int myMoves;
 
 
-    /**
-     * The Toolkit used.
-     */
     private static final Toolkit KIT = Toolkit.getDefaultToolkit();
 
-    /**
-     * The size of the current screen.
-     */
     private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
 
-    /**
-     * The Start command.
-     */
-    private static final String START_COMMAND = "Start";
-
-    /**
-     * The Stop command.
-     */
     private static final String STOP_COMMAND = "Stop";
 
     private static final String LOAD_COMMAND = "Load";
@@ -49,17 +33,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private static final String MOVE_RIGHT = "Right";
     private static final String MOVE_LEFT = "Left";
     private static final String ROOM_INFO = "Room";
-   private static final String POTION = "Use Potion";
+    private static final String POTION = "Use Potion";
 
     private static final String RESET_COMMAND = "Reset";
+    private static final String END_COMMAND = "End";
     private JButton myUp;
     private JButton myDown;
     private JButton myLeft;
     private JButton myRight;
 
-    /**
-     * The logic for the simulation.
-     */
     private TriviaMaze myTriviaMaze;
     private JPanel mySouthAndQuestionPanel;
     private int mySize;
@@ -81,6 +63,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private Clip myGameLost;
     private int myUnlockPotion;
     private JMenuItem myPotionItem;
+    private boolean myYetFound;
 
 
 
@@ -122,6 +105,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         return myPanel;
     }
     private void initGUI(final String theDif) {
+        myYetFound = false;
         myMazePanel = new TriviaMazePanel(mySize, myTriviaMaze, theDif);
         myPanel = new QuestionPanel(myTriviaMaze, theDif, this);
         myPanel.setVisible(true);
@@ -186,14 +170,14 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         final JMenu gameMenu = new JMenu("Game");
         gameMenu.setMnemonic(KeyEvent.VK_G);
 
-        final JMenuItem startItem = new JMenuItem(START_COMMAND);
-        startItem.addActionListener(this);
-        gameMenu.add(startItem);
-
 
         final JMenuItem resetItem = new JMenuItem(RESET_COMMAND);
         resetItem.addActionListener(this);
         gameMenu.add(resetItem);
+
+        final JMenuItem endGame = new JMenuItem(END_COMMAND);
+        endGame.addActionListener(this);
+        gameMenu.add(endGame);
 
         myPotionItem = new JMenuItem(POTION);
         myPotionItem.addActionListener(this);
@@ -258,8 +242,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void actionPerformed(final ActionEvent theEvent) {
         final String command = theEvent.getActionCommand();
         switch (command) {
-            case START_COMMAND:
-                myTriviaMaze.start();
+            case END_COMMAND:
+                end("Are you sure you want to end the game?");
                 break;
             case POTION:
                 int choice = JOptionPane.showConfirmDialog(this,"Are you sure you want to use a potion? You have " + myUnlockPotion,
@@ -289,7 +273,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 break;
             case ROOM_INFO:
                 JOptionPane.showMessageDialog(this, "Current Room Info:\n" + "Row: " + myTriviaMaze.getRow() + "\nColumn: " + myTriviaMaze.getCol() +
-                        "\nLocked Doors: " + myTriviaMaze.getCurrentRoom().getDoor().checkNumber());
+                        "\nLocked Doors: " + myTriviaMaze.getCurrentRoom().getDoors().checkNumber());
                 break;
             case LOAD_COMMAND:
                 Maze loaded = loadGame();
@@ -310,7 +294,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myMoves++;
                 if(!myTriviaMaze.checkLock(Direction.NORTH) && myTriviaMaze.checkNorthLocation()) {
                     disableButtons();
-                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().getMyAssignedQuestion());
+                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().getMyAssignedQuestion());
                     myPanel.setDir(0);
                     if(checkPotion()) {
                         messagePotion(1);
@@ -326,7 +310,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myMoves++;
                 if(!myTriviaMaze.checkLock(Direction.SOUTH) && myTriviaMaze.checkSouthLocation()) {
                     disableButtons();
-                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().getMyAssignedQuestion());
+                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().getMyAssignedQuestion());
                     myPanel.setDir(2);
                     if(checkPotion()) {
                         messagePotion(1);
@@ -341,7 +325,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myMoves++;
                 if(!myTriviaMaze.checkLock(Direction.WEST) && myTriviaMaze.checkWestLocation()) {
                     disableButtons();
-                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().getMyAssignedQuestion());
+                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().getMyAssignedQuestion());
                     myPanel.setDir(3);
                     if(checkPotion()) {
                         messagePotion(1);
@@ -356,7 +340,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myMoves++;
                 if(!myTriviaMaze.checkLock(Direction.EAST) && myTriviaMaze.checkEastLocation()) {
                     disableButtons();
-                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().getMyAssignedQuestion());
+                    myPanel.updateQuestion(myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().getMyAssignedQuestion());
                     myPanel.setDir(1);
                     if(checkPotion()) {
                         messagePotion(1);
@@ -378,8 +362,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
     public boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
-                myTriviaMaze.getMyMaze().placePotionCol()) {
+                myTriviaMaze.getMyMaze().placePotionCol() && !myYetFound) {
             myUnlockPotion++;
+            myYetFound = true;
             return true;
         } else {
             return false;
@@ -418,7 +403,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
     }
     public void updateCount() {
-        myPotionItem.setText("Potion(s): " + myUnlockPotion);
+        myPotionItem.setText("Potion");
     }
     public void setUpBut() {
         myUp.setEnabled(true);
@@ -484,29 +469,29 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         playLostSound();
-        if(myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked()) {
+        if(myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked()) {
            end(message);
-        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked())) {
+        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked())) {
             end(message);
-        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+        } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked())) {
             end(message);
-        } else if ((myTriviaMaze.getRow() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+        } else if ((myTriviaMaze.getRow() == 0) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked())) {
             end(message);
-        } else if ((myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked())) {
+        } else if ((myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked())) {
             end(message);
-        } else if ((myTriviaMaze.getCol() == 0 && myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1) && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked()) {
+        } else if ((myTriviaMaze.getCol() == 0 && myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1) && myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked()) {
             end(message);
-        } else if ((myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoor().getMySouthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked())) {
+        } else if ((myTriviaMaze.getCol() == myTriviaMaze.getExitCol() - 1) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked())) {
             end(message);
-        } else if ((myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1 ) && (myTriviaMaze.getCurrentRoom().getDoor().getMyNorthDoor().isLocked() &&
-                myTriviaMaze.getCurrentRoom().getDoor().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoor().getMyWestDoor().isLocked())) {
+        } else if ((myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1 ) && (myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() &&
+                myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked())) {
             end(message);
         } else {
             //
@@ -521,7 +506,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
-        if(room[exitRow][exitCol].getDoor().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoor().getMyWestDoor().isLocked()) {
+        if(room[exitRow][exitCol].getDoors().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoors().getMyWestDoor().isLocked()) {
             playLostSound();
             end(message);
         }
@@ -576,13 +561,13 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             if(myUnlockPotion > 0) {
                 messagePotion(2);
             } else {
-                int option = JOptionPane.showConfirmDialog(this, theMessage + "\nDo you want to Play again?",
+                int option = JOptionPane.showConfirmDialog(this, theMessage,
                         "Game Over", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     dispose();
                     new TitleScreen();
                 } else {
-
+                    System.exit(0);
                 }
             }
 

@@ -24,39 +24,12 @@ public class Player implements Serializable {
         }
         myColumn = theColumn;
     }
-    public void setName(final String theName) {
-        if(theName.isEmpty()) {
-            throw new IllegalArgumentException("needs a name: " + theName);
-        }
-        myName = theName;
-    }
-    public int getRow() {
-        return myRow;
-    }
-    public int getColumn() {
-        return myColumn;
-    }
+
     public String getName() {
         return myName;
     }
-    public void changeLocation(final Direction theDirection) {
-        switch (theDirection) {
-            case NORTH:
-                setRow(getRow()-1);
-            case EAST:
-                setColumn(getColumn()+1);
-            case SOUTH:
-                setRow(getRow()+1);
-            case WEST:
-                setColumn(getColumn()-1);
-        }
 
 
-    }
-
-    public String getImageFileName() {
-        return "elf.png";
-    }
     public String toString() {
         return myName;
     }
