@@ -299,6 +299,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     if(checkPotion()) {
                         messagePotion(1);
                     }
+                    checkEnd();
 
                 } else {
 
@@ -315,6 +316,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     if(checkPotion()) {
                         messagePotion(1);
                     }
+                    checkEnd();
                 } else {
 
                     JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
@@ -330,6 +332,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     if(checkPotion()) {
                         messagePotion(1);
                     }
+                    checkEnd();
                 } else {
 
                     JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");
@@ -345,6 +348,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     if(checkPotion()) {
                         messagePotion(1);
                     }
+                    checkEnd();
                 } else {
 
                     JOptionPane.showMessageDialog(this, "Door Locked! Try another way!");

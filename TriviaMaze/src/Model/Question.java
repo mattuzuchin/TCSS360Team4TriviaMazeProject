@@ -47,13 +47,13 @@ public class Question implements Serializable {
     @Override
     public String toString() {
         return "Question{" +
-                "questionText='" + questionText + '\'' +
-                ", optionA='" + myOptionA + '\'' +
-                ", optionB='" + myOptionB + '\'' +
-                ", optionC='" + myOptionC + '\'' +
-                ", optionD='" + myOptionD + '\'' +
-                ", type='" + myType + '\'' +
-                ", correctAnswer='" + myAnswer + '\'' +
+                "questionText=" + questionText  +
+                ", optionA=" + myOptionA  +
+                ", optionB=" + myOptionB  +
+                ", optionC=" + myOptionC  +
+                ", optionD=" + myOptionD  +
+                ", type=" + myType  +
+                ", correctAnswer=" + myAnswer  +
                 '}';
     }
 }

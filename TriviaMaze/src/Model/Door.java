@@ -28,6 +28,11 @@ public class Door implements Serializable {
     public void reassignQuestion() {
         myAssignedQuestion = Maze.FACTORY.getQuestion();
     }
+
+    //TESTING ONLY
+    public void setQuestion() {
+        myAssignedQuestion = new Question("2+2 is?","1","2","3","4","4","1");
+    }
     public String toString() {
         return "Locked status: " + myLockedStatus + ", " + "Direction: " + myDirection;
     }
