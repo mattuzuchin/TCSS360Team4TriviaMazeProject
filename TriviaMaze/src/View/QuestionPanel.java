@@ -114,10 +114,10 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
           setMultipleChoiceVisible(true);
           setMultipleChoiceEnable(true);
           mySubmit.setEnabled(false);
-           if (question.length() > 60) {
+           if (question.length() > 75) {
                myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 60));
-               myLong.setText(question.substring(60));
+               myQuestionLabel.setText("Question: " + question.substring(0, 75));
+               myLong.setText(question.substring(75));
                myButtonA.setText(myQuestion.getOptionA());
                myButtonB.setText(myQuestion.getOptionB());
                myButtonC.setText(myQuestion.getOptionC());
@@ -139,10 +139,10 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
            myButtonD.setEnabled(false);
            myButtonC.setVisible(false);
            myButtonD.setVisible(false);
-           if (question.length() > 60) {
+           if (question.length() > 75) {
                myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 60));
-               myLong.setText(question.substring(60));
+               myQuestionLabel.setText("Question: " + question.substring(0, 75));
+               myLong.setText(question.substring(75));
                myButtonA.setText(myQuestion.getOptionA());
                myButtonB.setText(myQuestion.getOptionB());
 
@@ -161,16 +161,14 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
            myField.setEditable(true);
            mySubmit.setVisible(true);
            myAnswer.setVisible(true);
-           if (question.length() > 45) {
+           if (question.length() > 60) {
                myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 45));
-               myLong.setText(question.substring(45));
+               myQuestionLabel.setText("Question: " + question.substring(0, 60));
+               myLong.setText(question.substring(60));
 
 
            } else {
                myQuestionLabel.setText("Question: " + question);
-
-
            }
 
        } else {
@@ -334,6 +332,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                     }
                     setMultipleChoiceVisible(false);
                 }
+                myAnswerButtons.clearSelection();
             } else {
                 myCheckAnswer = 1;
                 myLong.setText("");
@@ -416,11 +415,12 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                 }
                 myQuestionBody.setVisible(false);
                 myQuestionLabel.setVisible(false);
+                myField.setVisible(false);
+                myAnswer.setVisible(false);
+                mySubmit.setVisible(false);
+                myField.setText("");
 
             }
-            myField.setVisible(false);
-            myAnswer.setVisible(false);
-            mySubmit.setVisible(false);
 
 
         });

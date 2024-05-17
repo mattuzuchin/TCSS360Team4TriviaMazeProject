@@ -28,7 +28,7 @@ public class QuestionFactory implements Serializable {
     public void setInstance() {
         uniqueInstance = null;
     }
-    // singleton
+
     public static synchronized QuestionFactory getInstance() {
         if(uniqueInstance == null) {
             try {
@@ -86,14 +86,33 @@ public class QuestionFactory implements Serializable {
         }
     }
     public Question getQuestion() {
-        myChoice = myRandom.nextInt(myQuestionsList.size());
-        Question noRepeat = myQuestionsList.get(myChoice);
-        myQuestionsList.remove(myChoice);
-        return noRepeat;
+        int size = myQuestionsList.size();
+        int[] indices = getRandomPermutationOfIntegers(size);
+        for (int i = 0; i < size; i++) {
+            int index = indices[i];
+            Question question = myQuestionsList.get(index);
+            return question;
+        }
+
+        return null;
+    }
+    public static int[] getRandomPermutationOfIntegers(int size) {
+        int[] data = new int[size];
+        for (int i = 0; i < size; i++) {
+            data[i] = i;
+        }
+        for (int i = 0; i < size; i++) {
+            int temp;
+            int swap = i + (int) ((size - i) * Math.random());
+            temp = data[i];
+            data[i] = data[swap];
+            data[swap] = temp;
+        }
+
+        return data;
     }
 
 
-    public int getChoice() {
-        return myChoice;
-    }
+
+
 }
