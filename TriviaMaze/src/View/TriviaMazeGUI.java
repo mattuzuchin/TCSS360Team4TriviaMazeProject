@@ -525,6 +525,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void updateButtonState() {
         int row = myTriviaMaze.getRow();
         int col = myTriviaMaze.getCol();
+        myUp.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked());
+        myDown.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked());
+        myLeft.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked());
+        myRight.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked());
         myUp.setEnabled(row > 0);
         myDown.setEnabled(row < mySize - 1);
         myLeft.setEnabled(col > 0);
