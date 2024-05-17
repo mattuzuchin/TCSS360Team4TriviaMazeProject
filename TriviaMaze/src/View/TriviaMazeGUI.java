@@ -521,22 +521,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void updateButtonState() {
         int row = myTriviaMaze.getRow();
         int col = myTriviaMaze.getCol();
-        if (row==0) {
-            myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().setLockedStatus(true);
-        }
-        if (col==0) {
-            myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().setLockedStatus(true);
-        }
-        if (row == mySize-1) {
-            myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().setLockedStatus(true);
-        }
-        if (col == mySize-1) {
-            myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().setLockedStatus(true);
-        }
-        myUp.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked());
-        myDown.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked());
-        myLeft.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked());
-        myRight.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked());
+
+        myUp.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() && row > 0);
+        myDown.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() && row < mySize - 1);
+        myLeft.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked() && col > 0);
+        myRight.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && col < mySize - 1);
     }
 
 
