@@ -9,12 +9,6 @@ public interface TriviaMazeControls {
     void advanceSouth(final QuestionPanel thePanel);
     void advanceWest(final QuestionPanel thePanel);
     void lockDoor(final int theDir);
-    void start();
-
-    void reset();
-
-    int getHeight();
 
 
-    int getWidth();
 }

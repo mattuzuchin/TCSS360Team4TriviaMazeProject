@@ -4,34 +4,44 @@ package Model;
 import java.io.Serializable;
 
 public class Room implements Serializable {
-    private Doors myDoor;
+    private Doors myDoors;
     private int myRow;
     private int myColumn;
 
     public Room(final int theRow, final int theColumn) {
-        myDoor = new Doors();
+        myDoors = new Doors();
         myRow = theRow;
         myColumn = theColumn;
     }
-    public void setRow(final int theRow) {
-        if(theRow < 0) {
-            throw new IllegalArgumentException("row cannot be negative: " + theRow);
+
+
+    public Doors getDoors() {
+        return myDoors;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Row: " + myRow);
+        sb.append(" ");
+        sb.append("Column: " + myColumn);
+        if (myDoors.getMyNorthDoor().isLocked()) {
+            sb.append(", ");
+            sb.append("North door locked");
         }
-        myRow = theRow;
-    }
-    public void setColumn(final int theColumn) {
-        if(theColumn < 0) {
-            throw new IllegalArgumentException("column cannot be negative: " + theColumn);
+        if (myDoors.getMyEastDoor().isLocked()) {
+            sb.append(", ");
+            sb.append("East door locked");
         }
-        myRow = theColumn;
+        if (myDoors.getMySouthDoor().isLocked()) {
+            sb.append(", ");
+            sb.append("South door locked");
+        }
+        if (myDoors.getMyWestDoor().isLocked()) {
+            sb.append(", ");
+            sb.append("West door locked");
+        }
+        return sb.toString();
     }
-    public int getRow() {
-        return myRow;
-    }
-    public int getColumn() {
-        return myColumn;
-    }
-    public Doors getDoor() {
-        return myDoor;
-    }
+
 }

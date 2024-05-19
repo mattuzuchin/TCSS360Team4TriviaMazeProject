@@ -14,16 +14,21 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class QuestionFactory implements Serializable {
-    private static QuestionFactory uniqueInstance;
+    private static QuestionFactory uniqueInstance = null;
     private ArrayList<Question> myQuestionsList;
     private int myChoice;
+    private Random myRandom;
 
     private QuestionFactory() throws FileNotFoundException {
+        myRandom = new Random();
         myQuestionsList = new ArrayList<Question>();
         assignQuestion();
     }
 
-    // singleton
+    public void setInstance() {
+        uniqueInstance = null;
+    }
+
     public static synchronized QuestionFactory getInstance() {
         if(uniqueInstance == null) {
             try {
@@ -50,7 +55,8 @@ public class QuestionFactory implements Serializable {
                         "OPTION_B TEXT NOT NULL, " +
                         "OPTION_C TEXT NOT NULL, " +
                         "OPTION_D TEXT NOT NULL, " +
-                        "ANSWER TEXT NOT NULL )";
+                        "ANSWER TEXT NOT NULL, " +
+                        "TYPE TEXT NOT NULL )";
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement(); ) {
@@ -70,7 +76,8 @@ public class QuestionFactory implements Serializable {
                 String optionC = rs.getString(4);
                 String optionD = rs.getString(5);
                 String answer = rs.getString(6);
-                Question question = new Question(questionText, optionA, optionB, optionC, optionD, answer);
+                String type = rs.getString(7);
+                Question question = new Question(questionText, optionA, optionB, optionC, optionD,answer, type);
                 myQuestionsList.add(question);
             }
         } catch ( SQLException e ) {
@@ -79,13 +86,33 @@ public class QuestionFactory implements Serializable {
         }
     }
     public Question getQuestion() {
-        Random randomQ = new Random();
-        myChoice = randomQ.nextInt(myQuestionsList.size());
-        return myQuestionsList.get(myChoice);
+        int size = myQuestionsList.size();
+        int[] indices = getRandomPermutationOfIntegers(size);
+        for (int i = 0; i < size; i++) {
+            int index = indices[i];
+            Question question = myQuestionsList.get(index);
+            return question;
+        }
+
+        return null;
+    }
+    public static int[] getRandomPermutationOfIntegers(int size) {
+        int[] data = new int[size];
+        for (int i = 0; i < size; i++) {
+            data[i] = i;
+        }
+        for (int i = 0; i < size; i++) {
+            int temp;
+            int swap = i + (int) ((size - i) * Math.random());
+            temp = data[i];
+            data[i] = data[swap];
+            data[swap] = temp;
+        }
+
+        return data;
     }
 
 
-    public int getChoice() {
-        return myChoice;
-    }
+
+
 }

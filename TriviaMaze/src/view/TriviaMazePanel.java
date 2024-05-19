@@ -9,6 +9,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Random;
 
 
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
@@ -26,38 +27,32 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private static final int DOOR_SIZE = 5;
 
     private static final int DEBUG_OFFSET = 10;
-
+    private Random myRandom;
 
     private final int mySize;
 
     private TriviaMaze myMaze;
-    private boolean check = false;
+    private boolean myCheck = false;
     private boolean myDebugFlag;
     private Graphics myGraph;
+    private boolean myCheat;
+    private int myRow;
+    private int myCol;
 
 
     public TriviaMazePanel(final int theSize, final TriviaMaze theMaze, String theDif) {
         super();
+        myCheat = false;
         myMaze = theMaze;
         myMaze.makeMaze(theSize);
         mySize = theSize;
-        if(theDif.equals("Easy")) {
-            setPreferredSize(new Dimension(200,200));
-        } else if(theDif.equals("Medium")) {
-            setPreferredSize(new Dimension(300,300));
-        } else if(theDif.equals("Hard")) {
-            setPreferredSize(new Dimension(500,500));
-        } else {
-            setPreferredSize(new Dimension(700,700));
-        }
-
+        setPreferredSize(new Dimension(theSize * 56, theSize * 56));
         setBackground(Color.ORANGE);
         setFont(FONT);
+
     }
-    private int myRow;
-    private int myCol;
     public void setColor(final int theRow, final int theCol) {
-       check = true;
+       myCheck = true;
         myRow = theRow;
         myCol = theCol;
         paintComponent(myGraph);
@@ -66,7 +61,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
-        if(!check) {
+        if(!myCheck) {
             final Graphics2D g2 = (Graphics2D) theGraphics;
             myGraph = theGraphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -74,6 +69,12 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
             g2.setStroke(STROKE);
             drawRooms(g2);
+        } else if (myCheat) {
+            final Graphics2D g2 = (Graphics2D) theGraphics;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setStroke(STROKE);
+            drawRooms(g2);
         } else {
             final Graphics2D g2 = (Graphics2D) theGraphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -84,43 +85,65 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
 
     }
-    public void setCheck(final boolean theB) {
-        check = theB;
-    }
 
-    public void move() {
-        int row = myMaze.getRow() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-        int col = myMaze.getCol() * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+
+    public void useCheat() {
+        myCheat = true;
     }
 
     public void drawRooms(final Graphics2D theGraphics) {
+        if(!myCheck) {
+            Room[][] theR = myMaze.getMaze();
 
-        Room[][] theR = myMaze.getMaze();
-        if(!check) {
-        for (int y = 0; y < mySize; y++) {
-            final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+            for (int y = 0; y < mySize; y++) {
+                final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 
-            for (int x = 0; x < mySize; x++) {
-                final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
-                if (x == 0 && y == 0) {
-                    theGraphics.setPaint(Color.BLUE);
-                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                    drawDebugInfo(theGraphics, leftX, topY);
+                for (int x = 0; x < mySize; x++) {
+                    final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+                    if (x == 0 && y == 0) {
+                        theGraphics.setPaint(Color.BLUE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
 
-                } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
-                    theGraphics.setPaint(Color.RED);
-                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                    drawDebugInfo(theGraphics, leftX, topY);
+                    } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
+                        theGraphics.setPaint(Color.RED);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
 
-                } else {
-                    theGraphics.setPaint(Color.DARK_GRAY);
-                    theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                    drawDebugInfo(theGraphics, leftX, topY);
+                    } else {
+                        theGraphics.setPaint(Color.DARK_GRAY);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    }
                 }
             }
-        }
 
-        } else {
+        } else if (myCheat) {
+            repaint();
+            for (int y = 0; y < mySize; y++) {
+                final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+
+                for (int x = 0; x < mySize; x++) {
+                    final int leftX = x * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
+                    if (x == myMaze.getCol() && y == myMaze.getRow()) {
+                        theGraphics.setPaint(Color.BLUE);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
+                        theGraphics.setPaint(Color.RED);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+
+                    } else {
+                        theGraphics.setPaint(Color.DARK_GRAY);
+                        theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
+                        drawDebugInfo(theGraphics, leftX, topY);
+                    }
+                }
+            }
+            myCheat = false;
+        }  else {
             repaint();
             Room[][] checkRoom = myMaze.getMaze();
 
@@ -138,30 +161,30 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
 
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 0 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 0 ){
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 1 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 1 ){
                         theGraphics.setPaint(Color.GREEN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 2 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 2 ){
                         theGraphics.setPaint(Color.PINK);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 3 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 3 ){
                         theGraphics.setPaint(Color.WHITE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
-                    } else if(checkRoom[y][x].getDoor().checkNumber() == 4 ){
+                    } else if(checkRoom[y][x].getDoors().checkNumber() == 4 ){
                         theGraphics.setPaint(Color.CYAN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
                         drawDebugInfo(theGraphics, leftX, topY);
                     }
 
                 }
-        }
+            }
 
         }
 
