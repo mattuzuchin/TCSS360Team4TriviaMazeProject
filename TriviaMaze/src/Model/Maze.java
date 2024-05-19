@@ -1,7 +1,9 @@
 package Model;
 
 
+import javax.swing.plaf.TableHeaderUI;
 import java.io.Serializable;
+import java.util.Random;
 
 public class Maze implements Serializable {
     private int mySize;
@@ -9,15 +11,29 @@ public class Maze implements Serializable {
     private int myExitRow;
     private int myExitColumn;
     private Player myPlayer;
+    private Random myRandom;
+    private int myRowPotion;
+    private int myColPotion;
+    public static QuestionFactory FACTORY;
 
-    public Maze(final int theSize) {
-        myPlayer = new Player("test");
+    public Maze(final int theSize, final QuestionFactory theFactory) {
+        FACTORY = theFactory;
+        myPlayer = new Player("");
         mySize = theSize;
         myRooms = new Room[mySize][mySize];
-        myPlayer.setRow(0);
-        myPlayer.setColumn(0);
+        myRandom = new Random();
         myExitColumn = mySize -1;
         myExitRow = mySize - 1;
+        myRowPotion = myRandom.nextInt(mySize - 1);
+        myColPotion = myRandom.nextInt(mySize - 1);
+        while(myRowPotion == 0 || myRowPotion == myExitRow) {
+            myRowPotion = myRandom.nextInt(mySize - 1);
+        }
+        while(myColPotion == 0 || myColPotion == myExitColumn) {
+            myColPotion = myRandom.nextInt(mySize - 1);
+        }
+        myPlayer.setRow(0);
+        myPlayer.setColumn(0);
     }
 
 
@@ -29,31 +45,8 @@ public class Maze implements Serializable {
         }
     }
 
-    public void setPlayerStart(final int theRow, final int theColumn) {
-        myPlayer.setRow(theRow);
-        myPlayer.setColumn(theColumn);
-    }
 
-    public void setExitRow(final int theExitRow) {
-        if(theExitRow < 0) {
-            throw new IllegalArgumentException("cannot be negative: " + theExitRow);
-        }
-        myExitRow = theExitRow;
-    }
 
-    public void setExitColumn(final int theExitColumn) {
-        if(theExitColumn < 0) {
-            throw new IllegalArgumentException("cannot be negative: " + theExitColumn);
-        }
-        myExitColumn = theExitColumn;
-    }
-
-    public void setSize(final int theSize) {
-        if(theSize < 0) {
-            throw new IllegalArgumentException("cannot be negative size: " + theSize);
-        }
-        mySize = theSize;
-    }
 
     public int getSize() {
         return mySize;
@@ -67,16 +60,12 @@ public class Maze implements Serializable {
         return myExitColumn;
     }
 
-    public int getPlayerRow() {
-        return myPlayer.getRow();
-    }
 
-    public int getPlayerColumn() {
-        return myPlayer.getColumn();
+    public int placePotionRow() {
+        return myRowPotion;
     }
-
-    public Player getPlayer() {
-        return myPlayer;
+    public int placePotionCol() {
+        return myColPotion;
     }
 
     public Room getRoom(final int theX, final int theY) {

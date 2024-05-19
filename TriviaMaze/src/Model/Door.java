@@ -10,11 +10,11 @@ public class Door implements Serializable {
 
     private Direction myDirection;
 
-
     public Door(Direction theDirection) {
-        myLockedStatus = false; //false means unlocked, true is locked!
-        myAssignedQuestion = QuestionFactory.getInstance().getQuestion();
+        myLockedStatus = false;
+        myAssignedQuestion = Maze.FACTORY.getQuestion();
         myDirection = theDirection;
+
     }
 
     public void setLockedStatus(final boolean theLockedStatus) {
@@ -26,7 +26,14 @@ public class Door implements Serializable {
     public Question getMyAssignedQuestion() {
         return myAssignedQuestion;
     }
+    public void reassignQuestion() {
+        myAssignedQuestion = Maze.FACTORY.getQuestion();
+    }
 
+    //TESTING ONLY
+    public void setQuestion() {
+        myAssignedQuestion = new Question("2+2 is?","1","2","3","4","4","1");
+    }
     public String toString() {
         return "Current status: " + myLockedStatus + ", " + "Direction: " + myDirection;
     }

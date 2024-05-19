@@ -2,6 +2,7 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Difficulty;
+import Model.QuestionFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,18 +18,24 @@ public class TitleScreen extends JFrame implements ActionListener {
 
     private JButton myStartButton;
     private JTextField myTextName;
-    private final TriviaMaze myTM = new TriviaMaze();
+    private TriviaMaze myTM;
     private ArrayList<JToggleButton> myButtons;
     private ButtonGroup myButtonGroup;
+    private QuestionFactory myFactory;
+
 
     public TitleScreen() {
         myButtons = new ArrayList<>();
+        myFactory = QuestionFactory.getInstance();
+        myTM = new TriviaMaze(myFactory);
         initGUI();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Movie Trivia Maze");
         setSize(800, 600);
         setLocationRelativeTo(null);
+
+
     }
 
     private void initGUI() {
@@ -97,8 +104,23 @@ public class TitleScreen extends JFrame implements ActionListener {
             if (myTextName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No empty names!");
                 myTextName.requestFocusInWindow();
-            }
-            else {
+            } else if (myTextName.getText().trim().equals("test")) {
+                setVisible(false);
+                myTM.setName(myTextName.getText());
+                JOptionPane.showMessageDialog(this, "Congrats! You earned a free potion for using the name " + myTextName.getText());
+                String getDifficulty = null;
+                for (JToggleButton button : myButtons) {
+                    if (button.isSelected()) {
+                        getDifficulty = button.getText();
+                    }
+                }
+                for (Difficulty d : Difficulty.values()) {
+                    assert getDifficulty != null;
+                    if (getDifficulty.equals(d.getName())) {
+                        new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name(), 1);
+                    }
+                }
+            }else {
                 setVisible(false);
                 myTM.setName(myTextName.getText());
                 String getDifficulty = null;
@@ -110,12 +132,12 @@ public class TitleScreen extends JFrame implements ActionListener {
                 for (Difficulty d : Difficulty.values()) {
                     assert getDifficulty != null;
                     if (getDifficulty.equals(d.getName())) {
-//                        new TriviaMazeGUI(d, myTextName.getText());
-                        new TriviaMazeGUI(myTM, 4, d.name()); // placeholder size
+                        new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name());
                     }
                 }
             }
         }
     }
-}
 
+
+}
