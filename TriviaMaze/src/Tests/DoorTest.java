@@ -26,7 +26,7 @@ public class DoorTest {
 
     @Test
     public void toStringTest() {
-        assertEquals("Current status: false, Direction: NORTH", myDoor.toString());
+        assertEquals("Locked status: false, Direction: NORTH", myDoor.toString());
     }
 
     @Test

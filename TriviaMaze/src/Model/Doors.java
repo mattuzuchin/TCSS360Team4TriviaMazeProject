@@ -44,4 +44,17 @@ public class Doors implements Serializable {
         }
         return check;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("North door locked status: " + myNorthDoor.isLocked());
+        sb.append(" ");
+        sb.append("East door locked status: " + myEastDoor.isLocked());
+        sb.append(" ");
+        sb.append("South door locked status: " + mySouthDoor.isLocked());
+        sb.append(" ");
+        sb.append("West door locked status: " + myWestDoor.isLocked());
+        return sb.toString();
+    }
 }

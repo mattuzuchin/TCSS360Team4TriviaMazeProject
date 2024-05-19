@@ -15,8 +15,10 @@ public class Maze implements Serializable {
     private int myRowPotion;
     private int myColPotion;
     public static QuestionFactory FACTORY;
+    private int testCount;
 
     public Maze(final int theSize, final QuestionFactory theFactory) {
+        testCount=0;
         FACTORY = theFactory;
         myPlayer = new Player("");
         mySize = theSize;
@@ -41,8 +43,12 @@ public class Maze implements Serializable {
         for (int i = 0; i < mySize; i++) {
             for (int j = 0; j < mySize; j++) {
                 myRooms[i][j] = new Room(i, j);
+                testCount++;
             }
         }
+    }
+    public int getTotalRooms() {
+        return testCount;
     }
 
 
