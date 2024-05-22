@@ -353,6 +353,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public void setPlayerLocation(final int theRow, final int theCol) {
         myTriviaMaze.getMyMaze().setCurrentLocation(theRow, theCol);
         myMazePanel.setColor(theRow, theCol);
+        myTriviaMaze.setRow(theRow);
+        myTriviaMaze.setCol(theCol);
     }
     public boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
@@ -542,6 +544,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
 
     public static Maze loadGame() throws NullPointerException{
+
 
         Maze maze;
         File file = new File("save.ser");

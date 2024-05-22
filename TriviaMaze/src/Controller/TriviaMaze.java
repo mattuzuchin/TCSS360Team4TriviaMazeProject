@@ -209,6 +209,20 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     public void setName(String theName) {
         myPlayer = new Player(theName);
     }
+    public void setRow(final int theRow) {
+        if(theRow < 0) {
+            throw new IllegalArgumentException("negative row!!");
+        } else {
+            myRow = theRow;
+        }
+    }
+    public void setCol(final int theCol) {
+        if(theCol < 0) {
+            throw new IllegalArgumentException("negative col!!");
+        } else {
+            myColumns = theCol;
+        }
+    }
 
     public int getRow() {
         return myRow;
