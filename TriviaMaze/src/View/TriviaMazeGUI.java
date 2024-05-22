@@ -13,8 +13,6 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 
 public final class TriviaMazeGUI extends JFrame implements ActionListener, Serializable {
-    private static long serialVersionUID = 0;
-
     private static final String TITLE = "Movie Trivia Maze";
 
     private int myMoves;
@@ -397,6 +395,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myUnlockPotion--;
         myTriviaMaze.unlockAll();
         myMazePanel.useCheat();
+        updateButtonState();
         myMazePanel.paintComponent(myMazePanel.getGraphics());
         updateCount();
 

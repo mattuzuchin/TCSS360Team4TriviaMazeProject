@@ -16,7 +16,6 @@ import java.util.Scanner;
 public class QuestionFactory implements Serializable {
     private static QuestionFactory uniqueInstance = null;
     private ArrayList<Question> myQuestionsList;
-    private int myChoice;
     private Random myRandom;
 
     private QuestionFactory() throws FileNotFoundException {
