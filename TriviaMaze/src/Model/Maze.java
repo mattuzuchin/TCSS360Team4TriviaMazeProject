@@ -47,8 +47,6 @@ public class Maze implements Serializable {
             }
         }
     }
-
-
     public int getSize() {
         return mySize;
     }

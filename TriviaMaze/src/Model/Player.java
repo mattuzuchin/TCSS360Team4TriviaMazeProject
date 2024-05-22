@@ -12,6 +12,14 @@ public class Player implements Serializable {
         myColumn=0;
         myName = theName;
     }
+
+    public void setName(final String theNewName) {
+        if(theNewName.isEmpty()) {
+            throw new IllegalArgumentException("No empty names!");
+        } else {
+            myName = theNewName;
+        }
+    }
     public void setRow(final int theRow) {
         if(theRow < 0) {
             throw new IllegalArgumentException("cannot be negative row: " + theRow);

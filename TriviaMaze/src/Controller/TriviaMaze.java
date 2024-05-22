@@ -80,6 +80,21 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         }
         return check;
     }
+
+    public void setRow(final int theRow) {
+        if(theRow < 0) {
+            throw new IllegalArgumentException("negative row!!");
+        } else {
+            myRow = theRow;
+        }
+    }
+    public void setCol(final int theCol) {
+        if(theCol < 0) {
+            throw new IllegalArgumentException("negative col!!");
+        } else {
+           myColumns = theCol;
+        }
+    }
     public boolean checkSouthLocation() {
         boolean check = true;
         if(myRow == myMaze.getExitRow())  {
@@ -209,7 +224,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     public void setName(String theName) {
         myPlayer = new Player(theName);
     }
-
     public int getRow() {
         return myRow;
     }

@@ -45,7 +45,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private QuestionPanel myPanel;
     private TriviaMazePanel myMazePanel;
     private String myDif;
-
+    private String myName;
     private boolean myHitUp;
     private boolean myHitDown;
     private boolean myHitLeft;
@@ -59,6 +59,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private int myUnlockPotion;
     private JMenuItem myPotionItem;
     private boolean myYetFound;
+    private JMenuItem myPlayerName;
 
 
 
@@ -136,7 +137,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myRight.setFocusable(false);
         myUp.setFocusable(false);
         myDown.setFocusable(false);
-        final JLabel name = new JLabel(myTriviaMaze.getMyPlayer().getName());
         southPanel.add(myUp);
         southPanel.add(myRight);
         southPanel.add(myDown);
@@ -192,8 +192,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         final JMenuItem saveItem = new JMenuItem(SAVE_COMMAND);
         saveItem.addActionListener(this);
         gameMenu.add(saveItem);
-        final JMenu playerMenu = new JMenu("Player: " + myTriviaMaze.getMyPlayer().getName());
-        playerMenu.setEnabled(false);
+        myPlayerName = new JMenu("Player: " + myTriviaMaze.getMyPlayer().getName());
+
+        myPlayerName.setEnabled(false);
 
 
         final JMenu helpMenu = new JMenu("Help");
@@ -223,7 +224,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         helpMenu.add(aboutRoom);
 
         menuBar.add(helpMenu);
-        menuBar.add(playerMenu);
+        menuBar.add(myPlayerName);
         return menuBar;
 
     }
@@ -270,8 +271,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 Maze loaded = loadGame();
                 dispose();
                 TriviaMazeGUI newGUI = new TriviaMazeGUI(myTriviaMaze, loaded.getSize(), myDif);
+                updatePlayer();
                 myTriviaMaze.setMaze(loaded);
-                newGUI.setPlayerLocation(loaded.getMyRow(), loaded.getMyCol());
+                newGUI.setPlayerLocation(myTriviaMaze.getMyMaze().getMyRow(), myTriviaMaze.getMyMaze().getMyCol());
                 myMazePanel.setChecked();
                 myMazePanel.repaint();
 
@@ -351,6 +353,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
     }
     public void setPlayerLocation(final int theRow, final int theCol) {
+        myTriviaMaze.setRow(theRow);
+        myTriviaMaze.setCol(theCol);
         myTriviaMaze.getMyMaze().setCurrentLocation(theRow, theCol);
         myMazePanel.setColor(theRow, theCol);
     }
@@ -389,6 +393,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             }
         }
 
+    }
+
+    public void updatePlayer() {
+        myPlayerName.setText(myTriviaMaze.getMyPlayer().getName());
     }
 
     public void usePotion() {
