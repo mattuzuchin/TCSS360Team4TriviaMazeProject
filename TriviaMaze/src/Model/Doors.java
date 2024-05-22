@@ -44,7 +44,6 @@ public class Doors implements Serializable {
         }
         return check;
     }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

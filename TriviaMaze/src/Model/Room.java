@@ -13,6 +13,7 @@ public class Room implements Serializable {
         myRow = theRow;
         myColumn = theColumn;
     }
+
     public int getRow() {
         return myRow;
     }
@@ -47,4 +48,5 @@ public class Room implements Serializable {
         }
         return sb.toString();
     }
+
 }

@@ -1,7 +1,6 @@
 package Model;
 
 
-import javax.swing.plaf.TableHeaderUI;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -15,10 +14,11 @@ public class Maze implements Serializable {
     private int myRowPotion;
     private int myColPotion;
     public static QuestionFactory FACTORY;
-    private int testCount;
+    private int myTestCount;
+    private int myRow;
+    private int myCol;
 
     public Maze(final int theSize, final QuestionFactory theFactory) {
-        testCount=0;
         FACTORY = theFactory;
         myPlayer = new Player("");
         mySize = theSize;
@@ -43,15 +43,10 @@ public class Maze implements Serializable {
         for (int i = 0; i < mySize; i++) {
             for (int j = 0; j < mySize; j++) {
                 myRooms[i][j] = new Room(i, j);
-                testCount++;
+                myTestCount++;
             }
         }
     }
-    public int getTotalRooms() {
-        return testCount;
-    }
-
-
 
 
     public int getSize() {
@@ -66,7 +61,9 @@ public class Maze implements Serializable {
         return myExitColumn;
     }
 
-
+    public int getTotalRooms() {
+        return myTestCount;
+    }
     public int placePotionRow() {
         return myRowPotion;
     }
@@ -80,4 +77,16 @@ public class Maze implements Serializable {
     public Room[][] getMyRooms() {
         return myRooms;
     }
+    public int getMyRow() {
+        return myRow;
+    }
+    public int getMyCol() {
+        return myCol;
+    }
+    public void setCurrentLocation(final int theRow, final int theCol) {
+
+            myRow = theRow;
+            myCol = theCol;
+    }
+
 }

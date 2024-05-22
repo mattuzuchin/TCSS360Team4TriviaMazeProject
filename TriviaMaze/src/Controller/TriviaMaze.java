@@ -26,7 +26,9 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
         myColumns = 0;
     }
 
-
+    public void setMaze() {
+        myMaze.setCurrentLocation(myRow, myColumns);
+    }
 
 
     public Maze getMyMaze() {
@@ -119,6 +121,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             Question question = door.getMyAssignedQuestion();
             thePanel.setQuestion(question);
             myRow--;
+            setMaze();
         }
     }
     public void advanceEast(QuestionPanel thePanel) {
@@ -128,6 +131,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             Question question = door.getMyAssignedQuestion();
             thePanel.setQuestion(question);
             myColumns++; //go to the right
+            setMaze();
         }
 
     }
@@ -138,6 +142,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             Question question = door.getMyAssignedQuestion();
             thePanel.setQuestion(question);
             myRow++; // go down
+            setMaze();
         }
     }
     public void advanceWest(QuestionPanel thePanel) {
@@ -147,6 +152,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             Question question = door.getMyAssignedQuestion();
             thePanel.setQuestion(question);
             myColumns--; //go left
+            setMaze();
         }
     }
 
