@@ -47,7 +47,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private QuestionPanel myPanel;
     private TriviaMazePanel myMazePanel;
     private String myDif;
-    private boolean myStop;
 
     private boolean myHitUp;
     private boolean myHitDown;
@@ -85,6 +84,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         initGUI(theDif);
         setVisible(true);
     }
+
 
     public void initializeAudio() {
         try {
@@ -271,8 +271,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             case LOAD_COMMAND:
                 Maze loaded = loadGame();
                 dispose();
+                TriviaMazeGUI newGUI = new TriviaMazeGUI(myTriviaMaze, loaded.getSize(), myDif);
                 myTriviaMaze.setMaze(loaded);
-                new TriviaMazeGUI(myTriviaMaze, loaded.getSize(), myDif);
+                newGUI.setPlayerLocation(loaded.getMyRow(), loaded.getMyCol());
+                myMazePanel.setChecked();
+                myMazePanel.repaint();
+
                 break;
             case MOVE_UP:
                 myHitUp = true;
@@ -348,7 +352,10 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
 
     }
-
+    public void setPlayerLocation(final int theRow, final int theCol) {
+        myTriviaMaze.getMyMaze().setCurrentLocation(theRow, theCol);
+        myMazePanel.setColor(theRow, theCol);
+    }
     public boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
                 myTriviaMaze.getMyMaze().placePotionCol() && !myYetFound) {
