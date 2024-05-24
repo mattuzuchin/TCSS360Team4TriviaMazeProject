@@ -15,7 +15,7 @@ public class DoorTest {
     @Test
     public void testDoorConstructor() {
 
-        assertEquals(false, myDoor.isLocked());
+        assertFalse(myDoor.isLocked());
     }
 
     @Test

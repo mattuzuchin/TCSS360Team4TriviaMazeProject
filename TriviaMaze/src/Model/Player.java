@@ -33,6 +33,12 @@ public class Player implements Serializable {
         myColumn = theColumn;
     }
 
+    public int getMyRow() {
+        return myRow;
+    }
+    public int getMyColumn() {
+        return myColumn;
+    }
     public String getName() {
         return myName;
     }

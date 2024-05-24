@@ -110,6 +110,9 @@ public class QuestionFactory implements Serializable {
 
         return data;
     }
+    public ArrayList<Question> getQuestionsList() {
+        return myQuestionsList;
+    }
 
 
 
