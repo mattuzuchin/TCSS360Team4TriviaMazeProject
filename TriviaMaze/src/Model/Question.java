@@ -3,7 +3,7 @@ package Model;
 import java.io.Serializable;
 
 public class Question implements Serializable {
-    private String questionText;
+    private String myQuestionText;
     private String myOptionA;
     private String myOptionB;
     private String myOptionC;
@@ -13,7 +13,7 @@ public class Question implements Serializable {
 
     public Question(final String theQuestionText, final String theA, final String theB, final String theC, final String theD,
                     final String theAnswer, final String theType) {
-        questionText = theQuestionText;
+        myQuestionText = theQuestionText;
         myOptionA = theA;
         myOptionB = theB;
         myOptionC = theC;
@@ -21,10 +21,9 @@ public class Question implements Serializable {
         myType = Integer.parseInt(theType);
         myAnswer = theAnswer;
     }
-    public String getQuestionText() {
-        return questionText;
+    public String getMyQuestionText() {
+        return myQuestionText;
     }
-
     public String getOptionA() {
         return myOptionA;
     }
@@ -47,7 +46,7 @@ public class Question implements Serializable {
     @Override
     public String toString() {
         return "Question{" +
-                "questionText=" + questionText  +
+                "questionText=" + myQuestionText +
                 ", optionA=" + myOptionA  +
                 ", optionB=" + myOptionB  +
                 ", optionC=" + myOptionC  +

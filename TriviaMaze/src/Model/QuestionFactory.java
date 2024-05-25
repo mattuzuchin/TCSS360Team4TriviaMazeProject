@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class QuestionFactory implements Serializable {
-    private static QuestionFactory uniqueInstance = null;
+    private static QuestionFactory myUniqueInstance = null;
     private ArrayList<Question> myQuestionsList;
     private Random myRandom;
 
@@ -25,18 +25,18 @@ public class QuestionFactory implements Serializable {
     }
 
     public void setInstance() {
-        uniqueInstance = null;
+        myUniqueInstance = null;
     }
 
     public static synchronized QuestionFactory getInstance() {
-        if(uniqueInstance == null) {
+        if(myUniqueInstance == null) {
             try {
-                uniqueInstance = new QuestionFactory();
+                myUniqueInstance = new QuestionFactory();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
-        return uniqueInstance;
+        return myUniqueInstance;
     }
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
@@ -95,14 +95,14 @@ public class QuestionFactory implements Serializable {
 
         return null;
     }
-    public static int[] getRandomPermutationOfIntegers(int size) {
-        int[] data = new int[size];
-        for (int i = 0; i < size; i++) {
+    public static int[] getRandomPermutationOfIntegers(final int theSize) {
+        int[] data = new int[theSize];
+        for (int i = 0; i < theSize; i++) {
             data[i] = i;
         }
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < theSize; i++) {
             int temp;
-            int swap = i + (int) ((size - i) * Math.random());
+            int swap = i + (int) ((theSize - i) * Math.random());
             temp = data[i];
             data[i] = data[swap];
             data[swap] = temp;
@@ -111,7 +111,7 @@ public class QuestionFactory implements Serializable {
         return data;
     }
 
-
-
-
+    public ArrayList<Question> getQuestionsList() {
+        return myQuestionsList;
+    }
 }

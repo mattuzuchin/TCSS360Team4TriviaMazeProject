@@ -12,7 +12,6 @@ public class Player implements Serializable {
         myColumn=0;
         myName = theName;
     }
-
     public void setName(final String theNewName) {
         if(theNewName.isEmpty()) {
             throw new IllegalArgumentException("No empty names!");
@@ -32,7 +31,12 @@ public class Player implements Serializable {
         }
         myColumn = theColumn;
     }
-
+    public int getMyRow() {
+        return myRow;
+    }
+    public int getMyColumn() {
+        return myColumn;
+    }
     public String getName() {
         return myName;
     }

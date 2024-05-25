@@ -44,20 +44,6 @@ public class Doors implements Serializable {
         }
         return check;
     }
-    public Door getDoor(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return myNorthDoor;
-            case EAST:
-                return myEastDoor;
-            case SOUTH:
-                return mySouthDoor;
-            case WEST:
-                return myWestDoor;
-            default:
-                throw new IllegalArgumentException("Invalid direction: " + direction);
-        }
-    }
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -28,7 +28,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     /**
      * Manager for Property Change Listeners.
      */
-    private PropertyChangeSupport myPcs;
+    private final PropertyChangeSupport myPcs;
 
     /**
      * The player object.
@@ -55,7 +55,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @param theFactory single instance of Question Factory.
      */
     public TriviaMaze(QuestionFactory theFactory) {
-        new PropertyChangeSupport(this);
+        myPcs = new PropertyChangeSupport(this);
         myQF = theFactory;
         myRow =  0;
         myColumns = 0;
@@ -154,11 +154,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @return boolean if true or false
      */
     public boolean checkNorthLocation() {
-        boolean check = true;
-        if(myRow == 0)  {
-            check = false;
-        }
-        return check;
+        return myRow != 0;
     }
 
 
@@ -168,11 +164,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @return boolean if true or false
      */
     public boolean checkSouthLocation() {
-        boolean check = true;
-        if(myRow == myMaze.getExitRow())  {
-            check = false;
-        }
-        return check;
+        return myRow != myMaze.getExitRow();
     }
 
     /**
@@ -181,11 +173,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @return boolean if true or false
      */
     public boolean checkWestLocation() {
-        boolean check = true;
-        if(myColumns == 0)  {
-            check = false;
-        }
-        return check;
+        return myColumns != 0;
     }
 
     /**
@@ -194,11 +182,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @return boolean if true or false
      */
     public boolean checkEastLocation() {
-        boolean check = true;
-        if(myColumns == myMaze.getExitColumn())  {
-            check = false;
-        }
-        return check;
+        return myColumns != myMaze.getExitColumn();
     }
 
     /**
@@ -392,7 +376,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
 
     /**
      * mazes a new maze.
-     * @param theSize
+     * @param theSize size of maze
      * @throws IllegalArgumentException when size is  < 0
      */
     public void makeMaze(final int theSize) {

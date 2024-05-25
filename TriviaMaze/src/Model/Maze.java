@@ -69,8 +69,8 @@ public class Maze implements Serializable {
         return myColPotion;
     }
 
-    public Room getRoom(final int theX, final int theY) {
-        return myRooms[theX][theY];
+    public Room getRoom(final int theRow, final int theCol) {
+        return myRooms[theRow][theCol];
     }
     public Room[][] getMyRooms() {
         return myRooms;
@@ -82,7 +82,6 @@ public class Maze implements Serializable {
         return myCol;
     }
     public void setCurrentLocation(final int theRow, final int theCol) {
-
             myRow = theRow;
             myCol = theCol;
     }

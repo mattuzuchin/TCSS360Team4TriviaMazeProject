@@ -15,9 +15,6 @@ import java.io.*;
 public final class TriviaMazeGUI extends JFrame implements ActionListener, Serializable {
     private static final String TITLE = "Movie Trivia Maze";
 
-    private int myMoves;
-
-
     private static final Toolkit KIT = Toolkit.getDefaultToolkit();
 
     private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
@@ -37,15 +34,14 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     private JButton myDown;
     private JButton myLeft;
     private JButton myRight;
-
-    private TriviaMaze myTriviaMaze;
+    private int myMoves;
+    private final TriviaMaze myTriviaMaze;
     private JPanel mySouthAndQuestionPanel;
-    private int mySize;
+    private final int mySize;
 
     private QuestionPanel myPanel;
     private TriviaMazePanel myMazePanel;
-    private String myDif;
-    private String myName;
+    private final String myDif;
     private boolean myHitUp;
     private boolean myHitDown;
     private boolean myHitLeft;
@@ -76,7 +72,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif, int theUnlockPotion) {
         super(TITLE);
         initializeAudio();
-        myUnlockPotion = 1;
+        myUnlockPotion = theUnlockPotion;
         myDif =theDif;
         mySize = thePanelSize;
         myTriviaMaze = theMaze;
@@ -85,7 +81,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     }
 
 
-    public void initializeAudio() {
+    private void initializeAudio() {
         try {
             myGameWon = AudioSystem.getClip();
             AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File("gamewon.wav"));
@@ -178,11 +174,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myPotionItem = new JMenuItem(POTION);
         myPotionItem.addActionListener(this);
         gameMenu.add(myPotionItem);
-        if(myUnlockPotion > 0) {
-            myPotionItem.setEnabled(true);
-        } else {
-            myPotionItem.setEnabled(false);
-        }
+        myPotionItem.setEnabled(myUnlockPotion > 0);
         menuBar.add(gameMenu);
 
         final JMenuItem loadItem = new JMenuItem(LOAD_COMMAND);
@@ -243,13 +235,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 if (choice == JOptionPane.YES_OPTION) {
                     usePotion();
                     updateButtonState();
-                    if(myUnlockPotion > 0) {
-                        myPotionItem.setEnabled(true);
-                    } else {
-                        myPotionItem.setEnabled(false);
-                    }
-                } else {
-                    //
+                    myPotionItem.setEnabled(myUnlockPotion > 0);
                 }
                 break;
             case RESET_COMMAND:
@@ -259,8 +245,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     dispose();
                     myTriviaMaze.getQF().setInstance();
                     new TitleScreen();
-                } else {
-                    //
                 }
                 break;
             case ROOM_INFO:
@@ -352,13 +336,13 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
 
     }
-    public void setPlayerLocation(final int theRow, final int theCol) {
+    private void setPlayerLocation(final int theRow, final int theCol) {
         myTriviaMaze.setRow(theRow);
         myTriviaMaze.setCol(theCol);
         myTriviaMaze.getMyMaze().setCurrentLocation(theRow, theCol);
         myMazePanel.setColor(theRow, theCol);
     }
-    public boolean checkPotion() {
+    private boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
                 myTriviaMaze.getMyMaze().placePotionCol() && !myYetFound) {
             myUnlockPotion++;
@@ -369,7 +353,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
-    public void messagePotion(final int theM) {
+    private void messagePotion(final int theM) {
         if(theM == 1) {
             int option = JOptionPane.showConfirmDialog(this, "You found a potion! This unlocks all" +
                             " locked doors...would you like to use it?",
@@ -395,11 +379,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
     }
 
-    public void updatePlayer() {
+    private void updatePlayer() {
         myPlayerName.setText(myTriviaMaze.getMyPlayer().getName());
     }
 
-    public void usePotion() {
+    private void usePotion() {
         myUnlockPotion--;
         myTriviaMaze.unlockAll();
         myMazePanel.useCheat();
@@ -408,7 +392,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         updateCount();
 
     }
-    public void updateCount() {
+    private void updateCount() {
         myPotionItem.setText("Potion");
     }
     public void setUpBut() {
@@ -500,8 +484,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         } else if ((myTriviaMaze.getRow() == myTriviaMaze.getExitRow() - 1 ) && (myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked())) {
             end(message);
-        } else {
-            // do- nothing
         }
     }
 
@@ -519,7 +501,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
-    public void disableButtons() {
+    private void disableButtons() {
         myUp.setEnabled(false);
         myDown.setEnabled(false);
         myLeft.setEnabled(false);
@@ -536,7 +518,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     }
 
 
-    public static void saveGame(final Maze theMaze) {
+    private static void saveGame(final Maze theMaze) {
         try {
             FileOutputStream outputStream = new FileOutputStream("save.ser");
             ObjectOutputStream out = new ObjectOutputStream(outputStream);
@@ -549,7 +531,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     }
 
 
-    public static Maze loadGame() throws NullPointerException{
+    private static Maze loadGame() throws NullPointerException{
 
         Maze maze;
         File file = new File("save.ser");
@@ -565,7 +547,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
         return maze;
     }
-    public void end(final String theMessage) {
+    private void end(final String theMessage) {
             if(myUnlockPotion > 0) {
                 messagePotion(2);
             } else {

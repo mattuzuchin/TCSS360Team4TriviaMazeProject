@@ -18,10 +18,10 @@ public class TitleScreen extends JFrame implements ActionListener {
 
     private JButton myStartButton;
     private JTextField myTextName;
-    private TriviaMaze myTM;
-    private ArrayList<JToggleButton> myButtons;
+    private final TriviaMaze myTM;
+    private final ArrayList<JToggleButton> myButtons;
     private ButtonGroup myButtonGroup;
-    private QuestionFactory myFactory;
+    private final QuestionFactory myFactory;
 
 
     public TitleScreen() {
@@ -43,25 +43,18 @@ public class TitleScreen extends JFrame implements ActionListener {
         JPanel masterPanel = new JPanel(new BorderLayout());
         masterPanel.setBackground(Color.WHITE);
         setBackground(Color.WHITE);
-
-        // Create and add a text input field
         myTextName = new JTextField(20);
         JPanel inputPanel = new JPanel();
         inputPanel.add(new JLabel("Enter your name:"));
         inputPanel.add(myTextName);
         inputPanel.setBackground(Color.WHITE);
         masterPanel.add(inputPanel, BorderLayout.NORTH);
-
-        // Load and display your image
         BufferedImage image = loadImage("movie.png");
         JLabel imageLabel = new JLabel(new ImageIcon(image));
         imageLabel.setPreferredSize(new Dimension(800,600));
         masterPanel.add(imageLabel);
-
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
-
-        // Create difficulty buttons
         JPanel difficulty = new JPanel();
         difficulty.setBackground(Color.WHITE);
         difficulty.setLayout(new BoxLayout(difficulty, BoxLayout.X_AXIS));
@@ -76,8 +69,6 @@ public class TitleScreen extends JFrame implements ActionListener {
             difficulty.add(button);
         }
         southPanel.add(difficulty);
-
-        // Create start button
         myStartButton = new JButton("Start");
         myStartButton.setBackground(Color.WHITE);
         myStartButton.addActionListener(this);
@@ -120,7 +111,7 @@ public class TitleScreen extends JFrame implements ActionListener {
                         new TriviaMazeGUI(myTM, d.getSize(d.getName()), d.name(), 1);
                     }
                 }
-            }else {
+            } else {
                 setVisible(false);
                 myTM.setName(myTextName.getText());
                 String getDifficulty = null;
@@ -138,6 +129,4 @@ public class TitleScreen extends JFrame implements ActionListener {
             }
         }
     }
-
-
 }
