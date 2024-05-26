@@ -13,21 +13,46 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Implementation of the Question Factory containing all database questions.
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
+ * @version Spring 2024
+ */
 public class QuestionFactory implements Serializable {
+    /**
+     * Field representing unique instance of question factory.
+     */
     private static QuestionFactory myUniqueInstance = null;
-    private ArrayList<Question> myQuestionsList;
-    private Random myRandom;
+    /**
+     * Field represents a list of questions.
+     */
+    private final ArrayList<Question> myQuestionsList;
+    /**
+     * Random generator field.
+     */
+    private final Random myRandom;
 
+    /**
+     * Constructor for question factory.
+     * @throws FileNotFoundException when file not found
+     */
     private QuestionFactory() throws FileNotFoundException {
         myRandom = new Random();
         myQuestionsList = new ArrayList<Question>();
         assignQuestion();
     }
 
+    /**
+     * sets the instance of question factory.
+     */
     public void setInstance() {
         myUniqueInstance = null;
     }
 
+    /**
+     *
+     * @return unique instance of question factory.
+     */
     public static synchronized QuestionFactory getInstance() {
         if(myUniqueInstance == null) {
             try {
@@ -38,6 +63,11 @@ public class QuestionFactory implements Serializable {
         }
         return myUniqueInstance;
     }
+
+    /**
+     * Adds questions from database into list of questions.
+     * @throws FileNotFoundException when file not found
+     */
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
         try {
@@ -84,6 +114,10 @@ public class QuestionFactory implements Serializable {
             System.exit( 0 );
         }
     }
+
+    /**
+     * @return single random question.
+     */
     public Question getQuestion() {
         int size = myQuestionsList.size();
         int[] indices = getRandomPermutationOfIntegers(size);
@@ -95,6 +129,12 @@ public class QuestionFactory implements Serializable {
 
         return null;
     }
+
+    /**
+     *
+     * @param theSize size of array
+     * @return Random array of integers given a size
+     */
     public static int[] getRandomPermutationOfIntegers(final int theSize) {
         int[] data = new int[theSize];
         for (int i = 0; i < theSize; i++) {
@@ -111,6 +151,10 @@ public class QuestionFactory implements Serializable {
         return data;
     }
 
+    /**
+     *
+     * @return List of questions.
+     */
     public ArrayList<Question> getQuestionsList() {
         return myQuestionsList;
     }

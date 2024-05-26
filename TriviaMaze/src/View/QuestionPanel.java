@@ -108,7 +108,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myCheckAnswer = 0;
        setQuestion(theQ);
        myQuestion  = theQ;
-       String question = myQuestion.getMyQuestionText();
+       String question = myQuestion.getQuestionText();
        if(theQ.getType() == 1) { // multiple choice
           setMultipleChoiceVisible(true);
           setMultipleChoiceEnable(true);
