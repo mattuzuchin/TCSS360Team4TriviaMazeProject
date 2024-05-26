@@ -3,7 +3,7 @@ package Model;
 import java.io.Serializable;
 
 /**
- * @author Matthew Uzunoe-Chin.
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt.
  * @version Spring 2024
  * Implementation of Player in TriviaMaze.
  */
