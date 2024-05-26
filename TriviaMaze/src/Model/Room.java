@@ -3,27 +3,64 @@ package Model;
 
 import java.io.Serializable;
 
+/**
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
+ * @version Spring 2024
+ * Implementation of a Room.
+ */
 public class Room implements Serializable {
+    /**
+     * Field represents the rooms Doors.
+     */
     private Doors myDoors;
+    /**
+     * Field represents the rooms row location.
+     */
     private int myRow;
+    /**
+     * Field represents the rooms column location.
+     */
     private int myColumn;
 
+    /**
+     * Constructor for the Room.
+     * @param theRow
+     * @param theColumn
+     */
     public Room(final int theRow, final int theColumn) {
         myDoors = new Doors();
         myRow = theRow;
         myColumn = theColumn;
     }
 
+    /**
+     *
+     * @return the rooms row.
+     */
     public int getRow() {
         return myRow;
     }
+
+    /**
+     *
+     * @return the rooms column.
+     */
     public int getColumn() {
         return myColumn;
     }
+
+    /**
+     *
+     * @return the rooms Doors.
+     */
     public Doors getDoors() {
         return myDoors;
     }
 
+    /**
+     *
+     * @return String representation of the Rooms state.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

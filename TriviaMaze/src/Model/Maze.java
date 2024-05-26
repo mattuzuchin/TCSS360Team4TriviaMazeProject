@@ -4,20 +4,66 @@ package Model;
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
+ * @version Spring 2024
+ * Implementation of a Maze.
+ */
 public class Maze implements Serializable {
+    /**
+     * Field represents the size of the maze.
+     */
     private int mySize;
+    /**
+     * Field represents a 2D Array of rooms.
+     */
     private Room[][] myRooms;
+    /**
+     * Field represents the exit row of the maze.
+     */
     private int myExitRow;
+    /**
+     * Field represents the exit column of the maze.
+     */
     private int myExitColumn;
+    /**
+     * Field represents the player in the maze.
+     */
     private Player myPlayer;
+    /**
+     * Field represents a random generator.
+     */
     private Random myRandom;
+    /**
+     * Field represents the row location of the potion.
+     */
     private int myRowPotion;
+    /**
+     * Field represents the column location of the potion.
+     */
     private int myColPotion;
+    /**
+     * Field represents the question Factory
+     */
     public static QuestionFactory FACTORY;
+    /**
+     * Field represents a count of rooms for testing.
+     */
     private int myTestCount;
+    /**
+     * Field represents row location of player.
+     */
     private int myRow;
+    /**
+     * Field represents column location of player.
+     */
     private int myCol;
 
+    /**
+     * Constructor for Maze.
+     * @param theSize
+     * @param theFactory
+     */
     public Maze(final int theSize, final QuestionFactory theFactory) {
         FACTORY = theFactory;
         myPlayer = new Player("");
@@ -38,7 +84,9 @@ public class Maze implements Serializable {
         myPlayer.setColumn(0);
     }
 
-
+    /**
+     * Creates maze (2D array of rooms).
+     */
     public void createMaze() {
         for (int i = 0; i < mySize; i++) {
             for (int j = 0; j < mySize; j++) {
@@ -47,40 +95,94 @@ public class Maze implements Serializable {
             }
         }
     }
+
+    /**
+     *
+     * @return size of the maze.
+     */
     public int getSize() {
         return mySize;
     }
 
+    /**
+     *
+     * @return exit row of the maze.
+     */
     public int getExitRow() {
         return myExitRow;
     }
 
+    /**
+     *
+     * @return exit column of the maze.
+     */
     public int getExitColumn() {
         return myExitColumn;
     }
 
+    /**
+     *
+     * @return total number of rooms in maze for testing.
+     */
     public int getTotalRooms() {
         return myTestCount;
     }
+
+    /**
+     *
+     * @return gets the row location of potion.
+     */
     public int placePotionRow() {
         return myRowPotion;
     }
+
+    /**
+     *
+     * @return sets the column location of potion.
+     */
     public int placePotionCol() {
         return myColPotion;
     }
 
-    public Room getRoom(final int theX, final int theY) {
-        return myRooms[theX][theY];
+    /**
+     *
+     * @param theRow
+     * @param theColumn
+     * @return room at specified row and column.
+     */
+    public Room getRoom(final int theRow, final int theColumn) {
+        return myRooms[theRow][theColumn];
     }
+
+    /**
+     *
+     * @return 2D array of rooms.
+     */
     public Room[][] getMyRooms() {
         return myRooms;
     }
+
+    /**
+     *
+     * @return row location of player.
+     */
     public int getMyRow() {
         return myRow;
     }
+
+    /**
+     *
+     * @return column location of player.
+     */
     public int getMyCol() {
         return myCol;
     }
+
+    /**
+     * sets the current location of player in maze.
+     * @param theRow
+     * @param theCol
+     */
     public void setCurrentLocation(final int theRow, final int theCol) {
 
             myRow = theRow;

@@ -2,12 +2,32 @@ package Model;
 
 import java.io.Serializable;
 
+/**
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
+ * @version Spring 2024
+ * Implementation of 4 doors with different directions.
+ */
 public class Doors implements Serializable {
+    /**
+     * Field represents north Door.
+     */
     private Door myNorthDoor;
+    /**
+     * Field represents east Door.
+     */
     private Door myEastDoor;
+    /**
+     * Field represents south Door.
+     */
     private Door mySouthDoor;
+    /**
+     * Field represents west Door.
+     */
     private Door myWestDoor;
 
+    /**
+     * Constructor for Doors.
+     */
     public Doors() {
         myNorthDoor = new Door(Direction.NORTH);
         myEastDoor = new Door(Direction.EAST);
@@ -15,19 +35,41 @@ public class Doors implements Serializable {
         myWestDoor = new Door(Direction.WEST);
     }
 
+    /**
+     *
+     * @return the north Door.
+     */
     public Door getMyNorthDoor() {
         return myNorthDoor;
     }
+
+    /**
+     *
+     * @return the south Door.
+     */
     public Door getMySouthDoor() {
         return mySouthDoor;
     }
+
+    /**
+     *
+     * @return the east Door.
+     */
     public Door getMyEastDoor() {
         return myEastDoor;
     }
+
+    /**
+     *
+     * @return the west Door.
+     */
     public Door getMyWestDoor() {
         return myWestDoor;
     }
 
+    /**
+     * @return number of Doors locked.
+     */
     public int checkNumber() {
         int check = 0;
         if(myWestDoor.isLocked()) {
@@ -44,6 +86,12 @@ public class Doors implements Serializable {
         }
         return check;
     }
+
+    /**
+     *
+     * @param direction
+     * @return the door in the given direction.
+     */
     public Door getDoor(Direction direction) {
         switch (direction) {
             case NORTH:
@@ -58,6 +106,11 @@ public class Doors implements Serializable {
                 throw new IllegalArgumentException("Invalid direction: " + direction);
         }
     }
+
+    /**
+     *
+     * @return string representation of Doors state.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
