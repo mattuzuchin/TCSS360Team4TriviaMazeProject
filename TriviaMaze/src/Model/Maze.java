@@ -59,6 +59,8 @@ public class Maze implements Serializable {
      */
     private int myCol;
 
+
+
     /**
      * Constructor for Maze.
      * @param theSize size of maze
@@ -95,6 +97,7 @@ public class Maze implements Serializable {
             }
         }
     }
+
 
     /**
      *
