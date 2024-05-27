@@ -2,26 +2,32 @@ package Tests;
 import Model.QuestionFactory;
 import Model.Question;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * QuestionFactory Test Class
+ */
 public class QuestionFactoryTest {
 
-    private QuestionFactory questionFactory;
+    /**
+     * single QF instance
+     */
+    private final QuestionFactory myQuestionFactory = QuestionFactory.getInstance();
 
-    @BeforeEach
-    public void setUp() throws FileNotFoundException {
-        questionFactory = QuestionFactory.getInstance();
-    }
-
+    /**
+     * AfterEach
+     */
     @AfterEach
     public void tearDown() {
-        questionFactory.setInstance();
+        myQuestionFactory.setInstance();
     }
 
+    /**
+     * test singleton instance
+     */
     @Test
     public void testSingletonInstance() throws FileNotFoundException {
         QuestionFactory instance1 = QuestionFactory.getInstance();
@@ -29,17 +35,26 @@ public class QuestionFactoryTest {
         assertSame(instance1, instance2, "Instances should be the same (Singleton pattern)");
     }
 
+    /**
+     * test assign question
+     */
     @Test
     public void testAssignQuestion() {
-        assertFalse(questionFactory.getQuestionsList().isEmpty(), "Questions list should not be empty after assignment");
+        assertFalse(myQuestionFactory.getQuestionsList().isEmpty(), "Questions list should not be empty after assignment");
     }
 
+    /**
+     * test get question
+     */
     @Test
     public void testGetQuestion() {
-        Question question = questionFactory.getQuestion();
+        Question question = myQuestionFactory.getQuestion();
         assertNotNull(question, "Retrieved question should not be null");
     }
 
+    /**
+     * test random number method
+     */
     @Test
     public void testGetRandomPermutationOfIntegers() {
         int size = 10;
@@ -53,4 +68,5 @@ public class QuestionFactoryTest {
             assertTrue(b, "Each value from 0 to size-1 should be in the permutation");
         }
     }
+
 }

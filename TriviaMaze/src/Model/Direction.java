@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Random;
-
 /**
  * @author Matthew Uznoe-Chin, Elias Arriola, Dustin Feldt
  * @version Spring 2024
@@ -34,7 +32,7 @@ public enum Direction {
 
     /**
      * assigns character to Direction.
-     * @param theLetter
+     * @param theLetter letter of direction
      */
     Direction(final char theLetter) {
         myLetter = theLetter;
@@ -42,7 +40,7 @@ public enum Direction {
 
     /**
      *
-     * @param theLetter
+     * @param theLetter letter for direction
      * @return direction of given character.
      */
     public static Direction valueOf(final char theLetter) {

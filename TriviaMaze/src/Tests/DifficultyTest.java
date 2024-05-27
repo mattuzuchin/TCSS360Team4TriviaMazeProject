@@ -1,9 +1,17 @@
 package Tests;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import Model.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Difficulty Test Class
+ */
 public class DifficultyTest {
+
+    /**
+     * tests the name
+     */
     @Test
     public void testGetName() {
         assertEquals("Easy", Difficulty.EASY.getName(), "EASY should return 'Easy'");
@@ -11,7 +19,9 @@ public class DifficultyTest {
         assertEquals("Hard", Difficulty.HARD.getName(), "HARD should return 'Hard'");
         assertEquals("Extreme", Difficulty.EXTREME.getName(), "EXTREME should return 'Extreme'");
     }
-
+    /**
+     * tests the size
+     */
     @Test
     public void testGetSize() {
         assertEquals(4, Difficulty.EASY.getSize("Easy"), "EASY should return size 4 for 'Easy'");

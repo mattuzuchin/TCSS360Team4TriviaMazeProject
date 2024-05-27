@@ -11,19 +11,19 @@ public class Doors implements Serializable {
     /**
      * Field represents north Door.
      */
-    private Door myNorthDoor;
+    private final Door myNorthDoor;
     /**
      * Field represents east Door.
      */
-    private Door myEastDoor;
+    private final Door myEastDoor;
     /**
      * Field represents south Door.
      */
-    private Door mySouthDoor;
+    private final Door mySouthDoor;
     /**
      * Field represents west Door.
      */
-    private Door myWestDoor;
+    private final Door myWestDoor;
 
     /**
      * Constructor for Doors.
@@ -87,25 +87,6 @@ public class Doors implements Serializable {
         return check;
     }
 
-    /**
-     *
-     * @param direction
-     * @return the door in the given direction.
-     */
-    public Door getDoor(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return myNorthDoor;
-            case EAST:
-                return myEastDoor;
-            case SOUTH:
-                return mySouthDoor;
-            case WEST:
-                return myWestDoor;
-            default:
-                throw new IllegalArgumentException("Invalid direction: " + direction);
-        }
-    }
 
     /**
      *

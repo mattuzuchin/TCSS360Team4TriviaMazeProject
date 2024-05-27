@@ -3,14 +3,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import Model.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Player Test Class
+ */
 public class PlayerTest {
+    /**
+     * player object
+     */
     private Player myPlayer;
 
+    /**
+     * beforeEach
+     */
     @BeforeEach
     public void beforeEach() {
         myPlayer = new Player("Joe Mama");
     }
 
+    /**
+     * test constructor
+     */
     @Test
     public void testConstructor() {
         assertEquals("Joe Mama", myPlayer.getName());
@@ -18,6 +31,9 @@ public class PlayerTest {
         assertEquals(0,myPlayer.getMyColumn());
     }
 
+    /**
+     * test setters
+     */
     @Test
     public void testValidSetters() {
         myPlayer.setRow(10);
@@ -28,6 +44,9 @@ public class PlayerTest {
         assertEquals("JOE", myPlayer.getName());
     }
 
+    /**
+     * test invalid row
+     */
     @Test
     public void testInvalidSetterRow() {
         boolean InvalidRow = false;
@@ -41,6 +60,9 @@ public class PlayerTest {
 
     }
 
+    /**
+     * test invalid column
+     */
     @Test
     public void testInvalidSetterColumn() {
         boolean InvalidColumn = false;
@@ -52,6 +74,9 @@ public class PlayerTest {
         assertTrue(InvalidColumn);
     }
 
+    /**
+     * test invalid name
+     */
     @Test
     public void testInvalidSetterName() {
         boolean InvalidName = false;
@@ -63,9 +88,12 @@ public class PlayerTest {
         assertTrue(InvalidName);
     }
 
+    /**
+     * test toString
+     */
     @Test
     public void testToString() {
-        assertEquals("Name: Joe Mama Row: 0 Column: 0", myPlayer.toString());
+        assertEquals("Joe Mama", myPlayer.toString());
     }
 
 

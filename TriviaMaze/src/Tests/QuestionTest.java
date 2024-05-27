@@ -3,9 +3,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import Model.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Question Test Class
+ */
 public class QuestionTest {
+    /**
+     * Question object
+     */
     private Question myQuestion;
 
+    /**
+     * beforeEach
+     */
     @BeforeEach
     public void beforeEach() {
         String Question = "What game is this test test case for?";
@@ -19,6 +29,9 @@ public class QuestionTest {
         myQuestion = new Question(Question,A,B,C,D,Answer, QuestionType);
     }
 
+    /**
+     * test constructor
+     */
     @Test
     public void testConstructor() {
         assertEquals(myQuestion.getQuestionText(), "What game is this test test case for?");
@@ -30,6 +43,9 @@ public class QuestionTest {
         assertEquals(myQuestion.getType(), 1);
     }
 
+    /**
+     * test toString
+     */
     @Test
     public void testToString() {
         assertEquals(myQuestion.toString(), "Question{" +

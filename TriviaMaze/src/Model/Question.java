@@ -1,3 +1,4 @@
+
 package Model;
 
 import java.io.Serializable;
@@ -11,41 +12,41 @@ public class Question implements Serializable {
     /**
      * Field represents the question as a string.
      */
-    private String questionText;
+    private final String questionText;
     /**
      * Field represents 1st option of question.
      */
-    private String myOptionA;
+    private final String myOptionA;
     /**
      * Field represents 2nd option of question.
      */
-    private String myOptionB;
+    private final String myOptionB;
     /**
      * Field represents 3rd option of question.
      */
-    private String myOptionC;
+    private final String myOptionC;
     /**
      * Field represents fourth option of question.
      */
-    private String myOptionD;
+    private final String myOptionD;
     /**
      * Field represents answer to question.
      */
-    private String myAnswer;
+    private final String myAnswer;
     /**
      * Field represents question type as an integer.
      */
-    private int myType;
+    private final int myType;
 
     /**
      * Question Constructor.
-     * @param theQuestionText
-     * @param theA
-     * @param theB
-     * @param theC
-     * @param theD
-     * @param theAnswer
-     * @param theType
+     * @param theQuestionText text for question
+     * @param theA option a
+     * @param theB option b
+     * @param theC option c
+     * @param theD option d
+     * @param theAnswer the answer
+     * @param theType type of question
      */
     public Question(final String theQuestionText, final String theA, final String theB, final String theC, final String theD,
                     final String theAnswer, final String theType) {
@@ -131,4 +132,3 @@ public class Question implements Serializable {
                 '}';
     }
 }
-

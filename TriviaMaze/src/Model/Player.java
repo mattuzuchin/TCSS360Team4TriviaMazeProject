@@ -23,7 +23,7 @@ public class Player implements Serializable {
 
     /**
      * Constructor for Player.
-     * @param theName
+     * @param theName name of player as string
      */
     public Player(String theName) {
         myRow=0;
@@ -33,7 +33,7 @@ public class Player implements Serializable {
 
     /**
      * Field sets the name of the Player.
-     * @param theNewName
+     * @param theNewName string for player name
      */
     public void setName(final String theNewName) {
         if(theNewName.isEmpty()) {
@@ -45,7 +45,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the Player row location.
-     * @param theRow
+     * @param theRow set player row
      */
     public void setRow(final int theRow) {
         if(theRow < 0) {
@@ -56,7 +56,7 @@ public class Player implements Serializable {
 
     /**
      * Sets the Player column location.
-     * @param theColumn
+     * @param theColumn set player col
      */
     public void setColumn(final int theColumn) {
         if(theColumn < 0) {

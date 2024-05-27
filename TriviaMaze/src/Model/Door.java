@@ -19,11 +19,11 @@ public class Door implements Serializable {
     /**
      * Field represents direction of the Door.
      */
-    private Direction myDirection;
+    private final Direction myDirection;
 
     /**
      * Constructor for Door.
-     * @param theDirection
+     * @param theDirection direction for door
      */
     public Door(Direction theDirection) {
         myLockedStatus = false;
@@ -34,7 +34,7 @@ public class Door implements Serializable {
 
     /**
      * Sets the locked status of Door.
-     * @param theLockedStatus
+     * @param theLockedStatus boolean for status of door
      */
     public void setLockedStatus(final boolean theLockedStatus) {
         myLockedStatus  = theLockedStatus;

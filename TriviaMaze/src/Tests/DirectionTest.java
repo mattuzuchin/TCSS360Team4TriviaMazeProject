@@ -1,9 +1,17 @@
 package Tests;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import Model.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Direction Test Class
+ */
 public class DirectionTest {
+
+    /**
+     * tests the letter
+     */
     @Test
     public void testLetter() {
         assertEquals('N', Direction.NORTH.letter(), "NORTH should return 'N'");
@@ -12,6 +20,9 @@ public class DirectionTest {
         assertEquals('E', Direction.EAST.letter(), "EAST should return 'E'");
     }
 
+    /**
+     * tests the valueOf
+     */
     @Test
     public void testValueOf() {
         assertEquals(Direction.NORTH, Direction.valueOf('N'), "valueOf should return NORTH for 'N'");

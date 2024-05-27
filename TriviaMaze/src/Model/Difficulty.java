@@ -1,5 +1,4 @@
 package Model;
-
 /**
  * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
  * @version Spring 2024
@@ -9,26 +8,31 @@ public enum Difficulty {
      * Field represents easy difficulty.
      */
     EASY("Easy"),
+
     /**
      * Field represents medium difficulty.
      */
     MEDIUM("Medium"),
+
     /**
      * Field represents hard difficulty.
      */
     HARD("Hard"),
+
     /**
      * Field represents extreme difficulty.
      */
     EXTREME("Extreme");
+
     /**
      * Field represents name of difficulty.
      */
     private final String myName;
 
+
     /**
      * assigns name to difficulty.
-     * @param theName
+     * @param theName name of difficulty
      */
     Difficulty(final String theName) {
         myName = theName;
@@ -44,7 +48,7 @@ public enum Difficulty {
 
     /**
      *
-     * @param theIn
+     * @param theIn the difficulty as String
      * @return size of maze corresponding to difficulty.
      */
     public int getSize(final String theIn) {

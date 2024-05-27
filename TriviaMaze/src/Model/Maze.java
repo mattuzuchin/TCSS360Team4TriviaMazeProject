@@ -13,27 +13,27 @@ public class Maze implements Serializable {
     /**
      * Field represents the size of the maze.
      */
-    private int mySize;
+    private final int mySize;
     /**
      * Field represents a 2D Array of rooms.
      */
-    private Room[][] myRooms;
+    private final Room[][] myRooms;
     /**
      * Field represents the exit row of the maze.
      */
-    private int myExitRow;
+    private final int myExitRow;
     /**
      * Field represents the exit column of the maze.
      */
-    private int myExitColumn;
+    private final int myExitColumn;
     /**
      * Field represents the player in the maze.
      */
-    private Player myPlayer;
+    private final Player myPlayer;
     /**
      * Field represents a random generator.
      */
-    private Random myRandom;
+    private final Random myRandom;
     /**
      * Field represents the row location of the potion.
      */
@@ -61,8 +61,8 @@ public class Maze implements Serializable {
 
     /**
      * Constructor for Maze.
-     * @param theSize
-     * @param theFactory
+     * @param theSize size of maze
+     * @param theFactory single QF instance
      */
     public Maze(final int theSize, final QuestionFactory theFactory) {
         FACTORY = theFactory;
@@ -146,8 +146,8 @@ public class Maze implements Serializable {
 
     /**
      *
-     * @param theRow
-     * @param theColumn
+     * @param theRow the row
+     * @param theColumn the col
      * @return room at specified row and column.
      */
     public Room getRoom(final int theRow, final int theColumn) {
@@ -180,13 +180,13 @@ public class Maze implements Serializable {
 
     /**
      * sets the current location of player in maze.
-     * @param theRow
-     * @param theCol
+     * @param theRow the current row
+     * @param theCol the current col
      */
     public void setCurrentLocation(final int theRow, final int theCol) {
 
-            myRow = theRow;
-            myCol = theCol;
+        myRow = theRow;
+        myCol = theCol;
     }
 
 }

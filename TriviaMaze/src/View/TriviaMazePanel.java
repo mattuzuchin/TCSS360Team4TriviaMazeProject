@@ -28,7 +28,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private final int mySize;
 
-    private TriviaMaze myMaze;
+    private final TriviaMaze myMaze;
     private boolean myCheck = false;
     private boolean myCheat;
     private int myRow;
@@ -87,10 +87,8 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         myCheat = true;
     }
 
-    public void drawRooms(final Graphics2D theGraphics) {
+    private void drawRooms(final Graphics2D theGraphics) {
         if(!myCheck) {
-            Room[][] theR = myMaze.getMaze();
-
             for (int y = 0; y < mySize; y++) {
                 final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 

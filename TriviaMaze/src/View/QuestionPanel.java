@@ -2,7 +2,6 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Question;
-import Model.QuestionFactory;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -78,7 +77,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         setComponents();
         addListener();
     }
-    public void setQuestion(Question theQuestion) {
+    public void setQuestion(final Question theQuestion) {
         if(theQuestion == null) {
             throw new IllegalArgumentException("null");
         }
@@ -175,7 +174,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
            throw new IllegalArgumentException("no valid question types found!");
        }
     }
-    public void setMultipleChoiceVisible(final boolean theB) {
+    private void setMultipleChoiceVisible(final boolean theB) {
         myQuestionBody.setVisible(theB);
         myQuestionLabel.setVisible(theB);
         myButtonA.setVisible(theB);
@@ -184,7 +183,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myButtonD.setVisible(theB);
         mySubmit.setVisible(theB);
     }
-    public void setMultipleChoiceEnable(final boolean theB) {
+    private void setMultipleChoiceEnable(final boolean theB) {
         myQuestionBody.setVisible(theB);
         myQuestionLabel.setVisible(theB);
         myButtonA.setEnabled(theB);
@@ -193,7 +192,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         myButtonD.setEnabled(theB);
         mySubmit.setEnabled(theB);
     }
-    public void setComponents() {
+    private void setComponents() {
         myAnswer = new JPanel();
         myQuestionLabel = new JLabel();
         myLong = new JLabel();
@@ -239,7 +238,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
     }
-    public String getSelectedAnswer() {
+    private String getSelectedAnswer() {
         for (AbstractButton button : Collections.list(myAnswerButtons.getElements())) {
             if (button.isSelected()) {
                 return button.getText();

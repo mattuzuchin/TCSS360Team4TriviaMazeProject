@@ -12,20 +12,20 @@ public class Room implements Serializable {
     /**
      * Field represents the rooms Doors.
      */
-    private Doors myDoors;
+    private final Doors myDoors;
     /**
      * Field represents the rooms row location.
      */
-    private int myRow;
+    private final int myRow;
     /**
      * Field represents the rooms column location.
      */
-    private int myColumn;
+    private final int myColumn;
 
     /**
      * Constructor for the Room.
-     * @param theRow
-     * @param theColumn
+     * @param theRow set row
+     * @param theColumn set col
      */
     public Room(final int theRow, final int theColumn) {
         myDoors = new Doors();
@@ -43,7 +43,7 @@ public class Room implements Serializable {
 
     /**
      *
-     * @return the rooms column.
+     * @return the room's column.
      */
     public int getColumn() {
         return myColumn;
