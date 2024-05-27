@@ -341,8 +341,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myTriviaMaze.setCol(theCol);
         myTriviaMaze.getMyMaze().setCurrentLocation(theRow, theCol);
         myMazePanel.setColor(theRow, theCol);
-        myTriviaMaze.setRow(theRow);
-        myTriviaMaze.setCol(theCol);
+        updateButtonState();
     }
     private boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
@@ -560,7 +559,8 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                     dispose();
                     new TitleScreen();
                 } else {
-                    System.exit(0);
+                    JOptionPane.getRootFrame().dispose();
+                    //System.exit(0);
                 }
             }
 
