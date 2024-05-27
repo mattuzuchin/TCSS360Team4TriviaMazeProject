@@ -2,7 +2,6 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Question;
-import Model.QuestionFactory;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -17,70 +16,61 @@ import java.util.Collections;
 
 import static Controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
 
-public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
+public class QuestionPanel extends JPanel implements ChangeListener {
 
+    private static final String SUBMIT_TEXT = "Submit";
+    private static final String CORRECT_SOUND = "correctbuzz.wav";
+    private static final String INCORRECT_SOUND = "incorrectbuzz.wav";
+    private static final Dimension PANEL_SIZE = new Dimension(400, 400);
     private Clip myIncorrectSound;
     private Clip myCorrectSound;
 
     private Question myQuestion;
-    private JLabel myQuestionBody;
 
-    private ButtonGroup myAnswerButtons;
-    private JButton mySubmit;
+    private final ButtonGroup myAnswerButtons;
+    private final JButton mySubmitButton;
 
-    private JRadioButton myButtonA;
-    private JRadioButton myButtonB;
-    private JRadioButton myButtonC;
-    private JRadioButton myButtonD;
+    private JToggleButton myButtonA;
+    private JToggleButton myButtonB;
+    private JToggleButton myButtonC;
+    private JToggleButton myButtonD;
 
-    private JLabel myQuestionLabel;
+    private JTextArea myQuestionLabel;
     private int myDir;
-    private TriviaMaze myMaze;
+    private final TriviaMaze myMaze;
     private int myCorrect;
     private int myIncorrect;
     private int myCheckAnswer;
-    private JLabel myLong;
-    private JTextField myField;
-    private TriviaMazeGUI myView;
-    private JPanel myAnswer;
+    private JTextField myShortAnswerField;
+    private final TriviaMazeGUI myView;
 
-    public QuestionPanel(final TriviaMaze theMaze, String theDif, TriviaMazeGUI theView) {
+    public QuestionPanel(final TriviaMaze theMaze, final TriviaMazeGUI theView) {
         super();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setPreferredSize(PANEL_SIZE);
         myView = theView;
         myMaze = theMaze;
-        myQuestionBody = new JLabel();
-        myQuestionBody.setVisible(true);
         myAnswerButtons = new ButtonGroup();
-        mySubmit = new JButton("Submit");
-        mySubmit.setVisible(true);
-        mySubmit.setEnabled(false);
+        mySubmitButton = new JButton(SUBMIT_TEXT);
+        mySubmitButton.setVisible(true);
+        mySubmitButton.setEnabled(false);
         try {
             myCorrectSound = AudioSystem.getClip();
-            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File("correctbuzz.wav"));
+            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File(CORRECT_SOUND));
             myCorrectSound.open(correctStream);
 
             myIncorrectSound = AudioSystem.getClip();
-            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File("incorrectbuzz.wav"));
+            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File(INCORRECT_SOUND));
             myIncorrectSound.open(incorrectStream);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        if(theDif.equals("Easy")) {
-            setPreferredSize(new Dimension(200,200));
-        } else if(theDif.equals("Medium")) {
-            setPreferredSize(new Dimension(300,300));
-        } else if(theDif.equals("Hard")) {
-            setPreferredSize(new Dimension(500,500));
-        } else {
-            setPreferredSize(new Dimension(500,500));
+            JOptionPane.showMessageDialog(null, e);
         }
         setComponents();
         addListener();
     }
-    public void setQuestion(Question theQuestion) {
+    public void setQuestion(final Question theQuestion) {
         if(theQuestion == null) {
-            throw new IllegalArgumentException("null");
+            throw new IllegalArgumentException("Question cannot be null.");
         }
         myQuestion = theQuestion;
 
@@ -111,133 +101,101 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
        myQuestion  = theQ;
        String question = myQuestion.getQuestionText();
        if(theQ.getType() == 1) { // multiple choice
-          setMultipleChoiceVisible(true);
-          setMultipleChoiceEnable(true);
-          mySubmit.setEnabled(false);
-           if (question.length() > 75) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 75));
-               myLong.setText(question.substring(75));
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-               myButtonC.setText(myQuestion.getOptionC());
-               myButtonD.setText(myQuestion.getOptionD());
-
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-               myButtonC.setText(myQuestion.getOptionC());
-               myButtonD.setText(myQuestion.getOptionD());
-
-           }
+           setMultipleChoiceVisible(true);
+           setMultipleChoiceEnable(true);
+           mySubmitButton.setEnabled(false);
+           myQuestionLabel.setText("Question: " + question);
+           myButtonA.setText(myQuestion.getOptionA());
+           myButtonB.setText(myQuestion.getOptionB());
+           myButtonC.setText(myQuestion.getOptionC());
+           myButtonD.setText(myQuestion.getOptionD());
        } else if (theQ.getType() == 2) { //true false
            setMultipleChoiceVisible(true);
            setMultipleChoiceEnable(true);
-           mySubmit.setEnabled(false);
+           mySubmitButton.setEnabled(false);
            myButtonC.setEnabled(false);
            myButtonD.setEnabled(false);
            myButtonC.setVisible(false);
            myButtonD.setVisible(false);
-           if (question.length() > 75) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 75));
-               myLong.setText(question.substring(75));
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-
-           }
+           myQuestionLabel.setText("Question: " + question);
+           myButtonA.setText(myQuestion.getOptionA());
+           myButtonB.setText(myQuestion.getOptionB());
        } else if (theQ.getType() == 3) { // short answer
            setMultipleChoiceEnable(false);
            setMultipleChoiceVisible(false);
-           myQuestionBody.setVisible(true);
            myQuestionLabel.setVisible(true);
-           myField.setVisible(true);
-           myField.setEditable(true);
-           mySubmit.setVisible(true);
-           myAnswer.setVisible(true);
-           if (question.length() > 60) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 60));
-               myLong.setText(question.substring(60));
-
-
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-           }
-
+           myShortAnswerField.setVisible(true);
+           myShortAnswerField.setEditable(true);
+           mySubmitButton.setVisible(true);
+           myQuestionLabel.setText("Question: " + question);
        } else {
            throw new IllegalArgumentException("no valid question types found!");
        }
     }
-    public void setMultipleChoiceVisible(final boolean theB) {
-        myQuestionBody.setVisible(theB);
+    private void setMultipleChoiceVisible(final boolean theB) {
         myQuestionLabel.setVisible(theB);
         myButtonA.setVisible(theB);
         myButtonB.setVisible(theB);
         myButtonC.setVisible(theB);
         myButtonD.setVisible(theB);
-        mySubmit.setVisible(theB);
+        mySubmitButton.setVisible(theB);
     }
-    public void setMultipleChoiceEnable(final boolean theB) {
-        myQuestionBody.setVisible(theB);
+    private void setMultipleChoiceEnable(final boolean theB) {
         myQuestionLabel.setVisible(theB);
         myButtonA.setEnabled(theB);
         myButtonB.setEnabled(theB);
         myButtonC.setEnabled(theB);
         myButtonD.setEnabled(theB);
-        mySubmit.setEnabled(theB);
+        mySubmitButton.setEnabled(theB);
     }
-    public void setComponents() {
-        myAnswer = new JPanel();
-        myQuestionLabel = new JLabel();
-        myLong = new JLabel();
-        myField = new JTextField(20);
-        myButtonA = new JRadioButton();
+    private void setComponents() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6,1));
+
+        myQuestionLabel = new JTextArea();
+//        myQuestionLabel.setBackground(this.getBackground());
+        myQuestionLabel.setLineWrap(true);
+        myQuestionLabel.setWrapStyleWord(true);
+        myQuestionLabel.setEditable(false);
+        myQuestionLabel.setFont(new Font("Monospace", Font.PLAIN, 16));
+        myQuestionLabel.setPreferredSize(new Dimension(400, 200));
+
+        myShortAnswerField = new JTextField(20);
+//        myButtonA = new JRadioButton();
+        myButtonA = new JToggleButton();
+
         myAnswerButtons.add(myButtonA);
 
 
-        myButtonB = new JRadioButton();
+        myButtonB = new JToggleButton();
+        myButtonB.setVerticalAlignment(SwingConstants.CENTER);
         myAnswerButtons.add(myButtonB);
 
-        myButtonC = new JRadioButton();
+        myButtonC = new JToggleButton();
         myAnswerButtons.add(myButtonC);
 
-        myButtonD = new JRadioButton();
+        myButtonD = new JToggleButton();
         myAnswerButtons.add(myButtonD);
-        myField.setEditable(false);
-        myField.setVisible(false);
-        myAnswer.add(myField);
-        myAnswer.setVisible(false);
+//        myShortAnswerField.setEditable(false);
+        myShortAnswerField.setVisible(false);
         setMultipleChoiceVisible(false);
         setMultipleChoiceEnable(false);
         add(myQuestionLabel);
-        add(myLong);
-        add(myAnswer);
-        add(myButtonA);
-        add(myButtonB);
-        add(myButtonC);
-        add(myButtonD);
-        add(mySubmit);
-
+        panel.add(myButtonA);
+        panel.add(myButtonB);
+        panel.add(myButtonC);
+        panel.add(myButtonD);
+        panel.add(new Container());
+        add(myShortAnswerField);
+        panel.add(mySubmitButton);
+        add(panel);
     }
 
-
-    @Override
-    public void propertyChange(final PropertyChangeEvent theEvent) {
-        switch (theEvent.getPropertyName()) {
-            case PROPERTY_PLAYER:
-        }
-    }
 
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
     }
+
     public String getSelectedAnswer() {
         for (AbstractButton button : Collections.list(myAnswerButtons.getElements())) {
             if (button.isSelected()) {
@@ -247,12 +205,10 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         return "";
     }
 
-    public void addListener() {
-        mySubmit.addActionListener(theEvent -> {
+    private void addListener() {
+        mySubmitButton.addActionListener(theEvent -> {
             if(myQuestion.getType() == 1 || myQuestion.getType() == 2) {
-                myCheckAnswer = 1;
-                myLong.setText("");
-                mySubmit.setEnabled(false);
+                mySubmitButton.setEnabled(false);
                 myButtonA.setEnabled(false);
                 myButtonB.setEnabled(false);
                 myButtonC.setEnabled(false);
@@ -335,10 +291,9 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                 myAnswerButtons.clearSelection();
             } else {
                 myCheckAnswer = 1;
-                myLong.setText("");
-                mySubmit.setEnabled(false);
+                mySubmitButton.setEnabled(false);
                 String theAnswer = myQuestion.getCorrectAnswer();
-                String selectedAnswer = myField.getText();
+                String selectedAnswer = myShortAnswerField.getText();
                 if (selectedAnswer.toLowerCase().equals(theAnswer.toLowerCase())) {
                     playCorrectSound();
                     JOptionPane.showMessageDialog(this, "Correct!");
@@ -376,8 +331,7 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
                         myView.updateButtonState();
                         myView.setRight(false);
                     }
-                    myField.setVisible(false);
-                    myQuestionBody.setVisible(false);
+                    myShortAnswerField.setVisible(false);
                     myQuestionLabel.setVisible(false);
 
                 } else {
@@ -413,12 +367,10 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
 
                     }
                 }
-                myQuestionBody.setVisible(false);
                 myQuestionLabel.setVisible(false);
-                myField.setVisible(false);
-                myAnswer.setVisible(false);
-                mySubmit.setVisible(false);
-                myField.setText("");
+                myShortAnswerField.setVisible(false);
+                mySubmitButton.setVisible(false);
+                myShortAnswerField.setText("");
 
             }
 
@@ -426,33 +378,33 @@ public class QuestionPanel extends JPanel implements PropertyChangeListener, Cha
         });
         myButtonA.addActionListener(theEvent -> {
             if(myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
+                mySubmitButton.setEnabled(true);
 
             }
         });
         myButtonB.addActionListener(theEvent -> {
             if(myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
+                mySubmitButton.setEnabled(true);
 
             }
         });
         myButtonC.addActionListener(theEvent -> {
             if (myCheckAnswer == 0) {
 
-            mySubmit.setEnabled(true);
+            mySubmitButton.setEnabled(true);
 
             }
         });
-        myField.addActionListener(theEvent -> {
+        myShortAnswerField.addActionListener(theEvent -> {
             if (myCheckAnswer == 0) {
 
-                mySubmit.setEnabled(true);
+                mySubmitButton.setEnabled(true);
 
             }
         });
         myButtonD.addActionListener(theEvent -> {
             if (myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
+                mySubmitButton.setEnabled(true);
 
             }
         });

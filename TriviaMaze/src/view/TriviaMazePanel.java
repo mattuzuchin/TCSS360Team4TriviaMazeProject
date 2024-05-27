@@ -1,6 +1,7 @@
 package View;
 
 import Controller.TriviaMaze;
+import Model.Maze;
 import Model.Room;
 
 import javax.swing.*;
@@ -34,7 +35,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     private TriviaMaze myMaze;
     private boolean myCheck = false;
     private boolean myDebugFlag;
-    private Graphics myGraph;
     private boolean myCheat;
     private int myRow;
     private int myCol;
@@ -51,19 +51,21 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         setFont(FONT);
 
     }
+    public void setChecked() {
+        myCheck = true;
+    }
     public void setColor(final int theRow, final int theCol) {
        myCheck = true;
         myRow = theRow;
         myCol = theCol;
-        paintComponent(myGraph);
-
+        repaint();
     }
+
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
         if(!myCheck) {
             final Graphics2D g2 = (Graphics2D) theGraphics;
-            myGraph = theGraphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -85,7 +87,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
 
     }
-
 
     public void useCheat() {
         myCheat = true;
