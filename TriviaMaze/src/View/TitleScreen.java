@@ -96,7 +96,7 @@ public class TitleScreen extends JFrame implements ActionListener {
             if (myTextName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No empty names!");
                 myTextName.requestFocusInWindow();
-            } else if (myTextName.getText().trim().equals("test")) {
+            } else if (myTextName.getText().trim().equals("Han Solo")) {
                 setVisible(false);
                 myTM.setName(myTextName.getText());
                 JOptionPane.showMessageDialog(this, "Congrats! You earned a free potion for using the name " + myTextName.getText());

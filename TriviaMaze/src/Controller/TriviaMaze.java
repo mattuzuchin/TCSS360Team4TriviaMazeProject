@@ -50,6 +50,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      */
     private QuestionFactory myQF;
 
+
     /**
      * Constuctor for the TriviaMaze
      * @param theFactory single instance of Question Factory.

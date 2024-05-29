@@ -463,7 +463,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         playLostSound();
         if(myTriviaMaze.getCurrentRoom().getDoors().getMyNorthDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked()) {
-           end(message);
+            end(message);
         } else if ((myTriviaMaze.getRow() == 0 && myTriviaMaze.getCol() == 0) && (myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() &&
                 myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked())) {
             end(message);
@@ -550,19 +550,19 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         return maze;
     }
     private void end(final String theMessage) {
-            if(myUnlockPotion > 0) {
-                messagePotion(2);
+        if(myUnlockPotion > 0) {
+            messagePotion(2);
+        } else {
+            int option = JOptionPane.showConfirmDialog(this, theMessage,
+                    "Game Over", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                dispose();
+                new TitleScreen();
             } else {
-                int option = JOptionPane.showConfirmDialog(this, theMessage,
-                        "Game Over", JOptionPane.YES_NO_OPTION);
-                if (option == JOptionPane.YES_OPTION) {
-                    dispose();
-                    new TitleScreen();
-                } else {
-                    JOptionPane.getRootFrame().dispose();
-                    //System.exit(0);
-                }
+                JOptionPane.getRootFrame().dispose();
+                //System.exit(0);
             }
+        }
 
     }
 
