@@ -372,7 +372,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 usePotion();
             } else {
                 myUnlockPotion = 0;
-                end(myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                end(myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                         myPanel.getIncorrect() +  " incorrect.\n" +
                         myMoves +  " moves taken.\n Do you want to play again?");
             }
@@ -450,14 +450,14 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
             playWonSound();
             myUnlockPotion = 0;
-            end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+            end(myPlayerWon + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                     myPanel.getIncorrect() +  " incorrect.\n" +
                     myMoves +  " moves taken.\n Do you want to play again?");
         }
     }
 
     public void playerLost() {
-        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+        String message = myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         playLostSound();
@@ -493,7 +493,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         int exitCol = myTriviaMaze.getExitCol() - 1;
         Room[][] room = myTriviaMaze.getMaze();
 
-        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+        String message = myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         if(room[exitRow][exitCol].getDoors().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoors().getMyWestDoor().isLocked()) {
