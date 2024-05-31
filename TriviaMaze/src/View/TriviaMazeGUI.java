@@ -559,8 +559,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 dispose();
                 new TitleScreen();
             } else {
-                JOptionPane.getRootFrame().dispose();
-                //System.exit(0);
+                System.exit(0);
             }
         }
 
