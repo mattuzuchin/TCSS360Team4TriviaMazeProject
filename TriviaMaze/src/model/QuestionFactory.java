@@ -13,32 +13,61 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Implementation of the Question Factory containing all database questions.
+ * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
+ * @version Spring 2024
+ */
 public class QuestionFactory implements Serializable {
-    private static QuestionFactory uniqueInstance = null;
-    private ArrayList<Question> myQuestionsList;
-    private int myChoice;
-    private Random myRandom;
+    /**
+     * Field representing unique instance of question factory.
+     */
+    private static QuestionFactory myUniqueInstance = null;
+    /**
+     * Field represents a list of questions.
+     */
+    private final ArrayList<Question> myQuestionsList;
+    /**
+     * Random generator field.
+     */
+    private final Random myRandom;
 
+    /**
+     * Constructor for question factory.
+     * @throws FileNotFoundException when file not found
+     */
     private QuestionFactory() throws FileNotFoundException {
         myRandom = new Random();
         myQuestionsList = new ArrayList<Question>();
         assignQuestion();
     }
 
+    /**
+     * sets the instance of question factory.
+     */
     public void setInstance() {
-        uniqueInstance = null;
+        myUniqueInstance = null;
     }
 
+    /**
+     *
+     * @return unique instance of question factory.
+     */
     public static synchronized QuestionFactory getInstance() {
-        if(uniqueInstance == null) {
+        if(myUniqueInstance == null) {
             try {
-                uniqueInstance = new QuestionFactory();
+                myUniqueInstance = new QuestionFactory();
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
-        return uniqueInstance;
+        return myUniqueInstance;
     }
+
+    /**
+     * Adds questions from database into list of questions.
+     * @throws FileNotFoundException when file not found
+     */
     public void assignQuestion() throws FileNotFoundException {
         SQLiteDataSource ds = null;
         try {
@@ -60,7 +89,7 @@ public class QuestionFactory implements Serializable {
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement(); ) {
-             int rv = stmt.executeUpdate( query );
+            int rv = stmt.executeUpdate( query );
             Scanner in = new Scanner(new File("Questions.txt"));
             String queries = "";
             while(in.hasNext()) {
@@ -85,6 +114,10 @@ public class QuestionFactory implements Serializable {
             System.exit( 0 );
         }
     }
+
+    /**
+     * @return single random question.
+     */
     public Question getQuestion() {
         int size = myQuestionsList.size();
         int[] indices = getRandomPermutationOfIntegers(size);
@@ -96,14 +129,20 @@ public class QuestionFactory implements Serializable {
 
         return null;
     }
-    public static int[] getRandomPermutationOfIntegers(int size) {
-        int[] data = new int[size];
-        for (int i = 0; i < size; i++) {
+
+    /**
+     *
+     * @param theSize size of array
+     * @return Random array of integers given a size
+     */
+    public static int[] getRandomPermutationOfIntegers(final int theSize) {
+        int[] data = new int[theSize];
+        for (int i = 0; i < theSize; i++) {
             data[i] = i;
         }
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < theSize; i++) {
             int temp;
-            int swap = i + (int) ((size - i) * Math.random());
+            int swap = i + (int) ((theSize - i) * Math.random());
             temp = data[i];
             data[i] = data[swap];
             data[swap] = temp;
@@ -112,7 +151,11 @@ public class QuestionFactory implements Serializable {
         return data;
     }
 
-
-
-
+    /**
+     *
+     * @return List of questions.
+     */
+    public ArrayList<Question> getQuestionsList() {
+        return myQuestionsList;
+    }
 }

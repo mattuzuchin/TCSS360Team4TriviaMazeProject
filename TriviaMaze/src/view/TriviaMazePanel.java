@@ -1,3 +1,4 @@
+
 package View;
 
 import Controller.TriviaMaze;
@@ -15,7 +16,6 @@ import java.util.Random;
 
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
-    private static final long serialVersionUID = 1L;
 
     private static final Font FONT = new Font("SanSerif", Font.BOLD, 9);
 
@@ -27,14 +27,10 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     private static final int DOOR_SIZE = 5;
 
-    private static final int DEBUG_OFFSET = 10;
-    private Random myRandom;
-
     private final int mySize;
 
-    private TriviaMaze myMaze;
+    private final TriviaMaze myMaze;
     private boolean myCheck = false;
-    private boolean myDebugFlag;
     private boolean myCheat;
     private int myRow;
     private int myCol;
@@ -55,7 +51,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         myCheck = true;
     }
     public void setColor(final int theRow, final int theCol) {
-       myCheck = true;
+        myCheck = true;
         myRow = theRow;
         myCol = theCol;
         repaint();
@@ -92,10 +88,8 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         myCheat = true;
     }
 
-    public void drawRooms(final Graphics2D theGraphics) {
+    private void drawRooms(final Graphics2D theGraphics) {
         if(!myCheck) {
-            Room[][] theR = myMaze.getMaze();
-
             for (int y = 0; y < mySize; y++) {
                 final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 
@@ -104,17 +98,17 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                     if (x == 0 && y == 0) {
                         theGraphics.setPaint(Color.BLUE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
                         theGraphics.setPaint(Color.RED);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else {
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     }
                 }
             }
@@ -129,17 +123,17 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                     if (x == myMaze.getCol() && y == myMaze.getRow()) {
                         theGraphics.setPaint(Color.BLUE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
                         theGraphics.setPaint(Color.RED);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else {
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     }
                 }
             }
@@ -155,33 +149,33 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                     if (y == myRow && x == myCol) {
                         theGraphics.setPaint(Color.BLUE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else if (myMaze.getExitRow() == y && myMaze.getExitCol() == x) {
                         theGraphics.setPaint(Color.RED);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
 
                     } else if(checkRoom[y][x].getDoors().checkNumber() == 0 ){
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     } else if(checkRoom[y][x].getDoors().checkNumber() == 1 ){
                         theGraphics.setPaint(Color.GREEN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     } else if(checkRoom[y][x].getDoors().checkNumber() == 2 ){
                         theGraphics.setPaint(Color.PINK);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     } else if(checkRoom[y][x].getDoors().checkNumber() == 3 ){
                         theGraphics.setPaint(Color.WHITE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     } else if(checkRoom[y][x].getDoors().checkNumber() == 4 ){
                         theGraphics.setPaint(Color.CYAN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-                        drawDebugInfo(theGraphics, leftX, topY);
+
                     }
 
                 }
@@ -189,21 +183,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
         }
 
-    }
-
-
-
-
-    private void drawDebugInfo(final Graphics2D theGraphics, final int theX, final int theY) {
-        if (myDebugFlag) {
-            final Paint oldPaint = theGraphics.getPaint();
-            theGraphics.setPaint(Color.BLACK);
-
-            final int leftX = theX * ROOM_SIZE;
-            final int topY = theY * ROOM_SIZE;
-            theGraphics.drawString("(" + theX + ", " + theY + ")", leftX, topY+ DEBUG_OFFSET);
-            theGraphics.setPaint(oldPaint);
-        }
     }
 
 
@@ -215,7 +194,6 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
-        myDebugFlag = ((JToggleButton) theEvent.getSource()).isSelected();
         repaint();
     }
 }
