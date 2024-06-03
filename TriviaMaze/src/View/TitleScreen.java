@@ -13,17 +13,47 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+/**
+ * The TitleScreen class represents the title screen for the Trivia Maze game.
+ * It allows the player to enter their name, select a difficulty level, and start the game.
+ * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
+ * @version Spring 2024
+ */
 public class TitleScreen extends JFrame implements ActionListener {
 
+    /**
+     * The start button to begin the game.
+     */
     private JButton myStartButton;
+
+    /**
+     * The text field for entering the player's name.
+     */
     private JTextField myTextName;
+
+    /**
+     * The TriviaMaze instance that this title screen interacts with.
+     */
     private final TriviaMaze myTM;
+
+    /**
+     * A list of toggle buttons for selecting the difficulty level.
+     */
     private final ArrayList<JToggleButton> myButtons;
+
+    /**
+     * A ButtonGroup for grouping the difficulty level toggle buttons.
+     */
     private ButtonGroup myButtonGroup;
+
+    /**
+     * The QuestionFactory instance for generating questions.
+     */
     private final QuestionFactory myFactory;
 
-
+    /**
+     * Constructs a new TitleScreen.
+     */
     public TitleScreen() {
         myButtons = new ArrayList<>();
         myFactory = QuestionFactory.getInstance();
@@ -34,12 +64,12 @@ public class TitleScreen extends JFrame implements ActionListener {
         setTitle("Movie Trivia Maze");
         setSize(800, 600);
         setLocationRelativeTo(null);
-
-
     }
 
+    /**
+     * Initializes the GUI components of the title screen.
+     */
     private void initGUI() {
-
         JPanel masterPanel = new JPanel(new BorderLayout());
         masterPanel.setBackground(Color.WHITE);
         setBackground(Color.WHITE);
@@ -80,6 +110,12 @@ public class TitleScreen extends JFrame implements ActionListener {
         add(masterPanel);
     }
 
+    /**
+     * Loads an image from the specified file path.
+     *
+     * @param theImagePath the path to the image file
+     * @return the loaded BufferedImage, or null if the image could not be loaded
+     */
     private BufferedImage loadImage(final String theImagePath) {
         try {
             return ImageIO.read(new File(theImagePath));
@@ -89,6 +125,11 @@ public class TitleScreen extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Handles action events, such as when the start button is clicked.
+     *
+     * @param theEvent the action event
+     */
     @Override
     public void actionPerformed(final ActionEvent theEvent) {
         if (theEvent.getSource() == myStartButton) {
