@@ -94,7 +94,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     /**
      * The command string for using a potion.
      */
-    private static final String POTION = "Use Potion";
+    private static final String POTION = "Potion";
 
     /**
      * The player ID label text
