@@ -1,7 +1,7 @@
-
 package Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author Matthew Uzunoe-Chin, Elias Arriola, Dustin Feldt
@@ -9,52 +9,49 @@ import java.io.Serializable;
  * Implementation of a single question.
  */
 public class Question implements Serializable {
+
     /**
      * Field represents the question as a string.
      */
-    private final String questionText;
-    /**
-     * Field represents 1st option of question.
-     */
-    private final String myOptionA;
-    /**
-     * Field represents 2nd option of question.
-     */
-    private final String myOptionB;
-    /**
-     * Field represents 3rd option of question.
-     */
-    private final String myOptionC;
-    /**
-     * Field represents fourth option of question.
-     */
-    private final String myOptionD;
+    private final String myQuestionText;
+
     /**
      * Field represents answer to question.
      */
     private final String myAnswer;
+
     /**
-     * Field represents question type as an integer.
+     * A list of the question's answer options.
+     */
+    private final ArrayList<String> myOptions;
+
+    /**
+     * Field represents question type as an integer,
+     * with 1 being multiple choice,
+     * 2 being true/false,
+     * and 3 being short answer.
      */
     private final int myType;
 
     /**
-     * Question Constructor.
-     * @param theQuestionText text for question
-     * @param theA option a
-     * @param theB option b
-     * @param theC option c
-     * @param theD option d
-     * @param theAnswer the answer
-     * @param theType type of question
+     * Constructor.
+     *
+     * @param theQuestionText The body of the question.
+     * @param theA The first answer option.
+     * @param theB The second answer option.
+     * @param theC The third answer option.
+     * @param theD The fourth answer option.
+     * @param theAnswer The correct answer.
+     * @param theType The question type.
      */
-    public Question(final String theQuestionText, final String theA, final String theB, final String theC, final String theD,
-                    final String theAnswer, final String theType) {
-        questionText = theQuestionText;
-        myOptionA = theA;
-        myOptionB = theB;
-        myOptionC = theC;
-        myOptionD = theD;
+    public Question(final String theQuestionText, final String theA, final String theB, final String theC,
+                    final String theD, final String theAnswer, final String theType) {
+        myQuestionText = theQuestionText;
+        myOptions = new ArrayList<>();
+        myOptions.add(theA);
+        myOptions.add(theB);
+        myOptions.add(theC);
+        myOptions.add(theD);
         myType = Integer.parseInt(theType);
         myAnswer = theAnswer;
     }
@@ -63,40 +60,16 @@ public class Question implements Serializable {
      *
      * @return question text.
      */
-    public String getQuestionText() {
-        return questionText;
+    public String getMyQuestionText() {
+        return myQuestionText;
     }
 
     /**
      *
-     * @return 1st option of question.
+     * @return the list of options.
      */
-    public String getOptionA() {
-        return myOptionA;
-    }
-
-    /**
-     *
-     * @return 2nd option of question
-     */
-    public String getOptionB() {
-        return myOptionB;
-    }
-
-    /**
-     *
-     * @return 3rd option of question.
-     */
-    public String getOptionC() {
-        return myOptionC;
-    }
-
-    /**
-     *
-     * @return fourth option of question.
-     */
-    public String getOptionD() {
-        return myOptionD;
+    public ArrayList<String> getOptions() {
+        return myOptions;
     }
 
     /**
@@ -121,14 +94,13 @@ public class Question implements Serializable {
      */
     @Override
     public String toString() {
-        return "Question{" +
-                "questionText=" + questionText  +
-                ", optionA=" + myOptionA  +
-                ", optionB=" + myOptionB  +
-                ", optionC=" + myOptionC  +
-                ", optionD=" + myOptionD  +
-                ", type=" + myType  +
-                ", correctAnswer=" + myAnswer  +
-                '}';
+        return "Question{" + "questionText=" + myQuestionText
+                + ", optionA=" + myOptions.get(0)
+                + ", optionB=" + myOptions.get(1)
+                + ", optionC=" + myOptions.get(2)
+                + ", optionD=" + myOptions.get(3)
+                + ", type=" + myType
+                + ", correctAnswer=" + myAnswer + "}";
     }
 }
+

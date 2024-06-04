@@ -2,10 +2,6 @@ package Controller;
 
 import Model.*;
 import View.QuestionPanel;
-import View.TriviaMazePanel;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
 /**
@@ -14,7 +10,7 @@ import java.io.Serializable;
  * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
  * @version Spring 2024
  */
-public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Serializable {
+public class TriviaMaze implements Serializable {
     /**
      * The number of rows.
      */
@@ -24,11 +20,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * The number of columns.
      */
     private int myColumns;
-
-    /**
-     * Manager for Property Change Listeners.
-     */
-    private final PropertyChangeSupport myPcs;
 
     /**
      * The player object.
@@ -41,11 +32,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     private Maze myMaze;
 
     /**
-     * The TriviaMazeProject
-     */
-    private TriviaMazePanel myTMP;
-
-    /**
      * The QuestionFactory Object
      */
     private QuestionFactory myQF;
@@ -56,7 +42,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
      * @param theFactory single instance of Question Factory.
      */
     public TriviaMaze(QuestionFactory theFactory) {
-        myPcs = new PropertyChangeSupport(this);
         myQF = theFactory;
         myRow =  0;
         myColumns = 0;
@@ -79,19 +64,6 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     }
 
     /**
-     * sets the trivia maze panel to the given
-     * TMP object.
-     * @param theT the trivia maze panel.
-     * @throws IllegalArgumentException when object is null
-     */
-    public void mySetPanel(final TriviaMazePanel theT) {
-        if(theT == null) {
-            throw new IllegalArgumentException("Null object!");
-        }
-        myTMP = theT;
-    }
-
-    /**
      * gets the current player object.
      * @return the player object.
      */
@@ -100,23 +72,14 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
     }
 
     /**
-     * Adds the property change.
-     * @param theListener The PropertyChangeListener to be added
-     */
-    @Override
-    public void addPropertyChangeListener(final PropertyChangeListener theListener) {
-        myPcs.addPropertyChangeListener(theListener);
-    }
-
-    /**
      * Unlocks ALL doors - used when the potion is used.
      */
     public void unlockAll() {
         Room[][] rooms = myMaze.getMyRooms();
-       myQF.setInstance();
-       myQF = myQF.getInstance();
+        myQF.setInstance();
+        myQF = QuestionFactory.getInstance();
 
-        for(int row = 0; row < rooms.length;row++) {
+        for (int row = 0; row < rooms.length;row++) {
             for(int col = 0; col < rooms[row].length; col++) {
                 rooms[row][col].getDoors().getMyNorthDoor().setLockedStatus(false);
                 rooms[row][col].getDoors().getMySouthDoor().setLockedStatus(false);
@@ -385,6 +348,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             throw new IllegalArgumentException("Value is less than 0");
         }
         myMaze = new Maze(theSize, myQF);
+        myMaze.setPlayerName(myPlayer.getName());
         myMaze.createMaze();
     }
 

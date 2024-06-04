@@ -2,19 +2,24 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Room;
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
 /**
  * The TriviaMazePanel class is responsible for rendering the maze on the screen.
  * It implements PropertyChangeListener and ChangeListener to update the maze view when necessary.
  * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
  * @version Spring 2024
  */
-public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
+public class TriviaMazePanel extends JPanel implements ChangeListener {
 
     /**
      * The font used for rendering text in the panel.
@@ -51,7 +56,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     /**
      * A flag indicating whether a room has been checked.
      */
-    private boolean myCheck = false;
+    private boolean myCheck;
 
     /**
      * A flag indicating whether cheat mode is enabled.
@@ -73,9 +78,8 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
      *
      * @param theSize the size of the maze
      * @param theMaze the TriviaMaze instance representing the maze
-     * @param theDif the difficulty of the maze
      */
-    public TriviaMazePanel(final int theSize, final TriviaMaze theMaze, String theDif) {
+    public TriviaMazePanel(final int theSize, final TriviaMaze theMaze) {
         super();
         myCheat = false;
         myMaze = theMaze;
@@ -117,7 +121,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
-        if(!myCheck) {
+        if (!myCheck) {
             final Graphics2D g2 = (Graphics2D) theGraphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
@@ -141,16 +145,20 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     }
 
+    /**
+     * Sets a marker that the player has used a cheat potion.
+     */
     public void useCheat() {
         myCheat = true;
     }
+
     /**
      * Draws the rooms of the maze.
      *
      * @param theGraphics the Graphics2D object used for drawing
      */
     private void drawRooms(final Graphics2D theGraphics) {
-        if(!myCheck) {
+        if (!myCheck) {
             for (int y = 0; y < mySize; y++) {
                 final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
 
@@ -201,7 +209,7 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
             myCheat = false;
         }  else {
             repaint();
-            Room[][] checkRoom = myMaze.getMaze();
+            final Room[][] checkRoom = myMaze.getMaze();
 
             for (int y = 0; y < mySize; y++) {
                 final int topY = y * (ROOM_SIZE + DOOR_SIZE) + DOOR_SIZE;
@@ -217,45 +225,29 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
 
 
-                    } else if(checkRoom[y][x].getDoors().checkNumber() == 0 ){
+                    } else if (checkRoom[y][x].getDoors().checkNumber() == 0) {
                         theGraphics.setPaint(Color.DARK_GRAY);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
 
-                    } else if(checkRoom[y][x].getDoors().checkNumber() == 1 ){
+                    } else if (checkRoom[y][x].getDoors().checkNumber() == 1) {
                         theGraphics.setPaint(Color.GREEN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
 
-                    } else if(checkRoom[y][x].getDoors().checkNumber() == 2 ){
+                    } else if (checkRoom[y][x].getDoors().checkNumber() == 2) {
                         theGraphics.setPaint(Color.PINK);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
 
-                    } else if(checkRoom[y][x].getDoors().checkNumber() == 3 ){
+                    } else if (checkRoom[y][x].getDoors().checkNumber() == 3) {
                         theGraphics.setPaint(Color.WHITE);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
 
-                    } else if(checkRoom[y][x].getDoors().checkNumber() == 4 ){
+                    } else if (checkRoom[y][x].getDoors().checkNumber() == 4) {
                         theGraphics.setPaint(Color.CYAN);
                         theGraphics.fillRect(leftX, topY, ROOM_SIZE, ROOM_SIZE);
-
                     }
-
                 }
             }
-
         }
-
-    }
-
-    /**
-     * Handles property change events. This method is called when a bound property
-     * is changed, allowing the panel to respond to changes in the model or other
-     * components.
-     *
-     * @param theEvent the PropertyChangeEvent object representing the change
-     */
-    @Override
-    public void propertyChange(final PropertyChangeEvent theEvent) {
-
     }
 
     /**
