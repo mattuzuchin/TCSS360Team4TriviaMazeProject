@@ -10,56 +10,63 @@ import java.util.Random;
  * Implementation of a Maze.
  */
 public class Maze implements Serializable {
+
+
+    /**
+     * Field represents the question Factory.
+     */
+    protected static QuestionFactory FACTORY;
+
     /**
      * Field represents the size of the maze.
      */
+
     private final int mySize;
+
     /**
      * Field represents a 2D Array of rooms.
      */
     private final Room[][] myRooms;
+
     /**
      * Field represents the exit row of the maze.
      */
     private final int myExitRow;
+
     /**
      * Field represents the exit column of the maze.
      */
     private final int myExitColumn;
+
     /**
      * Field represents the player in the maze.
      */
     private final Player myPlayer;
-    /**
-     * Field represents a random generator.
-     */
-    private final Random myRandom;
+
     /**
      * Field represents the row location of the potion.
      */
     private int myRowPotion;
+
     /**
      * Field represents the column location of the potion.
      */
     private int myColPotion;
-    /**
-     * Field represents the question Factory
-     */
-    public static QuestionFactory FACTORY;
+
     /**
      * Field represents a count of rooms for testing.
      */
     private int myTestCount;
+
     /**
      * Field represents row location of player.
      */
     private int myRow;
+
     /**
      * Field represents column location of player.
      */
     private int myCol;
-
-
 
     /**
      * Constructor for Maze.
@@ -67,20 +74,20 @@ public class Maze implements Serializable {
      * @param theFactory single QF instance
      */
     public Maze(final int theSize, final QuestionFactory theFactory) {
+        final Random random = new Random();
         FACTORY = theFactory;
         myPlayer = new Player("");
         mySize = theSize;
         myRooms = new Room[mySize][mySize];
-        myRandom = new Random();
-        myExitColumn = mySize -1;
+        myExitColumn = mySize - 1;
         myExitRow = mySize - 1;
-        myRowPotion = myRandom.nextInt(mySize - 1);
-        myColPotion = myRandom.nextInt(mySize - 1);
-        while(myRowPotion == 0 || myRowPotion == myExitRow) {
-            myRowPotion = myRandom.nextInt(mySize - 1);
+        myRowPotion = random.nextInt(mySize - 1);
+        myColPotion = random.nextInt(mySize - 1);
+        while (myRowPotion == 0 || myRowPotion == myExitRow) {
+            myRowPotion = random.nextInt(mySize - 1);
         }
-        while(myColPotion == 0 || myColPotion == myExitColumn) {
-            myColPotion = myRandom.nextInt(mySize - 1);
+        while (myColPotion == 0 || myColPotion == myExitColumn) {
+            myColPotion = random.nextInt(mySize - 1);
         }
         myPlayer.setRow(0);
         myPlayer.setColumn(0);
@@ -97,7 +104,6 @@ public class Maze implements Serializable {
             }
         }
     }
-
 
     /**
      *
@@ -192,4 +198,19 @@ public class Maze implements Serializable {
         myCol = theCol;
     }
 
+    /**
+     * Sets the name of the Player.
+     * @param theName the name to be set.
+     */
+    public void setPlayerName(final String theName) {
+        myPlayer.setName(theName);
+    }
+
+    /**
+     * Returns the Player's name.
+     * @return the String representation of the Player's name.
+     */
+    public String getPlayerName() {
+        return myPlayer.getName();
+    }
 }
