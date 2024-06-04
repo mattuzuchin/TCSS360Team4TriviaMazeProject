@@ -1,40 +1,80 @@
 package View;
 
 import Controller.TriviaMaze;
-import Model.Maze;
 import Model.Room;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Random;
-
-
+/**
+ * The TriviaMazePanel class is responsible for rendering the maze on the screen.
+ * It implements PropertyChangeListener and ChangeListener to update the maze view when necessary.
+ * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
+ * @version Spring 2024
+ */
 public class TriviaMazePanel extends JPanel implements PropertyChangeListener, ChangeListener {
 
-
+    /**
+     * The font used for rendering text in the panel.
+     */
     private static final Font FONT = new Font("SanSerif", Font.BOLD, 9);
 
+    /**
+     * The stroke used for drawing the maze's outlines.
+     */
     private static final BasicStroke STROKE = new BasicStroke(3, BasicStroke.CAP_BUTT,
             BasicStroke.JOIN_MITER, 2,
             new float[] {2, 2, 2, 2}, 0);
 
+    /**
+     * The size of each room in the maze.
+     */
     private static final int ROOM_SIZE = 50;
 
+    /**
+     * The size of the doors in the maze.
+     */
     private static final int DOOR_SIZE = 5;
 
+    /**
+     * The size of the maze (number of rooms per side).
+     */
     private final int mySize;
 
+    /**
+     * The TriviaMaze instance representing the current maze.
+     */
     private final TriviaMaze myMaze;
+
+    /**
+     * A flag indicating whether a room has been checked.
+     */
     private boolean myCheck = false;
+
+    /**
+     * A flag indicating whether cheat mode is enabled.
+     */
     private boolean myCheat;
+
+    /**
+     * The row of the currently checked room.
+     */
     private int myRow;
+
+    /**
+     * The column of the currently checked room.
+     */
     private int myCol;
 
-
+    /**
+     * Constructs a new TriviaMazePanel with the specified size, maze, and difficulty.
+     *
+     * @param theSize the size of the maze
+     * @param theMaze the TriviaMaze instance representing the maze
+     * @param theDif the difficulty of the maze
+     */
     public TriviaMazePanel(final int theSize, final TriviaMaze theMaze, String theDif) {
         super();
         myCheat = false;
@@ -46,16 +86,34 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
         setFont(FONT);
 
     }
+
+    /**
+     * Sets the checked flag to true.
+     */
     public void setChecked() {
         myCheck = true;
     }
+
+    /**
+     * Sets the color of the room at the specified row and column.
+     *
+     * @param theRow the row of the room to be colored
+     * @param theCol the column of the room to be colored
+     */
     public void setColor(final int theRow, final int theCol) {
-       myCheck = true;
+        myCheck = true;
         myRow = theRow;
         myCol = theCol;
         repaint();
     }
 
+    /**
+     * Paints the component. This method is called automatically when the component
+     * needs to be repainted. It sets up the graphics object and calls drawRooms()
+     * to render the maze.
+     *
+     * @param theGraphics the Graphics object used for painting
+     */
     @Override
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
@@ -86,7 +144,11 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
     public void useCheat() {
         myCheat = true;
     }
-
+    /**
+     * Draws the rooms of the maze.
+     *
+     * @param theGraphics the Graphics2D object used for drawing
+     */
     private void drawRooms(final Graphics2D theGraphics) {
         if(!myCheck) {
             for (int y = 0; y < mySize; y++) {
@@ -184,13 +246,24 @@ public class TriviaMazePanel extends JPanel implements PropertyChangeListener, C
 
     }
 
-
+    /**
+     * Handles property change events. This method is called when a bound property
+     * is changed, allowing the panel to respond to changes in the model or other
+     * components.
+     *
+     * @param theEvent the PropertyChangeEvent object representing the change
+     */
     @Override
     public void propertyChange(final PropertyChangeEvent theEvent) {
 
     }
 
-
+    /**
+     * Called when the state of a model changes. This method is invoked whenever
+     * the state of the model changes, allowing the panel to repaint itself.
+     *
+     * @param theEvent the ChangeEvent object representing the change
+     */
     @Override
     public void stateChanged(final ChangeEvent theEvent) {
         repaint();

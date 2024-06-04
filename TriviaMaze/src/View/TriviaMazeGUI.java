@@ -11,54 +11,207 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
-
+/**
+ * The main GUI class for the Movie Trivia Maze game. This class sets up the game's main window,
+ * initializes all the components, and handles user interactions and events.
+ * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
+ * @version Spring 2024
+ */
 public final class TriviaMazeGUI extends JFrame implements ActionListener, Serializable {
+    /**
+     * The title of the game window.
+     */
     private static final String TITLE = "Movie Trivia Maze";
 
+    /**
+     * The toolkit used to get the screen size.
+     */
     private static final Toolkit KIT = Toolkit.getDefaultToolkit();
 
+    /**
+     * The size of the screen.
+     */
     private static final Dimension SCREEN_SIZE = KIT.getScreenSize();
 
+    /**
+     * The command string for loading a game.
+     */
     private static final String LOAD_COMMAND = "Load";
+
+    /**
+     * The command string for saving a game.
+     */
     private static final String SAVE_COMMAND = "Save";
+
+    /**
+     * The command string for moving up.
+     */
     private static final String MOVE_UP = "Up";
+
+    /**
+     * The command string for moving down.
+     */
     private static final String MOVE_DOWN = "Down";
+
+    /**
+     * The command string for moving right.
+     */
     private static final String MOVE_RIGHT = "Right";
+
+    /**
+     * The command string for moving left.
+     */
     private static final String MOVE_LEFT = "Left";
+
+    /**
+     * The command string for room information.
+     */
     private static final String ROOM_INFO = "Room";
+
+    /**
+     * The command string for using a potion.
+     */
     private static final String POTION = "Use Potion";
 
+    /**
+     * The command string for resetting the game.
+     */
     private static final String RESET_COMMAND = "Reset";
+
+    /**
+     * The command string for ending the game.
+     */
     private static final String END_COMMAND = "End";
+
+    /**
+     * The button for moving up.
+     */
     private JButton myUp;
+
+    /**
+     * The button for moving down.
+     */
     private JButton myDown;
+
+    /**
+     * The button for moving left.
+     */
     private JButton myLeft;
+
+    /**
+     * The button for moving right.
+     */
     private JButton myRight;
+
+    /**
+     * The count of moves made by the player.
+     */
     private int myMoves;
+
+    /**
+     * The TriviaMaze game instance.
+     */
     private final TriviaMaze myTriviaMaze;
+
+    /**
+     * The panel that holds the south and question panel.
+     */
     private JPanel mySouthAndQuestionPanel;
+
+    /**
+     * The size of the game panel.
+     */
     private final int mySize;
 
+    /**
+     * The question panel for displaying questions.
+     */
     private QuestionPanel myPanel;
+
+    /**
+     * The panel for displaying the maze.
+     */
     private TriviaMazePanel myMazePanel;
+
+    /**
+     * The difficulty level of the game.
+     */
     private final String myDif;
+
+    /**
+     * Indicates if the up button was hit.
+     */
     private boolean myHitUp;
+
+    /**
+     * Indicates if the down button was hit.
+     */
     private boolean myHitDown;
+
+    /**
+     * Indicates if the left button was hit.
+     */
     private boolean myHitLeft;
+
+    /**
+     * Indicates if the right button was hit.
+     */
     private boolean myHitRight;
 
+    /**
+     * The end message for the player.
+     */
     private String myPlayerEnd;
+
+    /**
+     * The win message for the player.
+     */
     private String myPlayerWon;
+
+    /**
+     * The lose message for the player.
+     */
     private String myPlayerLost;
+
+    /**
+     * The audio clip for game won.
+     */
     private Clip myGameWon;
+
+    /**
+     * The audio clip for game lost.
+     */
     private Clip myGameLost;
+
+    /**
+     * The count of unlock potions the player has.
+     */
     private int myUnlockPotion;
+
+    /**
+     * The menu item for using a potion.
+     */
     private JMenuItem myPotionItem;
+
+    /**
+     * Indicates if the potion is yet found.
+     */
     private boolean myYetFound;
+
+    /**
+     * The menu item for displaying the player's name.
+     */
     private JMenuItem myPlayerName;
 
 
 
+    /**
+     * Constructs a new TriviaMazeGUI.
+     *
+     * @param theMaze      The TriviaMaze instance.
+     * @param thePanelSize The size of the game panel.
+     * @param theDif       The difficulty level of the game.
+     */
     public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif) {
         super(TITLE);
         initializeAudio();
@@ -69,6 +222,16 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         initGUI(theDif);
         setVisible(true);
     }
+
+
+    /**
+     * Constructs a new TriviaMazeGUI with a specified potion count.
+     *
+     * @param theMaze         The TriviaMaze instance.
+     * @param thePanelSize    The size of the game panel.
+     * @param theDif          The difficulty level of the game.
+     * @param theUnlockPotion The count of unlock potions.
+     */
     public TriviaMazeGUI(TriviaMaze theMaze, int thePanelSize, String theDif, int theUnlockPotion) {
         super(TITLE);
         initializeAudio();
@@ -80,7 +243,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         setVisible(true);
     }
 
-
+    /**
+     * Initializes the audio clips for the game.
+     */
     private void initializeAudio() {
         try {
             myGameWon = AudioSystem.getClip();
@@ -94,9 +259,22 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
             e.printStackTrace();
         }
     }
+
+    /**
+     * Returns the question panel.
+     *
+     * @return The QuestionPanel instance.
+     */
     public QuestionPanel getQPanel() {
         return myPanel;
     }
+
+
+    /**
+     * Initializes the GUI components.
+     *
+     * @param theDif The difficulty level of the game.
+     */
     private void initGUI(final String theDif) {
         myYetFound = false;
         myMazePanel = new TriviaMazePanel(mySize, myTriviaMaze, theDif);
@@ -155,7 +333,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myLeft.setEnabled(false);
     }
 
-
+    /**
+     * Creates the menu bar for the game window.
+     *
+     * @return The JMenuBar instance.
+     */
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
 
@@ -198,8 +380,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 "whenever you move to a door, a question will pop up for you to answer. READ THIS: A room that is green \n" +
                 "indicates that ONE DOOR is locked, if a room is pink, it indicates that TWO DOORS are locked, if a room \n" +
                 "is white, it indicates that THREE DOORS are locked, if a room is WHITE, then ALL doors are locked. Grey doors \n" +
-                "indicate no locked doors! If you get it correct, great! You\n" +
-                "can move on, if you get it wrong, that door is locked and you must find another way! Good luck and have fun!";
+                "indicate no locked doors! If you get it correct, great! There is also a potion you can find randomly placed in \n" +
+                "the maze, this will UNLOCK ALL LOCKED DOORS! Be wise when you wish to use it! You " +
+                "can move on, if you get it wrong, \nthat door is locked and you must find another way! Good luck and have fun!";
         final JMenuItem rules = new JMenuItem("Rules");
         rules.setMnemonic(KeyEvent.VK_R);
         rules.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, gameRules));
@@ -221,7 +404,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
     }
 
-
+    /**
+     * This method is called when an action is performed by the user interface components.
+     * It handles various actions such as moving the player, using potions, saving the game, etc.
+     *
+     * @param theEvent The ActionEvent generated by the user interface component.
+     */
     @Override
     public void actionPerformed(final ActionEvent theEvent) {
         final String command = theEvent.getActionCommand();
@@ -336,6 +524,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
 
     }
+    /**
+     * Sets the player's location in the maze and updates GUI elements accordingly.
+     *
+     * @param theRow The row of the new player location.
+     * @param theCol The column of the new player location.
+     */
     private void setPlayerLocation(final int theRow, final int theCol) {
         myTriviaMaze.setRow(theRow);
         myTriviaMaze.setCol(theCol);
@@ -343,6 +537,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myMazePanel.setColor(theRow, theCol);
         updateButtonState();
     }
+    /**
+     * Checks if the player is on a potion tile and updates potion count if found.
+     *
+     * @return True if the player is on a potion tile and potion count is updated, otherwise false.
+     */
     private boolean checkPotion() {
         if(myTriviaMaze.getRow() == myTriviaMaze.getMyMaze().placePotionRow() && myTriviaMaze.getCol() ==
                 myTriviaMaze.getMyMaze().placePotionCol() && !myYetFound) {
@@ -354,6 +553,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
+    /**
+     * Displays a message related to potion usage based on the given condition.
+     *
+     * @param theM The condition for displaying the message.
+     */
     private void messagePotion(final int theM) {
         if(theM == 1) {
             int option = JOptionPane.showConfirmDialog(this, "You found a potion! This unlocks all" +
@@ -372,18 +576,23 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 usePotion();
             } else {
                 myUnlockPotion = 0;
-                end(myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+                end(myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                         myPanel.getIncorrect() +  " incorrect.\n" +
                         myMoves +  " moves taken.\n Do you want to play again?");
             }
         }
 
     }
-
+    /**
+     * Updates player-related GUI elements.
+     */
     private void updatePlayer() {
         myPlayerName.setText(myTriviaMaze.getMyPlayer().getName());
     }
 
+    /**
+     * Uses a potion, unlocks all doors, updates GUI elements, and decreases potion count.
+     */
     private void usePotion() {
         myUnlockPotion--;
         myTriviaMaze.unlockAll();
@@ -393,9 +602,17 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         updateCount();
 
     }
+
+    /**
+     * Updates the text of the potion item.
+     */
     private void updateCount() {
         myPotionItem.setText("Potion");
     }
+
+    /**
+     * Enables all movement buttons.
+     */
     public void setUpBut() {
         myUp.setEnabled(true);
         myDown.setEnabled(true);
@@ -403,61 +620,133 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myLeft.setEnabled(true);
     }
 
+    /**
+     * Disables the up movement button.
+     */
     public void setDisableUp() {
         myUp.setEnabled(false);
     }
+
+    /**
+     * Disables the down movement button.
+     */
     public void setDisableDown() {
         myDown.setEnabled(false);
     }
+
+    /**
+     * Disables the left movement button.
+     */
     public void setDisableLeft() {
         myLeft.setEnabled(false);
     }
+
+    /**
+     * Disables the right movement button.
+     */
     public void setDisableRight() {
         myRight.setEnabled(false);
     }
+
+
+    /**
+     * Sets the state of the up movement button.
+     *
+     * @param theB The state of the up movement button.
+     */
     public void setUp(final boolean theB) {
         myHitUp = theB;
     }
+
+    /**
+     * Sets the state of the down movement button.
+     *
+     * @param theB The state of the down movement button.
+     */
     public void setDown(final boolean theB) {
         myHitDown = theB;
     }
+
+    /**
+     * Sets the state of the left movement button.
+     *
+     * @param theB The state of the left movement button.
+     */
     public void setLeft(final boolean theB) {
         myHitLeft = theB;
     }
+
+    /**
+     * Sets the state of the right movement button.
+     *
+     * @param theB The state of the right movement button.
+     */
     public void setRight(final boolean theB) {
         myHitRight = theB;
     }
 
+    /**
+     * Retrieves the state of the up movement button.
+     *
+     * @return The state of the up movement button.
+     */
     public boolean getMyUp() {
         return myHitUp;
     }
+
+    /**
+     * Retrieves the state of the down movement button.
+     *
+     * @return The state of the down movement button.
+     */
     public boolean getMyDown() {
         return myHitDown;
     }
+
+    /**
+     * Retrieves the state of the left movement button.
+     *
+     * @return The state of the left movement button.
+     */
     public boolean getMyLeft() {
         return myHitLeft;
     }
+
+    /**
+     * Retrieves the state of the right movement button.
+     *
+     * @return The state of the right movement button.
+     */
     public boolean getMyRight() {
         return myHitRight;
     }
 
+    /**
+     * Changes the position of the player on the maze panel.
+     */
     public void changePosition() {
         myMazePanel.setColor(myTriviaMaze.getRow() , myTriviaMaze.getCol() );
     }
 
+    /**
+     * Checks if the game has ended (player reached the exit) and displays appropriate message.
+     */
     public void checkEnd() {
         if (myTriviaMaze.getRow() == myTriviaMaze.getExitRow()  &&
                 myTriviaMaze.getCol() == myTriviaMaze.getExitCol() ) {
             playWonSound();
             myUnlockPotion = 0;
-            end(myPlayerWon + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+            end(myPlayerWon + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                     myPanel.getIncorrect() +  " incorrect.\n" +
                     myMoves +  " moves taken.\n Do you want to play again?");
         }
     }
 
+    /**
+     * Checks if the player has lost the game under various conditions and ends the game accordingly.
+     */
     public void playerLost() {
-        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+        String message = myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         playLostSound();
@@ -488,12 +777,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
+    /**
+     * Checks if the player has lost the game when reaching the exit and ends the game accordingly.
+     */
     public void checkExitEnd() {
         int exitRow = myTriviaMaze.getExitRow() - 1;
         int exitCol = myTriviaMaze.getExitCol() - 1;
         Room[][] room = myTriviaMaze.getMaze();
 
-        String message = myPlayerLost + "Stats: " + myPanel.getCorrect() + " correct.\n" +
+        String message = myPlayerLost + "Stats: \n" + myPanel.getCorrect() + " correct.\n" +
                 myPanel.getIncorrect() +  " incorrect.\n" +
                 myMoves +  " moves taken.\n Do you want to play again?";
         if(room[exitRow][exitCol].getDoors().getMyNorthDoor().isLocked() && room[exitRow][exitCol].getDoors().getMyWestDoor().isLocked()) {
@@ -502,12 +794,19 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
+    /**
+     * Disables all movement buttons.
+     */
     private void disableButtons() {
         myUp.setEnabled(false);
         myDown.setEnabled(false);
         myLeft.setEnabled(false);
         myRight.setEnabled(false);
     }
+
+    /**
+     * Updates the state of movement buttons based on the current player position and locked doors.
+     */
     public void updateButtonState() {
         int row = myTriviaMaze.getRow();
         int col = myTriviaMaze.getCol();
@@ -518,7 +817,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myRight.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && col < mySize - 1);
     }
 
-
+    /**
+     * Saves the current game state to a file.
+     *
+     * @param theMaze The maze object representing the current game state.
+     */
     private static void saveGame(final Maze theMaze) {
         try {
             FileOutputStream outputStream = new FileOutputStream("save.ser");
@@ -531,7 +834,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
     }
 
-
+    /**
+     * Loads a saved game from a file.
+     *
+     * @return The maze object representing the loaded game state.
+     * @throws NullPointerException If there is an issue loading the game.
+     */
     private static Maze loadGame() throws NullPointerException{
 
 
@@ -549,6 +857,12 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         }
         return maze;
     }
+
+    /**
+     * Ends the game with the provided message and handles potion usage if available.
+     *
+     * @param theMessage The message to display when ending the game.
+     */
     private void end(final String theMessage) {
         if(myUnlockPotion > 0) {
             messagePotion(2);
@@ -559,13 +873,15 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                 dispose();
                 new TitleScreen();
             } else {
-                JOptionPane.getRootFrame().dispose();
-                //System.exit(0);
+                System.exit(0);
             }
         }
 
     }
 
+    /**
+     * plays the win sound.
+     */
     private void playWonSound() {
         if (myGameWon.isRunning())
             myGameWon.stop();
@@ -573,6 +889,9 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myGameWon.start();
     }
 
+    /**
+     * plays the lost sound.
+     */
     private void playLostSound() {
         if (myGameLost.isRunning())
             myGameLost.stop();
