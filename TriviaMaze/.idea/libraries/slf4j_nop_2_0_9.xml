@@ -2,6 +2,7 @@
   <library name="slf4j-nop-2.0.9">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/slf4j-nop-2.0.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-nop-2.0.9.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
