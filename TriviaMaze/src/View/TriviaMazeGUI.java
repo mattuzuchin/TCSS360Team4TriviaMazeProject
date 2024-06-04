@@ -71,7 +71,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
     /**
      * The command string for using a potion.
      */
-    private static final String POTION = "Use Potion";
+    private static final String POTION = "Potion";
 
     /**
      * The command string for resetting the game.
@@ -422,7 +422,6 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
                         "Confirm", JOptionPane.YES_NO_OPTION);
                 if (choice == JOptionPane.YES_OPTION) {
                     usePotion();
-                    updateButtonState();
                     myPotionItem.setEnabled(myUnlockPotion > 0);
                 }
                 break;
@@ -607,6 +606,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
      * Updates the text of the potion item.
      */
     private void updateCount() {
+        myPotionItem.setEnabled(myUnlockPotion > 0);
         myPotionItem.setText("Potion");
     }
 
@@ -815,6 +815,7 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         myDown.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMySouthDoor().isLocked() && row < mySize - 1);
         myLeft.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyWestDoor().isLocked() && col > 0);
         myRight.setEnabled(!myTriviaMaze.getCurrentRoom().getDoors().getMyEastDoor().isLocked() && col < mySize - 1);
+
     }
 
     /**
