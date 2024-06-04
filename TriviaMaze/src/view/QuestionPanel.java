@@ -2,39 +2,153 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Question;
-
-import javax.sound.sampled.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
+/**
+ * Displays the text of the question and handles user input for answering multiple-choice,
+ * true/false, and short-answer questions.
+ * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
+ * @version Spring 2024
+ */
 public class QuestionPanel extends JPanel {
 
+    /**
+     * The text for the Submit button.
+     */
     private static final String SUBMIT_TEXT = "Submit";
+
+    /**
+     * The message presented following a correct answer.
+     */
+    private static final String CORRECT_MESSAGE = "Correct!";
+
+    /**
+     * The message presented following an incorrect answer.
+     */
+    private static final String INCORRECT_MESSAGE = "Incorrect, Door locked, the answer was: ";
+
+    /**
+     * The filename for the correct answer sound.
+     */
     private static final String CORRECT_SOUND = "correctbuzz.wav";
+
+    /**
+     * The filename for the incorrect answer sound.
+     */
     private static final String INCORRECT_SOUND = "incorrectbuzz.wav";
+
+    /**
+     * The size of the panel.
+     */
     private static final Dimension PANEL_SIZE = new Dimension(400, 400);
+
+    /**
+     * The size of the question body text area.
+     */
+    private static final Dimension QUESTION_LABEL_SIZE = new Dimension(400, 200);
+
+    /**
+     * The font used by the text area.
+     */
+    private static final Font BODY_FONT = new Font("Monospace", Font.PLAIN, 16);
+
+    /**
+     * The size of the short answer user input area.
+     */
+    private static final int SHORT_ANSWER_COL = 20;
+
+    /**
+     * The incorrect answer sound.
+     */
     private Clip myIncorrectSound;
+
+    /**
+     * The correct answer sound.
+     */
     private Clip myCorrectSound;
 
+    /**
+     * The question to be displayed.
+     */
     private Question myQuestion;
 
+    /**
+     * The buttonGroup used for the possible answers.
+     */
     private final ButtonGroup myButtonGroup;
+
+    /**
+     * The list of answer buttons.
+     */
     private final ArrayList<JToggleButton> myAnswerButtons;
+
+    /**
+     * The Submit button.
+     */
     private final JButton mySubmitButton;
 
+    /**
+     * The text area which displays the question.
+     */
     private JTextArea myQuestionLabel;
+
+    /**
+     * The direction moved in.
+     */
     private int myDir;
+
+    /**
+     * The TriviaMaze instance used.
+     */
     private final TriviaMaze myMaze;
+
+    /**
+     * The number of questions answered correctly.
+     */
     private int myCorrect;
+
+    /**
+     *  The number of questions answered incorrectly.
+     */
     private int myIncorrect;
-    private int myCheckAnswer;
+
+    /**
+     * The user input area for short answer questions.
+     */
     private JTextField myShortAnswerField;
+
+    /**
+     * The TriviaMazeGUI instance holding this panel.
+     */
     private final TriviaMazeGUI myView;
 
+    /**
+     * Constructor.
+     *
+     * @param theMaze The TriviaMaze object this class interacts with.
+     * @param theView The TriviaMazeGUI object holding this panel.
+     */
     public QuestionPanel(final TriviaMaze theMaze, final TriviaMazeGUI theView) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -45,68 +159,92 @@ public class QuestionPanel extends JPanel {
         myAnswerButtons = new ArrayList<>();
         mySubmitButton = new JButton(SUBMIT_TEXT);
         mySubmitButton.addActionListener(theEvent -> {
-           mySubmitButton.setEnabled(false);
-           checkAnswer();
+            mySubmitButton.setEnabled(false);
+            checkAnswer();
         });
         mySubmitButton.setVisible(false);
         mySubmitButton.setEnabled(false);
         try {
             myCorrectSound = AudioSystem.getClip();
-            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File(CORRECT_SOUND));
+            final AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File(CORRECT_SOUND));
             myCorrectSound.open(correctStream);
 
             myIncorrectSound = AudioSystem.getClip();
-            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File(INCORRECT_SOUND));
+            final AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File(INCORRECT_SOUND));
             myIncorrectSound.open(incorrectStream);
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        } catch (final LineUnavailableException | UnsupportedAudioFileException | IOException e) {
             JOptionPane.showMessageDialog(null, e);
         }
         setComponents();
     }
 
+    /**
+     * Sets the question to be displayed.
+     *
+     * @param theQuestion the question to display.
+     * @throws IllegalArgumentException if theQuestion is null.
+     */
     public void setQuestion(final Question theQuestion) {
-        if(theQuestion == null) {
+        if (theQuestion == null) {
             throw new IllegalArgumentException("Question cannot be null.");
         }
         myQuestion = theQuestion;
 
     }
 
+    /**
+     * Plays the sound associated with a correct answer.
+     */
     private void playCorrectSound() {
-        if (myCorrectSound.isRunning())
+        if (myCorrectSound.isRunning()) {
             myCorrectSound.stop();
+        }
         myCorrectSound.setFramePosition(0);
         myCorrectSound.start();
     }
 
-
+    /**
+     * Plays the sound associated with an incorrect answer.
+     */
     private void playIncorrectSound() {
-        if (myIncorrectSound.isRunning())
+        if (myIncorrectSound.isRunning()) {
             myIncorrectSound.stop();
+        }
         myIncorrectSound.setFramePosition(0);
         myIncorrectSound.start();
     }
 
+    /**
+     * Sets the direction of the door associated with the current question.
+     *
+     * @param theDir the direction (0 = north, 1 = south, 2 = west, 3 = east).
+     * @throws IllegalArgumentException if theDir is not in the range 0-3.
+     */
     public void setDir(final int theDir) {
-        if(theDir < 0 || theDir > 3) {
+        if (theDir < 0 || theDir > 3) {
             throw new IllegalArgumentException("Invalid direction.");
         }
         myDir = theDir;
     }
 
+    /**
+     * Updates the panel to display a new question.
+     *
+     * @param theQ the new question to display.
+     * @throws IllegalArgumentException if the question type is not recognized.
+     */
     public void updateQuestion(final Question theQ) {
-        myCheckAnswer = 0;
         setQuestion(theQ);
         myQuestion = theQ;
-        String question = myQuestion.getQuestionText();
-        ArrayList<String> options = myQuestion.getOptions();
+        final String question = myQuestion.getMyQuestionText();
+        final ArrayList<String> options = myQuestion.getOptions();
 
         myQuestionLabel.setText("Question: " + question);
         myQuestionLabel.setVisible(true);
         mySubmitButton.setVisible(true);
         mySubmitButton.setEnabled(false);
 
-        if(theQ.getType() == 1) { // multiple choice
+        if (theQ.getType() == 1) { // multiple choice
             for (int i = 0; i < options.size(); i++) {
                 myAnswerButtons.get(i).setEnabled(true);
                 myAnswerButtons.get(i).setVisible(true);
@@ -126,40 +264,33 @@ public class QuestionPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Initializes the components of the panel.
+     */
     private void setComponents() {
 
         // Text area for the body of the question
         myQuestionLabel = new JTextArea();
-//        myQuestionLabel.setBackground(this.getBackground());
         myQuestionLabel.setLineWrap(true);
         myQuestionLabel.setWrapStyleWord(true);
         myQuestionLabel.setEditable(false);
-        myQuestionLabel.setFont(new Font("Monospace", Font.PLAIN, 16));
-        myQuestionLabel.setPreferredSize(new Dimension(400, 200));
+        myQuestionLabel.setFont(BODY_FONT);
+        myQuestionLabel.setPreferredSize(QUESTION_LABEL_SIZE);
         myQuestionLabel.setVisible(false);
         add(myQuestionLabel);
 
         // Short answer field
-        myShortAnswerField = new JTextField(20);
+        myShortAnswerField = new JTextField(SHORT_ANSWER_COL);
         myShortAnswerField.setVisible(false);
-        myShortAnswerField.addActionListener(theEvent -> {
-            if (myCheckAnswer == 0) {
-                mySubmitButton.setEnabled(true);
-            }
-        });
+        myShortAnswerField.addActionListener(theEvent -> mySubmitButton.setEnabled(true));
         add(myShortAnswerField);
 
         // Panel to hold answer and submit buttons
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6,1));
+        final JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6, 1));
         for (int i = 0; i < 4; i++) {
-            JToggleButton tb = new JToggleButton();
-            tb.addActionListener(theEvent -> {
-                if(myCheckAnswer == 0) {
-                    mySubmitButton.setEnabled(true);
-                }
-            });
+            final JToggleButton tb = new JToggleButton();
+            tb.addActionListener(theEvent -> mySubmitButton.setEnabled(true));
             myButtonGroup.add(tb);
             myAnswerButtons.add(tb);
             panel.add(tb);
@@ -170,21 +301,34 @@ public class QuestionPanel extends JPanel {
         add(panel);
     }
 
+    /**
+     * Gets the selected answer from the option buttons.
+     *
+     * @return the text of the selected answer, or an empty string if no answer is selected
+     */
     private String getSelectedAnswer() {
         String answerText = "";
-        for (AbstractButton button : Collections.list(myButtonGroup.getElements())) {
-            if (button.isSelected()) {
-                answerText = button.getText();
+        if (myQuestion.getType() != 3) {
+            for (AbstractButton button : Collections.list(myButtonGroup.getElements())) {
+                if (button.isSelected()) {
+                    answerText = button.getText();
+                }
             }
+        } else {
+            answerText = myShortAnswerField.getText();
         }
         return answerText;
     }
 
+    /**
+     * Checks the selected answer for accuracy, then moves the player location or
+     * locks the corresponding door according to the player's position and direction.
+     */
     private void checkAnswer() {
-        String correctAnswer = myQuestion.getCorrectAnswer();
+        final String correctAnswer = myQuestion.getCorrectAnswer();
         if (correctAnswer.equalsIgnoreCase(getSelectedAnswer())) {
             playCorrectSound();
-            JOptionPane.showMessageDialog(this, "Correct!");
+            JOptionPane.showMessageDialog(this, CORRECT_MESSAGE);
             myCorrect++;
             if (myView.getMyUpButton()) {
                 myMaze.advanceNorth(myView.getQPanel());
@@ -219,11 +363,10 @@ public class QuestionPanel extends JPanel {
                 myView.updateButtonState();
                 myView.setRight(false);
             }
-        }
-        else {
+        } else {
             myIncorrect++;
             playIncorrectSound();
-            JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + correctAnswer);
+            JOptionPane.showMessageDialog(this, INCORRECT_MESSAGE + correctAnswer);
             myMaze.lockDoor(myDir);
             myView.setUpBut();
             myView.updateButtonState();
@@ -263,10 +406,20 @@ public class QuestionPanel extends JPanel {
         mySubmitButton.setVisible(false);
     }
 
+    /**
+     * Gets the number of correct answers.
+     *
+     * @return the number of correct answers
+     */
     public int getCorrect() {
         return myCorrect;
     }
 
+    /**
+     * Gets the number of incorrect answers.
+     *
+     * @return the number of incorrect answers
+     */
     public int getIncorrect() {
         return myIncorrect;
     }

@@ -6,6 +6,7 @@ package Model;
  * Enum of directions.
  */
 public enum Direction {
+
     /**
      * field represents north direction
      */
@@ -25,6 +26,7 @@ public enum Direction {
      * field represents east direction.
      */
     EAST('E');
+
     /**
      * field represents direction assigned single character.
      */
@@ -52,7 +54,6 @@ public enum Direction {
                 break;
             }
         }
-
         return result;
     }
 
@@ -63,5 +64,4 @@ public enum Direction {
     public char letter() {
         return myLetter;
     }
-
 }

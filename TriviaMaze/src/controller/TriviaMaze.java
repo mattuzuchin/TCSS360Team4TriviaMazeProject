@@ -385,6 +385,7 @@ public class TriviaMaze implements PropertyChangeEnabledTriviaMazeControls, Seri
             throw new IllegalArgumentException("Value is less than 0");
         }
         myMaze = new Maze(theSize, myQF);
+        myMaze.setPlayerName(myPlayer.getName());
         myMaze.createMaze();
     }
 
