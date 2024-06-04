@@ -2,468 +2,425 @@ package View;
 
 import Controller.TriviaMaze;
 import Model.Question;
-import Model.QuestionFactory;
-
-import javax.sound.sampled.*;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
-import static Controller.PropertyChangeEnabledTriviaMazeControls.PROPERTY_PLAYER;
+/**
+ * Displays the text of the question and handles user input for answering multiple-choice,
+ * true/false, and short-answer questions.
+ * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
+ * @version Spring 2024
+ */
+public class QuestionPanel extends JPanel {
 
-public class QuestionPanel extends JPanel implements PropertyChangeListener, ChangeListener {
+    /**
+     * The text for the Submit button.
+     */
+    private static final String SUBMIT_TEXT = "Submit";
 
+    /**
+     * The message presented following a correct answer.
+     */
+    private static final String CORRECT_MESSAGE = "Correct!";
+
+    /**
+     * The message presented following an incorrect answer.
+     */
+    private static final String INCORRECT_MESSAGE = "Incorrect, Door locked, the answer was: ";
+
+    /**
+     * The filename for the correct answer sound.
+     */
+    private static final String CORRECT_SOUND = "correctbuzz.wav";
+
+    /**
+     * The filename for the incorrect answer sound.
+     */
+    private static final String INCORRECT_SOUND = "incorrectbuzz.wav";
+
+    /**
+     * The size of the panel.
+     */
+    private static final Dimension PANEL_SIZE = new Dimension(400, 400);
+
+    /**
+     * The size of the question body text area.
+     */
+    private static final Dimension QUESTION_LABEL_SIZE = new Dimension(400, 200);
+
+    /**
+     * The font used by the text area.
+     */
+    private static final Font BODY_FONT = new Font("Monospace", Font.PLAIN, 16);
+
+    /**
+     * The size of the short answer user input area.
+     */
+    private static final int SHORT_ANSWER_COL = 20;
+
+    /**
+     * The incorrect answer sound.
+     */
     private Clip myIncorrectSound;
+
+    /**
+     * The correct answer sound.
+     */
     private Clip myCorrectSound;
 
+    /**
+     * The question to be displayed.
+     */
     private Question myQuestion;
-    private JLabel myQuestionBody;
 
-    private ButtonGroup myAnswerButtons;
-    private JButton mySubmit;
+    /**
+     * The buttonGroup used for the possible answers.
+     */
+    private final ButtonGroup myButtonGroup;
 
-    private JRadioButton myButtonA;
-    private JRadioButton myButtonB;
-    private JRadioButton myButtonC;
-    private JRadioButton myButtonD;
+    /**
+     * The list of answer buttons.
+     */
+    private final ArrayList<JToggleButton> myAnswerButtons;
 
-    private JLabel myQuestionLabel;
+    /**
+     * The Submit button.
+     */
+    private final JButton mySubmitButton;
+
+    /**
+     * The text area which displays the question.
+     */
+    private JTextArea myQuestionLabel;
+
+    /**
+     * The direction moved in.
+     */
     private int myDir;
-    private TriviaMaze myMaze;
-    private int myCorrect;
-    private int myIncorrect;
-    private int myCheckAnswer;
-    private JLabel myLong;
-    private JTextField myField;
-    private TriviaMazeGUI myView;
-    private JPanel myAnswer;
 
-    public QuestionPanel(final TriviaMaze theMaze, String theDif, TriviaMazeGUI theView) {
+    /**
+     * The TriviaMaze instance used.
+     */
+    private final TriviaMaze myMaze;
+
+    /**
+     * The number of questions answered correctly.
+     */
+    private int myCorrect;
+
+    /**
+     *  The number of questions answered incorrectly.
+     */
+    private int myIncorrect;
+
+    /**
+     * The user input area for short answer questions.
+     */
+    private JTextField myShortAnswerField;
+
+    /**
+     * The TriviaMazeGUI instance holding this panel.
+     */
+    private final TriviaMazeGUI myView;
+
+    /**
+     * Constructor.
+     *
+     * @param theMaze The TriviaMaze object this class interacts with.
+     * @param theView The TriviaMazeGUI object holding this panel.
+     */
+    public QuestionPanel(final TriviaMaze theMaze, final TriviaMazeGUI theView) {
         super();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setPreferredSize(PANEL_SIZE);
         myView = theView;
         myMaze = theMaze;
-        myQuestionBody = new JLabel();
-        myQuestionBody.setVisible(true);
-        myAnswerButtons = new ButtonGroup();
-        mySubmit = new JButton("Submit");
-        mySubmit.setVisible(true);
-        mySubmit.setEnabled(false);
+        myButtonGroup = new ButtonGroup();
+        myAnswerButtons = new ArrayList<>();
+        mySubmitButton = new JButton(SUBMIT_TEXT);
+        mySubmitButton.addActionListener(theEvent -> {
+            mySubmitButton.setEnabled(false);
+            checkAnswer();
+        });
+        mySubmitButton.setVisible(false);
+        mySubmitButton.setEnabled(false);
         try {
             myCorrectSound = AudioSystem.getClip();
-            AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File("correctbuzz.wav"));
+            final AudioInputStream correctStream = AudioSystem.getAudioInputStream(new File(CORRECT_SOUND));
             myCorrectSound.open(correctStream);
 
             myIncorrectSound = AudioSystem.getClip();
-            AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File("incorrectbuzz.wav"));
+            final AudioInputStream incorrectStream = AudioSystem.getAudioInputStream(new File(INCORRECT_SOUND));
             myIncorrectSound.open(incorrectStream);
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
-            e.printStackTrace();
-        }
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        if(theDif.equals("Easy")) {
-            setPreferredSize(new Dimension(200,200));
-        } else if(theDif.equals("Medium")) {
-            setPreferredSize(new Dimension(300,300));
-        } else if(theDif.equals("Hard")) {
-            setPreferredSize(new Dimension(500,500));
-        } else {
-            setPreferredSize(new Dimension(500,500));
+        } catch (final LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            JOptionPane.showMessageDialog(null, e);
         }
         setComponents();
-        addListener();
     }
-    public void setQuestion(Question theQuestion) {
-        if(theQuestion == null) {
-            throw new IllegalArgumentException("null");
+
+    /**
+     * Sets the question to be displayed.
+     *
+     * @param theQuestion the question to display.
+     * @throws IllegalArgumentException if theQuestion is null.
+     */
+    public void setQuestion(final Question theQuestion) {
+        if (theQuestion == null) {
+            throw new IllegalArgumentException("Question cannot be null.");
         }
         myQuestion = theQuestion;
 
     }
+
+    /**
+     * Plays the sound associated with a correct answer.
+     */
     private void playCorrectSound() {
-        if (myCorrectSound.isRunning())
+        if (myCorrectSound.isRunning()) {
             myCorrectSound.stop();
+        }
         myCorrectSound.setFramePosition(0);
         myCorrectSound.start();
     }
 
-
+    /**
+     * Plays the sound associated with an incorrect answer.
+     */
     private void playIncorrectSound() {
-        if (myIncorrectSound.isRunning())
+        if (myIncorrectSound.isRunning()) {
             myIncorrectSound.stop();
+        }
         myIncorrectSound.setFramePosition(0);
         myIncorrectSound.start();
     }
+
+    /**
+     * Sets the direction of the door associated with the current question.
+     *
+     * @param theDir the direction (0 = north, 1 = south, 2 = west, 3 = east).
+     * @throws IllegalArgumentException if theDir is not in the range 0-3.
+     */
     public void setDir(final int theDir) {
-        if(theDir < 0 || theDir > 3) {
-            throw new IllegalArgumentException("not valid");
+        if (theDir < 0 || theDir > 3) {
+            throw new IllegalArgumentException("Invalid direction.");
         }
         myDir = theDir;
     }
+
+    /**
+     * Updates the panel to display a new question.
+     *
+     * @param theQ the new question to display.
+     * @throws IllegalArgumentException if the question type is not recognized.
+     */
     public void updateQuestion(final Question theQ) {
-        myCheckAnswer = 0;
-       setQuestion(theQ);
-       myQuestion  = theQ;
-       String question = myQuestion.getQuestionText();
-       if(theQ.getType() == 1) { // multiple choice
-          setMultipleChoiceVisible(true);
-          setMultipleChoiceEnable(true);
-          mySubmit.setEnabled(false);
-           if (question.length() > 75) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 75));
-               myLong.setText(question.substring(75));
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-               myButtonC.setText(myQuestion.getOptionC());
-               myButtonD.setText(myQuestion.getOptionD());
+        setQuestion(theQ);
+        myQuestion = theQ;
+        final String question = myQuestion.getMyQuestionText();
+        final ArrayList<String> options = myQuestion.getOptions();
 
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-               myButtonC.setText(myQuestion.getOptionC());
-               myButtonD.setText(myQuestion.getOptionD());
+        myQuestionLabel.setText("Question: " + question);
+        myQuestionLabel.setVisible(true);
+        mySubmitButton.setVisible(true);
+        mySubmitButton.setEnabled(false);
 
-           }
-       } else if (theQ.getType() == 2) { //true false
-           setMultipleChoiceVisible(true);
-           setMultipleChoiceEnable(true);
-           mySubmit.setEnabled(false);
-           myButtonC.setEnabled(false);
-           myButtonD.setEnabled(false);
-           myButtonC.setVisible(false);
-           myButtonD.setVisible(false);
-           if (question.length() > 75) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 75));
-               myLong.setText(question.substring(75));
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-               myButtonA.setText(myQuestion.getOptionA());
-               myButtonB.setText(myQuestion.getOptionB());
-
-           }
-       } else if (theQ.getType() == 3) { // short answer
-           setMultipleChoiceEnable(false);
-           setMultipleChoiceVisible(false);
-           myQuestionBody.setVisible(true);
-           myQuestionLabel.setVisible(true);
-           myField.setVisible(true);
-           myField.setEditable(true);
-           mySubmit.setVisible(true);
-           myAnswer.setVisible(true);
-           if (question.length() > 60) {
-               myLong.setVisible(true);
-               myQuestionLabel.setText("Question: " + question.substring(0, 60));
-               myLong.setText(question.substring(60));
-
-
-           } else {
-               myQuestionLabel.setText("Question: " + question);
-           }
-
-       } else {
-           throw new IllegalArgumentException("no valid question types found!");
-       }
+        if (theQ.getType() == 1) { // multiple choice
+            for (int i = 0; i < options.size(); i++) {
+                myAnswerButtons.get(i).setEnabled(true);
+                myAnswerButtons.get(i).setVisible(true);
+                myAnswerButtons.get(i).setText(options.get(i));
+            }
+        } else if (theQ.getType() == 2) { //true false
+            for (int i = 0; i < options.size() / 2; i++) {
+                myAnswerButtons.get(i).setEnabled(true);
+                myAnswerButtons.get(i).setVisible(true);
+                myAnswerButtons.get(i).setText(options.get(i));
+            }
+        } else if (theQ.getType() == 3) { // short answer
+            myShortAnswerField.setVisible(true);
+            myShortAnswerField.setEditable(true);
+        } else {
+            throw new IllegalArgumentException("no valid question types found!");
+        }
     }
-    public void setMultipleChoiceVisible(final boolean theB) {
-        myQuestionBody.setVisible(theB);
-        myQuestionLabel.setVisible(theB);
-        myButtonA.setVisible(theB);
-        myButtonB.setVisible(theB);
-        myButtonC.setVisible(theB);
-        myButtonD.setVisible(theB);
-        mySubmit.setVisible(theB);
-    }
-    public void setMultipleChoiceEnable(final boolean theB) {
-        myQuestionBody.setVisible(theB);
-        myQuestionLabel.setVisible(theB);
-        myButtonA.setEnabled(theB);
-        myButtonB.setEnabled(theB);
-        myButtonC.setEnabled(theB);
-        myButtonD.setEnabled(theB);
-        mySubmit.setEnabled(theB);
-    }
-    public void setComponents() {
-        myAnswer = new JPanel();
-        myQuestionLabel = new JLabel();
-        myLong = new JLabel();
-        myField = new JTextField(20);
-        myButtonA = new JRadioButton();
-        myAnswerButtons.add(myButtonA);
 
+    /**
+     * Initializes the components of the panel.
+     */
+    private void setComponents() {
 
-        myButtonB = new JRadioButton();
-        myAnswerButtons.add(myButtonB);
-
-        myButtonC = new JRadioButton();
-        myAnswerButtons.add(myButtonC);
-
-        myButtonD = new JRadioButton();
-        myAnswerButtons.add(myButtonD);
-        myField.setEditable(false);
-        myField.setVisible(false);
-        myAnswer.add(myField);
-        myAnswer.setVisible(false);
-        setMultipleChoiceVisible(false);
-        setMultipleChoiceEnable(false);
+        // Text area for the body of the question
+        myQuestionLabel = new JTextArea();
+        myQuestionLabel.setLineWrap(true);
+        myQuestionLabel.setWrapStyleWord(true);
+        myQuestionLabel.setEditable(false);
+        myQuestionLabel.setFont(BODY_FONT);
+        myQuestionLabel.setPreferredSize(QUESTION_LABEL_SIZE);
+        myQuestionLabel.setVisible(false);
         add(myQuestionLabel);
-        add(myLong);
-        add(myAnswer);
-        add(myButtonA);
-        add(myButtonB);
-        add(myButtonC);
-        add(myButtonD);
-        add(mySubmit);
 
-    }
+        // Short answer field
+        myShortAnswerField = new JTextField(SHORT_ANSWER_COL);
+        myShortAnswerField.setVisible(false);
+        myShortAnswerField.addActionListener(theEvent -> mySubmitButton.setEnabled(true));
+        add(myShortAnswerField);
 
-
-    @Override
-    public void propertyChange(final PropertyChangeEvent theEvent) {
-        switch (theEvent.getPropertyName()) {
-            case PROPERTY_PLAYER:
+        // Panel to hold answer and submit buttons
+        final JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6, 1));
+        for (int i = 0; i < 4; i++) {
+            final JToggleButton tb = new JToggleButton();
+            tb.addActionListener(theEvent -> mySubmitButton.setEnabled(true));
+            myButtonGroup.add(tb);
+            myAnswerButtons.add(tb);
+            panel.add(tb);
+            tb.setVisible(false);
         }
+        panel.add(new Container());
+        panel.add(mySubmitButton);
+        add(panel);
     }
 
-    @Override
-    public void stateChanged(final ChangeEvent theEvent) {
+    /**
+     * Gets the selected answer from the option buttons.
+     *
+     * @return the text of the selected answer, or an empty string if no answer is selected
+     */
+    private String getSelectedAnswer() {
+        String answerText = "";
+        if (myQuestion.getType() != 3) {
+            for (AbstractButton button : Collections.list(myButtonGroup.getElements())) {
+                if (button.isSelected()) {
+                    answerText = button.getText();
+                }
+            }
+        } else {
+            answerText = myShortAnswerField.getText();
+        }
+        return answerText;
     }
-    public String getSelectedAnswer() {
-        for (AbstractButton button : Collections.list(myAnswerButtons.getElements())) {
-            if (button.isSelected()) {
-                return button.getText();
+
+    /**
+     * Checks the selected answer for accuracy, then moves the player location or
+     * locks the corresponding door according to the player's position and direction.
+     */
+    private void checkAnswer() {
+        final String correctAnswer = myQuestion.getCorrectAnswer();
+        if (correctAnswer.equalsIgnoreCase(getSelectedAnswer())) {
+            playCorrectSound();
+            JOptionPane.showMessageDialog(this, CORRECT_MESSAGE);
+            myCorrect++;
+            if (myView.getMyUpButton()) {
+                myMaze.advanceNorth(myView.getQPanel());
+                myView.changePosition();
+                myView.enableMoveButtons();
+                myView.checkEnd();
+                myView.updateButtonState();
+                myView.setUp(false);
+            }
+            if (myView.getMyDown()) {
+                myMaze.advanceSouth(myView.getQPanel());
+                myView.changePosition();
+                myView.enableMoveButtons();
+                myView.checkEnd();
+                myView.updateButtonState();
+                myView.setDown(false);
+
+            }
+            if (myView.getMyLeft()) {
+                myMaze.advanceWest(myView.getQPanel());
+                myView.changePosition();
+                myView.enableMoveButtons();
+                myView.checkEnd();
+                myView.updateButtonState();
+                myView.setLeft(false);
+            }
+            if (myView.getMyRight()) {
+                myMaze.advanceEast(myView.getQPanel());
+                myView.changePosition();
+                myView.enableMoveButtons();
+                myView.checkEnd();
+                myView.updateButtonState();
+                myView.setRight(false);
+            }
+        } else {
+            myIncorrect++;
+            playIncorrectSound();
+            JOptionPane.showMessageDialog(this, INCORRECT_MESSAGE + correctAnswer);
+            myMaze.lockDoor(myDir);
+            myView.enableMoveButtons();
+            myView.updateButtonState();
+            myView.playerLost();
+            myView.checkExitEnd();
+            if (myView.getMyUpButton()) {
+                myView.setDisableUp();
+                myView.setUp(false);
+                myView.changePosition();
+            }
+            if (myView.getMyDown()) {
+                myView.setDisableDown();
+                myView.setDown(false);
+                myView.changePosition();
+
+            }
+            if (myView.getMyRight()) {
+                myView.setDisableRight();
+                myView.setRight(false);
+                myView.changePosition();
+
+            }
+            if (myView.getMyLeft()) {
+                myView.setDisableLeft();
+                myView.setLeft(false);
+                myView.changePosition();
+
             }
         }
-        return "";
+        myButtonGroup.clearSelection();
+        for (JToggleButton tb : myAnswerButtons) {
+            tb.setVisible(false);
+        }
+        myQuestionLabel.setVisible(false);
+        myShortAnswerField.setText("");
+        myShortAnswerField.setVisible(false);
+        mySubmitButton.setVisible(false);
     }
 
-    public void addListener() {
-        mySubmit.addActionListener(theEvent -> {
-            if(myQuestion.getType() == 1 || myQuestion.getType() == 2) {
-                myCheckAnswer = 1;
-                myLong.setText("");
-                mySubmit.setEnabled(false);
-                myButtonA.setEnabled(false);
-                myButtonB.setEnabled(false);
-                myButtonC.setEnabled(false);
-                myButtonD.setEnabled(false);
-                String theAnswer = myQuestion.getCorrectAnswer();
-                String selectedAnswer = getSelectedAnswer();
-                if (selectedAnswer.equals(theAnswer)) {
-                    playCorrectSound();
-                    JOptionPane.showMessageDialog(this, "Correct!");
-                    myCorrect++;
-                    if (myView.getMyUp()) {
-                        myMaze.advanceNorth(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setUp(false);
-                    }
-                    if (myView.getMyDown()) {
-                        myMaze.advanceSouth(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setDown(false);
-
-                    }
-                    if (myView.getMyLeft()) {
-                        myMaze.advanceWest(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setLeft(false);
-                    }
-                    if (myView.getMyRight()) {
-                        myMaze.advanceEast(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setRight(false);
-                    }
-                    setMultipleChoiceVisible(false);
-
-                } else {
-                    myIncorrect++;
-                    playIncorrectSound();
-                    JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
-                    myMaze.lockDoor(myDir);
-                    myView.setUpBut();
-                    myView.updateButtonState();
-                    myView.playerLost();
-                    myView.checkExitEnd();
-                    if (myView.getMyUp()) {
-                        myView.setDisableUp();
-                        myView.setUp(false);
-                        myView.changePosition();
-                    }
-                    if (myView.getMyDown()) {
-                        myView.setDisableDown();
-                        myView.setDown(false);
-                        myView.changePosition();
-
-                    }
-                    if (myView.getMyRight()) {
-                        myView.setDisableRight();
-                        myView.setRight(false);
-                        myView.changePosition();
-
-                    }
-                    if (myView.getMyLeft()) {
-                        myView.setDisableLeft();
-                        myView.setLeft(false);
-                        myView.changePosition();
-
-                    }
-                    setMultipleChoiceVisible(false);
-                }
-                myAnswerButtons.clearSelection();
-            } else {
-                myCheckAnswer = 1;
-                myLong.setText("");
-                mySubmit.setEnabled(false);
-                String theAnswer = myQuestion.getCorrectAnswer();
-                String selectedAnswer = myField.getText();
-                if (selectedAnswer.toLowerCase().equals(theAnswer.toLowerCase())) {
-                    playCorrectSound();
-                    JOptionPane.showMessageDialog(this, "Correct!");
-                    myCorrect++;
-                    if (myView.getMyUp()) {
-                        myMaze.advanceNorth(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setUp(false);
-                    }
-                    if (myView.getMyDown()) {
-                        myMaze.advanceSouth(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setDown(false);
-
-                    }
-                    if (myView.getMyLeft()) {
-                        myMaze.advanceWest(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setLeft(false);
-                    }
-                    if (myView.getMyRight()) {
-                        myMaze.advanceEast(myView.getQPanel());
-                        myView.changePosition();
-                        myView.setUpBut();
-                        myView.checkEnd();
-                        myView.updateButtonState();
-                        myView.setRight(false);
-                    }
-                    myField.setVisible(false);
-                    myQuestionBody.setVisible(false);
-                    myQuestionLabel.setVisible(false);
-
-                } else {
-                    myIncorrect++;
-                    playIncorrectSound();
-                    JOptionPane.showMessageDialog(this, "Incorrect, Door locked, the answer was: " + theAnswer);
-                    myMaze.lockDoor(myDir);
-                    myView.setUpBut();
-                    myView.updateButtonState();
-                    myView.playerLost();
-                    myView.checkExitEnd();
-                    if (myView.getMyUp()) {
-                        myView.setDisableUp();
-                        myView.setUp(false);
-                        myView.changePosition();
-                    }
-                    if (myView.getMyDown()) {
-                        myView.setDisableDown();
-                        myView.setDown(false);
-                        myView.changePosition();
-
-                    }
-                    if (myView.getMyRight()) {
-                        myView.setDisableRight();
-                        myView.setRight(false);
-                        myView.changePosition();
-
-                    }
-                    if (myView.getMyLeft()) {
-                        myView.setDisableLeft();
-                        myView.setLeft(false);
-                        myView.changePosition();
-
-                    }
-                }
-                myQuestionBody.setVisible(false);
-                myQuestionLabel.setVisible(false);
-                myField.setVisible(false);
-                myAnswer.setVisible(false);
-                mySubmit.setVisible(false);
-                myField.setText("");
-
-            }
-
-
-        });
-        myButtonA.addActionListener(theEvent -> {
-            if(myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
-
-            }
-        });
-        myButtonB.addActionListener(theEvent -> {
-            if(myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
-
-            }
-        });
-        myButtonC.addActionListener(theEvent -> {
-            if (myCheckAnswer == 0) {
-
-            mySubmit.setEnabled(true);
-
-            }
-        });
-        myField.addActionListener(theEvent -> {
-            if (myCheckAnswer == 0) {
-
-                mySubmit.setEnabled(true);
-
-            }
-        });
-        myButtonD.addActionListener(theEvent -> {
-            if (myCheckAnswer == 0) {
-                mySubmit.setEnabled(true);
-
-            }
-        });
-      }
-
-
-      public int getCorrect() {
+    /**
+     * Gets the number of correct answers.
+     *
+     * @return the number of correct answers
+     */
+    public int getCorrect() {
         return myCorrect;
-      }
+    }
 
-      public int getIncorrect() {
+    /**
+     * Gets the number of incorrect answers.
+     *
+     * @return the number of incorrect answers
+     */
+    public int getIncorrect() {
         return myIncorrect;
-      }
+    }
 }

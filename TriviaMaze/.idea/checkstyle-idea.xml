@@ -10,6 +10,7 @@
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="63aa7ef7-4819-492c-89c4-f7600775d559" type="LOCAL_FILE" scope="All" description="UWT">$PROJECT_DIR$/../../tcss305_checkstyle_sameline.xml</ConfigurationLocation>
       </list>
     </option>
   </component>
