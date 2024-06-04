@@ -93,7 +93,7 @@ public class PlayerTest {
      */
     @Test
     public void testToString() {
-        assertEquals("Joe Mama", myPlayer.toString());
+        assertEquals("Name: Joe Mama Row: 0 Column: 0", myPlayer.toString());
     }
 
 
