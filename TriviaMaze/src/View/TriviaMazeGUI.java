@@ -415,10 +415,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
         final String gameRules = "Welcome to the Movie Trivia Maze " + myTriviaMaze.getMyPlayer().getName()
                 +  "! \nGame Rules as follows:\n"
                 + "You will start at a square (a room), and you must go through the maze to reach the exit, which\n"
-                + "is listed on the maze itself. Each room has 4 doors, with each being a direction you wish to choose from, \n"
-                + "whenever you move to a door, a question will pop up for you to answer. READ THIS: A room that is green \n"
-                + "indicates that ONE DOOR is locked, if a room is pink, it indicates that TWO DOORS are locked, if a room \n"
-                + "is white, it indicates that THREE DOORS are locked, if a room is WHITE, then ALL doors are locked. Grey doors \n"
+                + "is listed on the maze itself (RED square). Each room has 4 doors, with each being a direction you wish to choose from, \n"
+                + "whenever you move to a door, a question will pop up for you to answer. Your location is the BLUE square. " +
+                "\nREAD THIS: A room that is green "
+                + "indicates that ONE DOOR is locked. If a room is pink, it indicates that TWO DOORS are locked.\n If a room "
+                + "is white, it indicates that THREE DOORS are locked. If a room is cyan, then FOUR doors are locked. Grey doors \n"
                 + "indicate no locked doors! If you get it correct, great! You can move on, but if you get it wrong, \n"
                 + "that door is locked and you must find another way! Good luck and have fun!";
         final JMenuItem rules = new JMenuItem("Rules");
@@ -432,7 +433,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
         final JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
-        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V1.0"));
+        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, null, "Trivia Maze V1.0" + "\n"
+            + "Created by Elias Arriola, Matthew Uzunoe-Chin, and Dustin Feldt" + "\n"
+            + "TCSS 360: Software Development and Quality Assurance Techniques" + "\n"
+            + "Professor Tom Capaul" + "\n" + "University of Washington, Tacoma" + "\n"
+            + "June 2024"));
         helpMenu.add(about);
         helpMenu.add(aboutRoom);
 
