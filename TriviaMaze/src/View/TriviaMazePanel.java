@@ -15,7 +15,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  * The TriviaMazePanel class is responsible for rendering the maze on the screen.
- * It implements PropertyChangeListener and ChangeListener to update the maze view when necessary.
+ * It implements PropertyChangeListener and ChangeListener to update the maze view when needed.
  * @author Matthew Uzunoe-Chin, Dustin Feldt, Elias Arriolas
  * @version Spring 2024
  */

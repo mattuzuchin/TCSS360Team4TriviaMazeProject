@@ -430,7 +430,11 @@ public final class TriviaMazeGUI extends JFrame implements ActionListener, Seria
 
         final JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
-        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V1.0"));
+        about.addActionListener(theEvent -> JOptionPane.showMessageDialog(null, "Trivia Maze V1.0" + "\n"
+                + "Created by Elias Arriola, Matthew Uzunoe-Chin, and Dustin Feldt" + "\n"
+                + "TCSS 360: Software Development and Quality Assurance Techniques" + "\n"
+                + "Professor Tom Capaul" + "\n" + "University of Washington, Tacoma" + "\n"
+                + "June 2024"));
         helpMenu.add(about);
         helpMenu.add(aboutRoom);
 
